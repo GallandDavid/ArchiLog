@@ -7,7 +7,7 @@ public class FxApp extends XShape {
         return new ShapeFactoryFx(FxApplication._root);
     }
     @Override
-    void run() {
+    public void run() {
         draw();
         FxApplication.launch(FxApplication.class);
     }

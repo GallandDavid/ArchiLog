@@ -41,7 +41,7 @@ public class AwtApp extends XShape {
     }
 
     @Override
-    void run() {
+    public void run() {
         JCanvas jc = new JCanvas(this);
         jc.setBackground(Color.WHITE);
         jc.setPreferredSize(new Dimension(500, 500));

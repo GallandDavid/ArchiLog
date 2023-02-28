@@ -9,7 +9,7 @@ public abstract class XShape {
     //method factory to delegate instanciation of Shapefactory to subclass
     protected abstract ShapeFactory createFactory();
     //Handler to start the GUI
-    abstract void run();
+    public abstract void run();
 
     private void createScene() {
         Shape shape = _factory.createRectangle(100, 100, 50, 50);
