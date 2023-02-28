@@ -1,4 +1,4 @@
-package xshape;
+package xshape.vue;
 
 import java.awt.Graphics;
 

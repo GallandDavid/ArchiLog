@@ -1,4 +1,4 @@
-package xshape;
+package xshape.model;
 
 public class ShapeFactoryAwt implements ShapeFactory {
     public ShapeFactoryAwt() {

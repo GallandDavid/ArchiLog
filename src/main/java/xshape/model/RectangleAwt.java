@@ -1,6 +1,9 @@
-package xshape;
+package xshape.model;
 
 import java.awt.geom.Point2D;
+
+import xshape.vue.AwtContext;
+
 import java.awt.*;
 
 public class RectangleAwt extends Rectangle {

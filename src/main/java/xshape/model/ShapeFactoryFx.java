@@ -1,4 +1,4 @@
-package xshape;
+package xshape.model;
 
 import javafx.scene.Group;
 

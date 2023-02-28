@@ -1,6 +1,9 @@
-package xshape;
+package xshape.controleur;
 
 import java.awt.geom.Point2D;
+
+import xshape.model.Shape;
+import xshape.model.ShapeFactory;
 
 public abstract class XShape {
     private ShapeFactory _factory = null;

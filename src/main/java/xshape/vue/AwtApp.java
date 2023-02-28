@@ -1,4 +1,4 @@
-package xshape;
+package xshape.vue;
 
 import java.awt.*;
 import javax.swing.*;
@@ -6,6 +6,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+
+import xshape.controleur.XShape;
+import xshape.model.ShapeFactory;
+import xshape.model.ShapeFactoryAwt;
 
 class GUIHelper {
     public static void showOnFrame(JComponent component, String frameName) {

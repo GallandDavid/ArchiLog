@@ -1,4 +1,8 @@
-package xshape;
+package xshape.vue;
+
+import xshape.controleur.XShape;
+import xshape.model.ShapeFactory;
+import xshape.model.ShapeFactoryFx;
 
 public class FxApp extends XShape {
 
