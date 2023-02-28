@@ -1,4 +1,7 @@
-package model;
+package model.Object;
+
+import model.utils.Couleur;
+import model.utils.Position;
 
 public abstract class Forme {
     private Position position;

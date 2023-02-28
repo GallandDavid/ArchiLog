@@ -1,4 +1,7 @@
-package model;
+package model.Object;
+
+import model.utils.Couleur;
+import model.utils.Position;
 
 public class PolygoneRegulier extends Forme{
     private int nb_cote;

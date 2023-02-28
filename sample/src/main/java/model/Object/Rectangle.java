@@ -1,4 +1,7 @@
-package model;
+package model.Object;
+
+import model.utils.Couleur;
+import model.utils.Position;
 
 public class Rectangle extends Forme{
 
