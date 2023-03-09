@@ -10,8 +10,7 @@ public class RectangleFx extends Rectangle {
     Group _grp = null;
 
 	public RectangleFx(double posX, double posY, double height, double width, Group grp) {
-		position(new Point2D.Double(posX, posY));
-		size(new Point2D.Double(width, height));
+		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height));
 		_grp = grp;
 		_grp.getChildren().add(_adapted);
 	}
