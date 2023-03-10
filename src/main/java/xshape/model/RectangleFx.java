@@ -6,11 +6,12 @@ import javafx.scene.paint.Color;
 
 public class RectangleFx extends Rectangle {
 
-	javafx.scene.shape.Rectangle _adapted = new javafx.scene.shape.Rectangle();
-    Group _grp = null;
+	javafx.scene.shape.Rectangle _adapted;
+    Group _grp;
 
 	public RectangleFx(double posX, double posY, double height, double width, Group grp) {
 		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height));
+		_adapted = new javafx.scene.shape.Rectangle();
 		_grp = grp;
 		_grp.getChildren().add(_adapted);
 	}

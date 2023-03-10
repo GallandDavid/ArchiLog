@@ -8,8 +8,11 @@ public class ShapeFactoryFx implements ShapeFactory {
         grp = root;
     }
     @Override
-    public Rectangle createRectangle(double posX, double posY, 
-    double height, double width) {
+    public Rectangle createRectangle(double posX, double posY, double height, double width) {
         return new RectangleFx(posX, posY, height, width, grp);
+    }
+    @Override
+    public ToolBar createToolBar() {
+        return new ToolBarFx();
     } 
 }

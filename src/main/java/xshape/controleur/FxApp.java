@@ -1,10 +1,12 @@
-package xshape.vue;
+package xshape.controleur;
 
-import xshape.controleur.XShape;
 import xshape.model.ShapeFactory;
 import xshape.model.ShapeFactoryFx;
+import xshape.model.ToolBar;
+import xshape.model.ToolBarFx;
+import xshape.vue.FxApplication;
 
-public class FxApp extends XShape {
+public class FxApp extends XShape{
 
     @Override
     protected ShapeFactory createFactory() {
@@ -12,7 +14,8 @@ public class FxApp extends XShape {
     }
     @Override
     public void run() {
-        draw();
+        
         FxApplication.launch(FxApplication.class);
+        draw();
     }
 }

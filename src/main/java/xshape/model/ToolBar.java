@@ -1,5 +1,11 @@
 package xshape.model;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class ToolBar extends Rectangle{
-    
+import javafx.scene.control.Button;
+
+public interface ToolBar{
+    Button rectangleButton();
+    ArrayList<?> buttons();
+	void draw();
 }

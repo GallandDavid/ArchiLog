@@ -8,4 +8,8 @@ public class ShapeFactoryAwt implements ShapeFactory {
     double height, double width) {
         return new RectangleAwt(posX, posY, height, width);
     }
+    @Override
+    public ToolBar createToolBar() {
+        return new ToolBarAwt();
+    }
 }

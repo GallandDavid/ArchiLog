@@ -15,11 +15,6 @@ public abstract class XShape {
     public abstract void run();
 
     private void createScene() {
-        Shape shape = _factory.createRectangle(100, 100, 50, 50);
-        Shape shape2 = _factory.createRectangle(250, 250, 75, 20);
-        shape.translate(new Point2D.Double(100, 50));
-        Shape[] tmp = { shape, shape2 };
-        _shapes = tmp;
     }
 
     public void draw() {
@@ -27,9 +22,9 @@ public abstract class XShape {
             _factory = createFactory();
             createScene();
         }
-
-        for (Shape s : _shapes)
-            s.draw();
+        if(_shapes != null)
+            for (Shape s : _shapes)
+                s.draw();
     }
 
 }
