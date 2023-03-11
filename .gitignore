@@ -25,3 +25,5 @@ hs_err_pid*
 pom.properties
 createdFiles.lst
 inputFiles.lst
+target
+.vscode
