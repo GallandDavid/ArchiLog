@@ -9,16 +9,18 @@ import xshape.model.ToolBar;
 public abstract class XShape {
     private ShapeFactory _factory = null;
     Shape[] _shapes = null;
-    private ToolBar _toolbar = null;
+    private ToolBar _toolBar = null;
 
     //method factory to delegate instanciation of Shapefactory to subclass
     protected abstract ShapeFactory createFactory();
+    //method factory to delegate instanciation of Shapefactory to subclass
+    protected abstract ToolBar createToolBar();
     //Handler to start the GUI
     public abstract void run();
 
     private void createScene() {
-        _shapes = null;
-        _shapes[0] = _factory.createToolBar();
+        Shape[] tmp = {};
+        _shapes = tmp;
     }
 
     public void draw() {
@@ -31,4 +33,15 @@ public abstract class XShape {
                 s.draw();
     }
 
+    protected ShapeFactory factory(){
+        return _factory;
+    }
+
+    protected ToolBar toolBar(){
+        return _toolBar;
+    }
+    
+    protected void toolBar(ToolBar tb){
+        this._toolBar = tb;
+    }
 }

@@ -12,6 +12,9 @@ import javax.swing.JFrame;
 
 import xshape.model.ShapeFactory;
 import xshape.model.ShapeFactoryAwt;
+import xshape.model.ToolBar;
+import xshape.model.Button;
+import xshape.model.ToolBarAwt;
 import xshape.vue.AwtContext;
 
 class GUIHelper {
@@ -46,6 +49,11 @@ public class AwtApp extends XShape {
     @Override
     protected ShapeFactory createFactory() {
         return new ShapeFactoryAwt();
+    }
+
+    @Override
+    protected ToolBar createToolBar() {
+        return new ToolBarAwt(400.0, 0.0, 100.0, 500.0, new Button(420.0,240.0,60.0,20.0,"Rectangle"));
     }
 
     @Override

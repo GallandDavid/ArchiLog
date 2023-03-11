@@ -1,7 +1,6 @@
 xshape/model/Rectangle.class
 xshape/controleur/GUIHelper.class
 xshape/App.class
-xshape/model/ButtonAwt.class
 xshape/controleur/AwtApp$JCanvas.class
 xshape/model/ShapeFactoryAwt.class
 xshape/controleur/AwtApp.class
@@ -15,7 +14,6 @@ xshape/controleur/XShape.class
 xshape/model/RectangleFx.class
 xshape/vue/AwtContext.class
 xshape/vue/FxApplication.class
-xshape/model/ButtonFx.class
 xshape/controleur/GUIHelper$1.class
 xshape/model/Button.class
 xshape/model/ToolBarFx.class
