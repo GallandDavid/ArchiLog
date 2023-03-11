@@ -7,19 +7,13 @@ import javafx.stage.Stage;
 import xshape.model.ToolBarFx;
 
 public class FxApplication extends Application {
-    ToolBar _toolbar = new ToolBarFx().toolBar();
     public static Group _root;
-
-    public ToolBar toolbar(ToolBar toolbar){
-        _toolbar = toolbar;
-        return _toolbar;
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("XShape JavaFx Rendering");
         
-        _root = new Group(_toolbar);
+        _root = new Group();
         Scene _scene = new Scene(_root, 500, 500);
         primaryStage.setScene(_scene);
         primaryStage.show();

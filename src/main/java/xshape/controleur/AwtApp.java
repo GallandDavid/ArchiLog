@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 
 import xshape.model.ShapeFactory;
 import xshape.model.ShapeFactoryAwt;
-import xshape.model.ToolBar;
 import xshape.vue.AwtContext;
 
 class GUIHelper {
@@ -23,18 +22,7 @@ class GUIHelper {
                 System.exit(0);
             }
         };
-        JMenuBar menuBar = new JMenuBar();
-        JMenuItem rectangleItem = new JMenuItem("Rectangle");
-        rectangleItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
-            }
-        });
         
-        menuBar.add(rectangleItem);
-        frame.setJMenuBar(menuBar);
         frame.addWindowListener(wa);
         frame.getContentPane().add(component);
         frame.pack();

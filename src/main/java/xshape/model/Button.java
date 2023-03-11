@@ -1,22 +1,24 @@
 package xshape.model;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 
-public abstract class ToolBar implements Shape{
+
+public abstract class Button implements Shape{
     private Point2D _pos;
     private Point2D _size;
-    private ArrayList<Button> buttons = new ArrayList<>();
+    private String _title;
     
-    public ToolBar(){
-        _pos  = new Point2D.Double(400, 0);
-        _size = new Point2D.Double(100, 500);
+    public Button(){
+        _pos  = new Point2D.Double(0, 0);
+        _size = new Point2D.Double(1, 1);
+        _title = "Button";
     }
 
-    public ToolBar(Point2D pos, Point2D size, Button rect_button){
+    public Button(Point2D pos, Point2D size, String title){
         this._pos  = pos;
         this._size = size;
-        buttons.add(rect_button);
+        this._title = title;
     }
+
     @Override
     public Point2D size() {
         return (Point2D) _size.clone();
@@ -44,5 +46,9 @@ public abstract class ToolBar implements Shape{
         _pos.setLocation(_pos.getX() + vec.getX(),
                 _pos.getY() + vec.getY());
         return this;
+    }
+
+    public String title(){
+        return _title;
     }
 }

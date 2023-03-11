@@ -4,10 +4,12 @@ import java.awt.geom.Point2D;
 
 import xshape.model.Shape;
 import xshape.model.ShapeFactory;
+import xshape.model.ToolBar;
 
 public abstract class XShape {
     private ShapeFactory _factory = null;
     Shape[] _shapes = null;
+    private ToolBar _toolbar = null;
 
     //method factory to delegate instanciation of Shapefactory to subclass
     protected abstract ShapeFactory createFactory();
@@ -15,6 +17,8 @@ public abstract class XShape {
     public abstract void run();
 
     private void createScene() {
+        _shapes = null;
+        _shapes[0] = _factory.createToolBar();
     }
 
     public void draw() {

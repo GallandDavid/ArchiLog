@@ -1,15 +1,6 @@
 package xshape.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javafx.scene.control.Button;
-
-public class ToolBarAwt extends ToolBar{
-
-    public ToolBarAwt(){
-        
-    }
+public class ButtonFx extends Button{
 
     @Override
     public void draw() {
