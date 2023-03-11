@@ -6,6 +6,7 @@ xshape/model/ShapeFactoryAwt.class
 xshape/controleur/AwtApp.class
 xshape/model/ToolBar.class
 xshape/model/ShapeFactory.class
+xshape/model/ToolBarAwt$1.class
 xshape/model/ShapeFactoryFx.class
 xshape/model/Shape.class
 xshape/controleur/FxApp.class

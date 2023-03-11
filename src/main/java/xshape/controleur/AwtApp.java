@@ -16,6 +16,7 @@ import xshape.model.ToolBar;
 import xshape.model.Button;
 import xshape.model.ToolBarAwt;
 import xshape.vue.AwtContext;
+import xshape.controleur.AwtApp.JCanvas;
 
 class GUIHelper {
     public static void showOnFrame(JComponent component, String frameName) {
@@ -25,6 +26,10 @@ class GUIHelper {
                 System.exit(0);
             }
         };
+        JCanvas jc = (JCanvas) component;
+        XShape xshape = jc._xshape;
+        ToolBarAwt toolbar = (ToolBarAwt) xshape.toolBar();
+        frame.setJMenuBar(toolbar.draw());
         
         frame.addWindowListener(wa);
         frame.getContentPane().add(component);
@@ -58,6 +63,7 @@ public class AwtApp extends XShape {
 
     @Override
     public void run() {
+        super.toolBar(createToolBar());
         JCanvas jc = new JCanvas(this);
         jc.setBackground(Color.WHITE);
         jc.setPreferredSize(new Dimension(500, 500));
