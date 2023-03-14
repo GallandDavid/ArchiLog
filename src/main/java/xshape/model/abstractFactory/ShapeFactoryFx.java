@@ -1,5 +1,7 @@
-package xshape.model;
+package xshape.model.abstractFactory;
 
+import xshape.model.Rectangle;
+import xshape.model.RectangleFx;
 import javafx.scene.Group;
 
 public class ShapeFactoryFx implements ShapeFactory {

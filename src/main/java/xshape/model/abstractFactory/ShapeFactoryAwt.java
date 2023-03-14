@@ -1,4 +1,7 @@
-package xshape.model;
+package xshape.model.abstractFactory;
+
+import xshape.model.Rectangle;
+import xshape.model.RectangleAwt;
 
 public class ShapeFactoryAwt implements ShapeFactory {
     public ShapeFactoryAwt() {
