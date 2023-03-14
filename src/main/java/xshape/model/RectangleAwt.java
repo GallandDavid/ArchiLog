@@ -9,8 +9,7 @@ import java.awt.*;
 public class RectangleAwt extends Rectangle {
 
 	public RectangleAwt(double posX, double posY, double height, double width) {
-		super.position(new Point2D.Double(posX, posY));
-		super.size(new Point2D.Double(width, height));
+		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height));
 	}
 
 	@Override

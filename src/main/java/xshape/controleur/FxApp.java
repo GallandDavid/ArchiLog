@@ -1,8 +1,10 @@
-package xshape.vue;
+package xshape.controleur;
 
-import xshape.controleur.XShape;
-import xshape.model.ShapeFactory;
-import xshape.model.ShapeFactoryFx;
+import xshape.model.abstractFactory.*;
+import xshape.model.ToolBar;
+import xshape.model.ToolBarFx;
+import xshape.model.Button;
+import xshape.vue.FxApplication;
 
 public class FxApp extends XShape {
 
@@ -10,9 +12,10 @@ public class FxApp extends XShape {
     protected ShapeFactory createFactory() {
         return new ShapeFactoryFx(FxApplication._root);
     }
+
     @Override
     public void run() {
-        draw();
         FxApplication.launch(FxApplication.class);
+        draw();
     }
 }

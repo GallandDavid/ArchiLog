@@ -1,9 +1,8 @@
 package xshape.controleur;
 
-import java.awt.geom.Point2D;
 
 import xshape.model.Shape;
-import xshape.model.ShapeFactory;
+import xshape.model.abstractFactory.ShapeFactory;
 
 public abstract class XShape {
     private ShapeFactory _factory = null;
@@ -15,10 +14,7 @@ public abstract class XShape {
     public abstract void run();
 
     private void createScene() {
-        Shape shape = _factory.createRectangle(100, 100, 50, 50);
-        Shape shape2 = _factory.createRectangle(250, 250, 75, 20);
-        shape.translate(new Point2D.Double(100, 50));
-        Shape[] tmp = { shape, shape2 };
+        Shape[] tmp = {};
         _shapes = tmp;
     }
 
@@ -27,9 +23,12 @@ public abstract class XShape {
             _factory = createFactory();
             createScene();
         }
-
-        for (Shape s : _shapes)
-            s.draw();
+        if(_shapes != null)
+            for (Shape s : _shapes)
+                s.draw();
     }
 
+    protected ShapeFactory factory(){
+        return _factory;
+    }
 }

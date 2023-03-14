@@ -3,9 +3,19 @@ package xshape.model;
 import java.awt.geom.Point2D;
 
 public abstract class Rectangle implements Shape {
-    private Point2D _pos  = new Point2D.Double(0, 0);
-    private Point2D _size = new Point2D.Double(1, 1);
+    private Point2D _pos;
+    private Point2D _size;
     
+    public Rectangle(){
+        _pos  = new Point2D.Double(0, 0);
+        _size = new Point2D.Double(1, 1);
+    }
+
+    public Rectangle(Point2D pos, Point2D size){
+        this._pos  = pos;
+        this._size = size;
+    }
+
     @Override
     public Point2D size() {
         return (Point2D) _size.clone();
