@@ -1,10 +1,8 @@
 package xshape.model;
 
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import xshape.controleur.XShape;
 import xshape.observer.Iobserver;
 
 public class ToolBarAwt extends ToolBar {
@@ -33,8 +31,6 @@ public class ToolBarAwt extends ToolBar {
 
     @Override
     public void notifyObservers(String code) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'notifyObservers'");
     }
 
 }

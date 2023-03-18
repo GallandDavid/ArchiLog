@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
 import javafx.stage.Stage;
 import xshape.controleur.FxApp;
-import xshape.model.ToolBarFx;
 
 public class FxApplication extends Application   {
     public static Group _root;

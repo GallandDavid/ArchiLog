@@ -5,7 +5,6 @@ import xshape.observer.Iobserver;
 import xshape.model.ToolBar;
 import xshape.model.ToolBarFx;
 import xshape.model.Builder.ToolBarDirector;
-import xshape.model.Button;
 import xshape.vue.FxApplication;
 
 public class FxApp extends XShape implements Iobserver, ToolBarDirector {
