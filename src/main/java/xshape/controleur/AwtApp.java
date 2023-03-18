@@ -69,7 +69,7 @@ public class AwtApp extends XShape {
                 case "rect selected":
                 System.out.println("ok");
                 xshape.model.Shape rect = (xshape.model.Shape) new RectangleAwt(X,Y,true);
-                    _xshape._shapes.add(rect);
+                    /*_xshape._shapes.add(rect);*/
                     break;
                 default:
                     break;

@@ -11,7 +11,7 @@ import xshape.model.abstractFactory.ShapeFactory;
 
 public abstract class XShape implements CommandHistory{
     private ShapeFactory _factory = null;
-    ArrayList<Shape> _shapes = new ArrayList<>();
+    Shape[] _shapes = null;
     ArrayList<ICommand> _history = new ArrayList<>();
 
     @Override
@@ -25,6 +25,9 @@ public abstract class XShape implements CommandHistory{
     public abstract void run();
 
     private void createScene() {
+        Shape rect = _factory.createRectangle(15, 15, 50, 50);
+        Shape[] tmp = {rect};
+        _shapes = tmp;
     }
 
     public void draw() {
@@ -32,9 +35,13 @@ public abstract class XShape implements CommandHistory{
             _factory = createFactory();
             createScene();
         }
-        if(_shapes != null)
-            for (Shape s : _shapes)
+        if(_shapes != null){
+            System.out.println("ok");
+            for (Shape s : _shapes){
+                System.out.println("ok");
                 s.draw();
+            }
+        }
     }
 
     protected ShapeFactory factory(){
