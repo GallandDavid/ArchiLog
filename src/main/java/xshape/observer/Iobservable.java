@@ -6,4 +6,5 @@ public interface Iobservable {
     void unRegisterObserver(Iobserver obs);
 
     void notifyObservers(String code);
+    void notifyObservers(String code, int X, int Y);
 }

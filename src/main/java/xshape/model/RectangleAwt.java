@@ -8,8 +8,28 @@ import java.awt.*;
 
 public class RectangleAwt extends Rectangle {
 
-	public RectangleAwt(double posX, double posY, double height, double width) {
+	public RectangleAwt() {
+		super();
+	}
+
+    public RectangleAwt(boolean selected) {
+		super(selected);
+	}
+
+    public RectangleAwt(double posX, double posY) {
+		super(new Point2D.Double(posX, posY));
+	}
+
+    public RectangleAwt(double posX, double posY, boolean selected) {
+		super(new Point2D.Double(posX, posY),selected);
+	}
+
+    public RectangleAwt(double posX, double posY, double height, double width) {
 		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height));
+	}
+
+    public RectangleAwt(double posX, double posY, double height, double width, boolean selected) {
+		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected);
 	}
 
 	@Override

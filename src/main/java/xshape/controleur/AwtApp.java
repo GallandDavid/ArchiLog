@@ -8,6 +8,7 @@ import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.abstractFactory.ShapeFactoryAwt;
 import xshape.observer.Iobserver;
 import xshape.vue.AwtContext;
+import xshape.model.RectangleAwt;
 import xshape.model.ToolBar;
 import xshape.model.ToolBarAwt;
 import xshape.model.Builder.ToolBarDirector;
@@ -61,6 +62,20 @@ public class AwtApp extends XShape {
         public Object getToolBar() {
             return _toolBar.getProduct();
         }
+
+        @Override
+        public void update(String code, int X, int Y) {
+            switch(code){
+                case "rect selected":
+                System.out.println("ok");
+                xshape.model.Shape rect = (xshape.model.Shape) new RectangleAwt(X,Y,true);
+                    _xshape._shapes.add(rect);
+                    break;
+                default:
+                    break;
+            }
+            _xshape.draw();
+        }
     }
 
     @Override
@@ -74,6 +89,10 @@ public class AwtApp extends XShape {
         jc.setBackground(Color.WHITE);
         jc.setPreferredSize(new Dimension(500, 500));
         GUIHelper.showOnFrame(jc, "XShape Swing/AWT Rendering");
+    }
+
+    @Override
+    public void pop() {
     }
 
 }

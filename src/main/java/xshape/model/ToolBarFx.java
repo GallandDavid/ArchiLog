@@ -39,10 +39,15 @@ public class ToolBarFx extends ToolBar {
 
   @Override
   public void notifyObservers(String code) {
-    switch(code){
-      case "new rect/follow mouse/place at right click":
-        _obs.update("new rect/follow mouse/place at right click");
-    }
+    
   }
 
+
+
+  @Override
+  public void notifyObservers(String code, int X, int Y) {
+    for (Iobserver obs : _obs) {
+      obs.update(code,X, Y);
+    }
+  }
 }

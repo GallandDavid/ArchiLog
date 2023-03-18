@@ -1,19 +1,51 @@
 package xshape.model;
 
 import java.awt.geom.Point2D;
+import java.util.UUID;
 
 public abstract class Rectangle implements Shape {
+    private final UUID ID = UUID.randomUUID();
     private Point2D _pos;
     private Point2D _size;
+    private boolean _selected;
+    private Point2D _default_pos = new Point2D.Double(0, 0);
+    private Point2D _default_size = new Point2D.Double(1, 1);
+    
     
     public Rectangle(){
-        _pos  = new Point2D.Double(0, 0);
-        _size = new Point2D.Double(1, 1);
+        _pos  = _default_pos;
+        _size = _default_size;
+        _selected = false;
+    }
+
+    public Rectangle(boolean selected){
+        _pos  = _default_pos;
+        _size = _default_size;
+        _selected = selected;
+    }
+
+    public Rectangle(Point2D pos){
+        _pos  = pos;
+        _size = _default_pos;
+        _selected = false;
+    }
+
+    public Rectangle(Point2D pos, boolean selected){
+        _pos  = pos;
+        _size = _default_pos;
+        _selected = selected;
     }
 
     public Rectangle(Point2D pos, Point2D size){
-        this._pos  = pos;
-        this._size = size;
+        _pos  = pos;
+        _size = size;
+        _selected = false;
+    }
+
+    public Rectangle(Point2D pos, Point2D size, boolean selected){
+        _pos  = pos;
+        _size = size;
+        _selected = selected;
     }
 
     @Override
@@ -43,5 +75,23 @@ public abstract class Rectangle implements Shape {
         _pos.setLocation(_pos.getX() + vec.getX(),
                 _pos.getY() + vec.getY());
         return this;
+    }
+
+    @Override
+    public String getId(){
+        return ID.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        Rectangle object = (Rectangle) obj;
+        if(object.getId() == this.getId())
+            return true;
+        return false;
+    }
+
+    @Override
+    public boolean isSelected(){
+        return _selected;
     }
 }

@@ -39,4 +39,12 @@ public class FxApp extends XShape implements Iobserver, ToolBarDirector {
     public Object getToolBar() {
         return _toolbar.getProduct();
     }
+
+    @Override
+    public void pop() {
+    }
+
+    @Override
+    public void update(String code, int X, int Y) {
+    }
 }
