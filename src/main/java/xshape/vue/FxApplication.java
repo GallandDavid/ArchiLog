@@ -11,10 +11,10 @@ import javafx.stage.Stage;
 import xshape.controleur.FxApp;
 
 public class FxApplication extends Application   {
-    public static Group _root;
+    public static Group _root = new Group();
     private ToolBar _toolBar;
 
-    /* 
+     
     @Override
     public void init(){
         try {
@@ -32,14 +32,13 @@ public class FxApplication extends Application   {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }*/
+    }
 
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("XShape JavaFx Rendering");
-
-        _root = new Group(/*_toolBar*/);
+        _root.getChildren().add(_toolBar);
         Scene _scene = new Scene(_root, 500, 500);
         primaryStage.setScene(_scene);
         primaryStage.show();

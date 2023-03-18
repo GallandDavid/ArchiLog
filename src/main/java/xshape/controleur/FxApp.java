@@ -18,7 +18,7 @@ public class FxApp extends XShape implements Iobserver, ToolBarDirector {
     @Override
     public void run() {
         draw();
-        FxApplication.launch(FxApplication.class/*, FxApp.class.getName()*/);
+        FxApplication.launch(FxApplication.class, FxApp.class.getName());
         
     }
 
