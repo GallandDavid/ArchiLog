@@ -5,12 +5,12 @@ import xshape.model.RectangleFx;
 import javafx.scene.Group;
 
 public class ShapeFactoryFx implements ShapeFactory {
-    Group grp;
+    Group _grp = null;
     public ShapeFactoryFx(Group root) {
-        grp = root;
+        _grp = root;
     }
     @Override
     public Rectangle createRectangle(double posX, double posY, double height, double width) {
-        return new RectangleFx(posX, posY, height, width, grp);
+        return new RectangleFx(posX, posY, height, width, _grp);
     }
 }

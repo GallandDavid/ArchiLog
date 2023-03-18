@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import xshape.Command.CommandHistory;
 import xshape.Command.ICommand;
-import xshape.model.Rectangle;
 import xshape.model.Shape;
 import xshape.model.abstractFactory.ShapeFactory;
 
@@ -25,7 +24,7 @@ public abstract class XShape implements CommandHistory{
     public abstract void run();
 
     private void createScene() {
-        Shape rect = _factory.createRectangle(15, 15, 50, 50);
+        Shape rect = (Shape) _factory.createRectangle(15, 15, 50, 50);
         Shape[] tmp = {rect};
         _shapes = tmp;
     }
