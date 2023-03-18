@@ -5,7 +5,7 @@ import xshape.model.RectangleFx;
 import javafx.scene.Group;
 
 public class ShapeFactoryFx implements ShapeFactory {
-    Group _grp = null;
+    Group _grp;
     public ShapeFactoryFx(Group root) {
         _grp = root;
     }
