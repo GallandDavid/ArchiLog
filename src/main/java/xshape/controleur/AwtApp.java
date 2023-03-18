@@ -2,21 +2,15 @@ package xshape.controleur;
 
 import java.awt.*;
 import javax.swing.*;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-
 import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.abstractFactory.ShapeFactoryAwt;
+import xshape.observer.Iobserver;
+import xshape.vue.AwtContext;
 import xshape.model.ToolBar;
-import xshape.model.Button;
 import xshape.model.ToolBarAwt;
 import xshape.model.Builder.ToolBarDirector;
-import xshape.vue.AwtContext;
 import xshape.controleur.AwtApp.JCanvas;
 
 class GUIHelper {
@@ -28,8 +22,7 @@ class GUIHelper {
             }
         };
         JCanvas jc = (JCanvas) component;
-        ToolBar tb = jc._toolBar;
-        frame.setJMenuBar((JMenuBar) tb.getProduct());
+        frame.setJMenuBar((JMenuBar) jc.getToolBar());
 
         frame.addWindowListener(wa);
         frame.getContentPane().add(component);
@@ -39,12 +32,12 @@ class GUIHelper {
 }
 
 public class AwtApp extends XShape {
-    class JCanvas extends JPanel implements ToolBarDirector {
+    class JCanvas extends JPanel implements ToolBarDirector, Iobserver {
         XShape _xshape = null;
         protected ToolBar _toolBar = null;
 
         public JCanvas(XShape xs) {
-            _toolBar = new ToolBarAwt();
+            _toolBar = new ToolBarAwt(this);
             _xshape = xs;
             createToolBar();
         }
@@ -58,6 +51,15 @@ public class AwtApp extends XShape {
         @Override
         public void createToolBar() {
             _toolBar.makeProduct();
+        }
+
+        @Override
+        public void update(String code) {
+        }
+
+        @Override
+        public Object getToolBar() {
+            return _toolBar.getProduct();
         }
     }
 

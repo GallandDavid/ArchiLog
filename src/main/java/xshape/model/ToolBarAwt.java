@@ -4,10 +4,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import xshape.controleur.XShape;
+import xshape.observer.Iobserver;
+
 public class ToolBarAwt extends ToolBar {
 
-    public ToolBarAwt() {
-
+    public ToolBarAwt(Iobserver obs) {
+        super(obs);
     }
 
     @Override
@@ -26,6 +29,12 @@ public class ToolBarAwt extends ToolBar {
         JMenuBar mb = (JMenuBar) getProduct();
         mb.add(new JMenuItem(getRectButton().title()));
         setProduct(mb);
+    }
+
+    @Override
+    public void notifyObservers(String code) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'notifyObservers'");
     }
 
 }

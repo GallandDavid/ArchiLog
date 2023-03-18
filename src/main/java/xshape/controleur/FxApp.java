@@ -1,12 +1,15 @@
 package xshape.controleur;
 
 import xshape.model.abstractFactory.*;
+import xshape.observer.Iobserver;
 import xshape.model.ToolBar;
 import xshape.model.ToolBarFx;
+import xshape.model.Builder.ToolBarDirector;
 import xshape.model.Button;
 import xshape.vue.FxApplication;
 
-public class FxApp extends XShape {
+public class FxApp extends XShape implements Iobserver, ToolBarDirector {
+    ToolBar _toolbar = new ToolBarFx(this);
 
     @Override
     protected ShapeFactory createFactory() {
@@ -15,7 +18,26 @@ public class FxApp extends XShape {
 
     @Override
     public void run() {
-        FxApplication.launch(FxApplication.class);
+        FxApplication.launch(FxApplication.class, FxApp.class.getName());
         draw();
+    }
+
+
+    @Override
+    public void createToolBar() {
+        _toolbar.makeProduct();
+    }
+
+    @Override
+    public void update(String code) {
+        switch(code){
+            case "new rect/follow mouse/place at right click":
+
+        }
+    }
+
+    @Override
+    public Object getToolBar() {
+        return _toolbar.getProduct();
     }
 }
