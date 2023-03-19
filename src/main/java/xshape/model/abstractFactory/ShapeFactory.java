@@ -1,14 +1,15 @@
 package xshape.model.abstractFactory;
 
 import xshape.model.Rectangle;
+import xshape.observer.Iobserver;
 
 public interface ShapeFactory {
-    Rectangle createRectangle();
-    Rectangle createRectangle(boolean selected);
-    Rectangle createRectangle(double posX, double posY);
-    Rectangle createRectangle(double posX, double posY, boolean selected);
-    Rectangle createRectangle(double posX, double posY, double height, double width);
-    Rectangle createRectangle(double posX, double posY, double height, double width, boolean selected);
+    Rectangle createRectangle(Iobserver obs);
+    Rectangle createRectangle(boolean selected, Iobserver obs);
+    Rectangle createRectangle(double posX, double posY, Iobserver obs);
+    Rectangle createRectangle(double posX, double posY, boolean selected, Iobserver obs);
+    Rectangle createRectangle(double posX, double posY, double height, double width, Iobserver obs);
+    Rectangle createRectangle(double posX, double posY, double height, double width, boolean selected, Iobserver obs);
 
 }
 

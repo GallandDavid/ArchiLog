@@ -6,130 +6,63 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import xshape.observer.Iobserver;
 
-public class RectangleFx extends Rectangle {
+public class RectangleFx extends Rectangle{
 
 	javafx.scene.shape.Rectangle _adapted;
     Group _grp;
+    
 
-	public RectangleFx( Group grp) {
-		super();
-		_adapted = new javafx.scene.shape.Rectangle();
-		_grp = grp;
-		_grp.getChildren().add(_adapted);
-		EventHandler<MouseEvent> drag_event = new EventHandler<MouseEvent>() { 
-			@Override 
-			public void handle(MouseEvent e) { 
-				position(new Point2D.Double(e.getX(), e.getY()));
-				draw();
-			} 
-		 };  
-		if(isSelected())
-			_adapted.setOnMouseMoved(drag_event);
-			_adapted.setOnMouseReleased(e -> {
-				_selected = false;
-				_adapted.removeEventFilter(MouseEvent.MOUSE_MOVED, drag_event);
-			});
+	public RectangleFx( Group grp, Iobserver obs) {
+		this(_pos_x, _pos_y, _size_x, _size_y, false, grp, obs);
 	}
 
-    public RectangleFx(boolean selected, Group grp) {
-		super(selected);
-		_adapted = new javafx.scene.shape.Rectangle();
-		_grp = grp;
-		_grp.getChildren().add(_adapted);
-		EventHandler<MouseEvent> drag_event = new EventHandler<MouseEvent>() { 
-			@Override 
-			public void handle(MouseEvent e) { 
-				position(new Point2D.Double(e.getX(), e.getY()));
-				draw();
-			} 
-		 };  
-		if(isSelected())
-			_adapted.setOnMouseMoved(drag_event);
-			_adapted.setOnMouseReleased(e -> {
-				_selected = false;
-				_adapted.removeEventFilter(MouseEvent.MOUSE_MOVED, drag_event);
-			});
+    public RectangleFx(boolean selected, Group grp, Iobserver obs) {
+		this(_pos_x, _pos_y, _size_x, _size_y, selected, grp, obs);
 	}
 
-    public RectangleFx(double posX, double posY, Group grp) {
-		super(new Point2D.Double(posX, posY));
-		_adapted = new javafx.scene.shape.Rectangle();
-		_grp = grp;
-		_grp.getChildren().add(_adapted);
-		EventHandler<MouseEvent> drag_event = new EventHandler<MouseEvent>() { 
-			@Override 
-			public void handle(MouseEvent e) { 
-				position(new Point2D.Double(e.getX(), e.getY()));
-				draw();
-			} 
-		 };  
-		if(isSelected())
-			_adapted.setOnMouseMoved(drag_event);
-			_adapted.setOnMouseReleased(e -> {
-				_selected = false;
-				_adapted.removeEventFilter(MouseEvent.MOUSE_MOVED, drag_event);
-			});
+    public RectangleFx(double posX, double posY, Group grp, Iobserver obs) {
+		this(posX, posY, _size_x, _size_y, false, grp, obs);
 	}
 
-    public RectangleFx(double posX, double posY, boolean selected, Group grp) {
-		super(new Point2D.Double(posX, posY),selected);
-		_adapted = new javafx.scene.shape.Rectangle();
-		_grp = grp;
-		_grp.getChildren().add(_adapted);
-		EventHandler<MouseEvent> drag_event = new EventHandler<MouseEvent>() { 
-			@Override 
-			public void handle(MouseEvent e) { 
-				position(new Point2D.Double(e.getX(), e.getY()));
-				draw();
-			} 
-		 };  
-		if(isSelected())
-			_adapted.setOnMouseMoved(drag_event);
-			_adapted.setOnMouseReleased(e -> {
-				_selected = false;
-				_adapted.removeEventFilter(MouseEvent.MOUSE_MOVED, drag_event);
-			});
+    public RectangleFx(double posX, double posY, boolean selected, Group grp, Iobserver obs) {
+		this(posX, posY, _size_x, _size_y, selected, grp, obs);
 	}
 
-    public RectangleFx(double posX, double posY, double height, double width, Group grp) {
-		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height));
-		_adapted = new javafx.scene.shape.Rectangle();
-		_grp = grp;
-		_grp.getChildren().add(_adapted);
-		EventHandler<MouseEvent> drag_event = new EventHandler<MouseEvent>() { 
-			@Override 
-			public void handle(MouseEvent e) { 
-				position(new Point2D.Double(e.getX(), e.getY()));
-				draw();
-			} 
-		 };  
-		if(isSelected())
-			_adapted.setOnMouseMoved(drag_event);
-			_adapted.setOnMouseReleased(e -> {
-				_selected = false;
-				_adapted.removeEventFilter(MouseEvent.MOUSE_MOVED, drag_event);
-			});
+    public RectangleFx(double posX, double posY, double height, double width, Group grp, Iobserver obs) {
+		this(posX, posY, height, width, false, grp, obs);
 	}
 
-    public RectangleFx(double posX, double posY, double height, double width, boolean selected, Group grp) {
-		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected);
+    public RectangleFx(double posX, double posY, double height, double width, boolean selected, Group grp, Iobserver obs) {
+		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected, obs);
 		_adapted = new javafx.scene.shape.Rectangle();
+		_adapted.setOnMouseDragged(new EventHandler <MouseEvent>()
+        {
+            public void handle(MouseEvent event)
+            {
+              notifyObservers("obj selected drag", event.getX(), event.getY(), getId());
+            }
+        });
+    	_adapted.setOnMousePressed(new EventHandler <MouseEvent>()
+        {
+            public void handle(MouseEvent event)
+            {
+                notifyObservers("obj selected", event.getX(), event.getY(), getId());
+                event.consume();
+            }
+        });
+ 
+    	_adapted.setOnMouseReleased(new EventHandler <MouseEvent>()
+        {
+            public void handle(MouseEvent event)
+            {
+              notifyObservers("obj select place", event.getX(), event.getY(), getId());
+              event.consume();
+            }
+        });
 		_grp = grp;
 		_grp.getChildren().add(_adapted);
-		EventHandler<MouseEvent> drag_event = new EventHandler<MouseEvent>() { 
-			@Override 
-			public void handle(MouseEvent e) { 
-				position(new Point2D.Double(e.getX(), e.getY()));
-				draw();
-			} 
-		 };  
-		if(isSelected())
-			_adapted.setOnMouseMoved(drag_event);
-			_adapted.setOnMouseReleased(e -> {
-				_selected = false;
-				_adapted.removeEventFilter(MouseEvent.MOUSE_MOVED, drag_event);
-			});
 	}
 
 	@Override

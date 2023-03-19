@@ -1,7 +1,6 @@
 package xshape;
 
 import xshape.controleur.AwtApp;
-import xshape.controleur.FxApp;
 import xshape.controleur.XShape;
 import xshape.vue.FxApplication;
 

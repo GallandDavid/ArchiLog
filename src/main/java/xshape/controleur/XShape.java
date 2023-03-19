@@ -7,8 +7,10 @@ import xshape.Command.CommandHistory;
 import xshape.Command.ICommand;
 import xshape.model.Shape;
 import xshape.model.abstractFactory.ShapeFactory;
+import xshape.observer.Iobserver;
 
-public abstract class XShape implements CommandHistory{
+public abstract class XShape implements CommandHistory, Iobserver{
+    Shape selected_item = null;
     private ShapeFactory _factory = null;
     Shape[] _shapes = null;
     ArrayList<ICommand> _history = new ArrayList<>();
@@ -24,7 +26,7 @@ public abstract class XShape implements CommandHistory{
     public abstract void run();
 
     private void createScene() {
-        addShape((Shape) _factory.createRectangle(15, 15, 50, 50));
+        addShape((Shape) _factory.createRectangle(15, 15, 50, 50, this));
     }
 
     public void draw() {
@@ -37,6 +39,8 @@ public abstract class XShape implements CommandHistory{
                 s.draw();
             }
         }
+        if(selected_item != null)
+            selected_item.draw();
     }
 
     protected ShapeFactory factory(){
@@ -54,5 +58,17 @@ public abstract class XShape implements CommandHistory{
         }
         tmp[tmp.length - 1] = shape;
         _shapes = tmp;
+    }
+
+    public void addSelectedShape(Shape shape){
+        selected_item = shape;
+    }
+
+    public Shape selectShape(String ref){
+        for (Shape shape : _shapes) {
+            if(shape.getId().equals(ref))
+                return shape;
+        }
+        return null;
     }
 }

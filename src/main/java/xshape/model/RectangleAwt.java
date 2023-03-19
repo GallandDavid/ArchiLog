@@ -2,34 +2,35 @@ package xshape.model;
 
 import java.awt.geom.Point2D;
 
+import xshape.observer.Iobserver;
 import xshape.vue.AwtContext;
 
 import java.awt.*;
 
 public class RectangleAwt extends Rectangle {
 
-	public RectangleAwt() {
-		super();
+	public RectangleAwt(Iobserver obs) {
+		this(_pos_x, _pos_y, _size_x, _size_y, false, obs);
 	}
 
-    public RectangleAwt(boolean selected) {
-		super(selected);
+    public RectangleAwt(boolean selected, Iobserver obs) {
+		this(_pos_x, _pos_y, _size_x, _size_y, selected, obs);
 	}
 
-    public RectangleAwt(double posX, double posY) {
-		super(new Point2D.Double(posX, posY));
+    public RectangleAwt(double posX, double posY, Iobserver obs) {
+		this(posX, posY, _size_x, _size_y, false, obs);
 	}
 
-    public RectangleAwt(double posX, double posY, boolean selected) {
-		super(new Point2D.Double(posX, posY),selected);
+    public RectangleAwt(double posX, double posY, boolean selected, Iobserver obs) {
+		this(posX, posY, _size_x, _size_y, selected, obs);
 	}
 
-    public RectangleAwt(double posX, double posY, double height, double width) {
-		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height));
+    public RectangleAwt(double posX, double posY, double height, double width, Iobserver obs) {
+		this(posX, posY, height, width, false, obs);
 	}
 
-    public RectangleAwt(double posX, double posY, double height, double width, boolean selected) {
-		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected);
+    public RectangleAwt(double posX, double posY, double height, double width, boolean selected, Iobserver obs) {
+		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected, obs);
 	}
 
 	@Override

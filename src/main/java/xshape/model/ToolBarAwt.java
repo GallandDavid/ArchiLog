@@ -70,4 +70,8 @@ public class ToolBarAwt extends ToolBar {
     public void notifyObservers(String code, double X, double Y) {
     }
 
+    @Override
+    public void notifyObservers(String code, double X, double Y, String ref) {
+    }
+
 }

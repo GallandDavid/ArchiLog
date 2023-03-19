@@ -2,6 +2,7 @@ package xshape.model.abstractFactory;
 
 import xshape.model.Rectangle;
 import xshape.model.RectangleFx;
+import xshape.observer.Iobserver;
 import javafx.scene.Group;
 
 public class ShapeFactoryFx implements ShapeFactory {
@@ -11,32 +12,32 @@ public class ShapeFactoryFx implements ShapeFactory {
     }
 
     @Override
-    public Rectangle createRectangle() {
-        return new RectangleFx(_grp);
+    public Rectangle createRectangle(Iobserver obs) {
+        return new RectangleFx(_grp, obs);
     }
     
     @Override
-    public Rectangle createRectangle(boolean selected) {
-        return new RectangleFx(selected, _grp);
+    public Rectangle createRectangle(boolean selected, Iobserver obs) {
+        return new RectangleFx(selected, _grp, obs);
     }
     
     @Override
-    public Rectangle createRectangle(double posX, double posY) {
-        return new RectangleFx(posX, posY, _grp);
+    public Rectangle createRectangle(double posX, double posY, Iobserver obs) {
+        return new RectangleFx(posX, posY, _grp, obs);
     }
     
     @Override
-    public Rectangle createRectangle(double posX, double posY, boolean selected) {
-        return new RectangleFx(posX, posY, selected, _grp);
+    public Rectangle createRectangle(double posX, double posY, boolean selected, Iobserver obs) {
+        return new RectangleFx(posX, posY, selected, _grp, obs);
     }
 
     @Override
-    public Rectangle createRectangle(double posX, double posY, double height, double width) {
-        return new RectangleFx(posX, posY, height, width, _grp);
+    public Rectangle createRectangle(double posX, double posY, double height, double width, Iobserver obs) {
+        return new RectangleFx(posX, posY, height, width, _grp, obs);
     }
 
     @Override
-    public Rectangle createRectangle(double posX, double posY, double height, double width, boolean selected) {
-        return new RectangleFx(posX, posY, height, width, selected, _grp);
+    public Rectangle createRectangle(double posX, double posY, double height, double width, boolean selected, Iobserver obs) {
+        return new RectangleFx(posX, posY, height, width, selected, _grp, obs);
     }
 }

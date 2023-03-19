@@ -1,48 +1,27 @@
 package xshape.model;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.UUID;
 
-public abstract class Rectangle implements Shape {
+import xshape.observer.Iobservable;
+import xshape.observer.Iobserver;
+
+public abstract class Rectangle implements Shape,Iobservable {
+
+	ArrayList<Iobserver> _observers = new ArrayList<>();
     private final UUID ID = UUID.randomUUID();
     private Point2D _pos;
     private Point2D _size;
     protected boolean _selected;
-    private Point2D _default_pos = new Point2D.Double(200, 200);
-    private Point2D _default_size = new Point2D.Double(100, 100);
+    protected static double _pos_x = 200;
+    protected static double _pos_y = 200;
+    protected static double _size_x = 100;
+    protected static double _size_y = 100;
     
-    
-    public Rectangle(){
-        _pos  = _default_pos;
-        _size = _default_size;
-        _selected = false;
-    }
 
-    public Rectangle(boolean selected){
-        _pos  = _default_pos;
-        _size = _default_size;
-        _selected = selected;
-    }
-
-    public Rectangle(Point2D pos){
-        _pos  = pos;
-        _size = _default_size;
-        _selected = false;
-    }
-
-    public Rectangle(Point2D pos, boolean selected){
-        _pos  = pos;
-        _size = _default_size;
-        _selected = selected;
-    }
-
-    public Rectangle(Point2D pos, Point2D size){
-        _pos  = pos;
-        _size = size;
-        _selected = false;
-    }
-
-    public Rectangle(Point2D pos, Point2D size, boolean selected){
+    public Rectangle(Point2D pos, Point2D size, boolean selected, Iobserver obs){
+        registerOberver(obs);
         _pos  = pos;
         _size = size;
         _selected = selected;
@@ -94,4 +73,36 @@ public abstract class Rectangle implements Shape {
     public boolean isSelected(){
         return _selected;
     }
+
+    @Override
+	public void registerOberver(Iobserver obs) {
+		_observers.add(obs);
+	}
+
+	@Override
+	public void unRegisterObserver(Iobserver obs) {
+		if(_observers.contains(obs))
+			_observers.remove(obs);
+	}
+
+	@Override
+	public void notifyObservers(String code) {
+		
+	}
+
+	@Override
+	public void notifyObservers(String code, int X, int Y) {
+		
+	}
+
+	@Override
+	public void notifyObservers(String code, double X, double Y) {
+		
+	}
+
+	@Override
+	public void notifyObservers(String code, double X, double Y, String ref) {
+		for(Iobserver obs : _observers)
+			obs.update(code,X,Y,ref);
+	}
 }

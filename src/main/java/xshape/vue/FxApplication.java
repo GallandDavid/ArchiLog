@@ -1,7 +1,5 @@
 package xshape.vue;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
