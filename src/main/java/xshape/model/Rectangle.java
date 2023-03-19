@@ -7,9 +7,9 @@ public abstract class Rectangle implements Shape {
     private final UUID ID = UUID.randomUUID();
     private Point2D _pos;
     private Point2D _size;
-    private boolean _selected;
-    private Point2D _default_pos = new Point2D.Double(0, 0);
-    private Point2D _default_size = new Point2D.Double(1, 1);
+    protected boolean _selected;
+    private Point2D _default_pos = new Point2D.Double(200, 200);
+    private Point2D _default_size = new Point2D.Double(100, 100);
     
     
     public Rectangle(){
@@ -26,13 +26,13 @@ public abstract class Rectangle implements Shape {
 
     public Rectangle(Point2D pos){
         _pos  = pos;
-        _size = _default_pos;
+        _size = _default_size;
         _selected = false;
     }
 
     public Rectangle(Point2D pos, boolean selected){
         _pos  = pos;
-        _size = _default_pos;
+        _size = _default_size;
         _selected = selected;
     }
 

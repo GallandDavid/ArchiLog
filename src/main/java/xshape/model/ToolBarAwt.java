@@ -1,14 +1,8 @@
 package xshape.model;
 
-import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
-
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-
-import javafx.event.ActionEvent;
-import javafx.scene.input.MouseEvent;
 import xshape.observer.Iobserver;
 
 public class ToolBarAwt extends ToolBar {
@@ -70,6 +64,10 @@ public class ToolBarAwt extends ToolBar {
 
     @Override
     public void notifyObservers(String code) {
+    }
+
+    @Override
+    public void notifyObservers(String code, double X, double Y) {
     }
 
 }

@@ -7,4 +7,6 @@ public interface Iobservable {
 
     void notifyObservers(String code);
     void notifyObservers(String code, int X, int Y);
+
+    void notifyObservers(String code, double X, double Y);
 }

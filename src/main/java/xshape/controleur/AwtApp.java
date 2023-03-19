@@ -67,14 +67,20 @@ public class AwtApp extends XShape {
         public void update(String code, int X, int Y) {
             switch(code){
                 case "rect selected":
-                System.out.println("ok");
-                xshape.model.Shape rect = (xshape.model.Shape) new RectangleAwt(X,Y,true);
-                    /*_xshape._shapes.add(rect);*/
+                System.out.println("X :" + String.valueOf(X) + "\nY :" + String.valueOf(Y));
+                xshape.model.Shape rect = (xshape.model.Shape) _xshape.factory().createRectangle(X,Y,true);
+                    _xshape.addShape(rect);
                     break;
                 default:
                     break;
             }
-            _xshape.draw();
+            draw();
+            this.repaint();
+            draw();
+        }
+
+        @Override
+        public void update(String code, double x, double y) {
         }
     }
 

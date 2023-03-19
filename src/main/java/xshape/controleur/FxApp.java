@@ -2,24 +2,30 @@ package xshape.controleur;
 
 import xshape.model.abstractFactory.*;
 import xshape.observer.Iobserver;
+import javafx.scene.Group;
+import xshape.model.Rectangle;
+import xshape.model.RectangleFx;
 import xshape.model.ToolBar;
 import xshape.model.ToolBarFx;
 import xshape.model.Builder.ToolBarDirector;
-import xshape.vue.FxApplication;
 
 public class FxApp extends XShape implements Iobserver, ToolBarDirector {
     ToolBar _toolbar = new ToolBarFx(this);
+    Group _root;
+
+    public FxApp(Group root){
+        _root = root;
+    }
 
     @Override
     protected ShapeFactory createFactory() {
-        return new ShapeFactoryFx(FxApplication._root);
+        return new ShapeFactoryFx(_root);
     }
 
     @Override
     public void run() {
+        createToolBar();
         draw();
-        FxApplication.launch(FxApplication.class, FxApp.class.getName());
-        
     }
 
 
@@ -30,10 +36,7 @@ public class FxApp extends XShape implements Iobserver, ToolBarDirector {
 
     @Override
     public void update(String code) {
-        switch(code){
-            case "new rect/follow mouse/place at right click":
-
-        }
+        
     }
 
     @Override
@@ -43,6 +46,19 @@ public class FxApp extends XShape implements Iobserver, ToolBarDirector {
 
     @Override
     public void pop() {
+    }
+
+    @Override
+    public void update(String code, double X, double Y) {
+        switch(code){
+            case "rect selected":
+                addShape((xshape.model.Shape) factory().createRectangle(X,Y,true));
+                break;
+            default:
+                break;
+        }
+        draw();
+        _root.requestLayout();
     }
 
     @Override

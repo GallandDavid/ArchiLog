@@ -15,9 +15,6 @@ public class AwtContext {
             _singleton = new AwtContext();
         return _singleton;
     }
-    private AwtContext() {
-    }
-
     public Graphics graphics() {
         if (_graphics == null) 
             throw new RuntimeErrorException(null, "Graphics has not been set contex is not valid");

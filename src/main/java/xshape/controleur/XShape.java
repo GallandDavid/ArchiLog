@@ -24,9 +24,7 @@ public abstract class XShape implements CommandHistory{
     public abstract void run();
 
     private void createScene() {
-        Shape rect = (Shape) _factory.createRectangle(15, 15, 50, 50);
-        Shape[] tmp = {rect};
-        _shapes = tmp;
+        addShape((Shape) _factory.createRectangle(15, 15, 50, 50));
     }
 
     public void draw() {
@@ -35,9 +33,7 @@ public abstract class XShape implements CommandHistory{
             createScene();
         }
         if(_shapes != null){
-            System.out.println("ok");
             for (Shape s : _shapes){
-                System.out.println("ok");
                 s.draw();
             }
         }
@@ -45,5 +41,18 @@ public abstract class XShape implements CommandHistory{
 
     protected ShapeFactory factory(){
         return _factory;
+    }
+
+    public void addShape(Shape shape){
+        Shape[] tmp;
+        if(_shapes == null)
+            tmp = new Shape[1];
+        else
+            tmp = new Shape[_shapes.length + 1];
+        for (int i = 0; i < tmp.length - 1; i++) {
+            tmp[i] = _shapes[i];
+        }
+        tmp[tmp.length - 1] = shape;
+        _shapes = tmp;
     }
 }

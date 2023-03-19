@@ -1,10 +1,6 @@
 package xshape.model;
 
-import xshape.observer.Iobserver;/* 
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;*/
-
+import xshape.observer.Iobserver;
 public class ToolBarFx extends ToolBar {
 
   public ToolBarFx(Iobserver obs) {
@@ -20,12 +16,10 @@ public class ToolBarFx extends ToolBar {
   public void createRectButton() {
     javafx.scene.control.ToolBar tb = (javafx.scene.control.ToolBar) getProduct();
     javafx.scene.control.Button bt = new javafx.scene.control.Button(getRectButton().title());
-    /* 
-    EventHandler<MouseEvent> leftClickHandler = event -> {
-      if (MouseButton.PRIMARY.equals(event.getButton())) {
-          notifyObservers("new rect/follow mouse/place at right click");
+    bt.setOnMousePressed(e -> {
+        notifyObservers("rect selected", e.getX(), e.getY());
       }
-  };*/
+    );
     tb.getItems().add(bt);
     setProduct(tb);
   }
@@ -46,6 +40,13 @@ public class ToolBarFx extends ToolBar {
 
   @Override
   public void notifyObservers(String code, int X, int Y) {
+    for (Iobserver obs : _obs) {
+      obs.update(code,X, Y);
+    }
+  }
+
+  @Override
+  public void notifyObservers(String code, double X, double Y) {
     for (Iobserver obs : _obs) {
       obs.update(code,X, Y);
     }
