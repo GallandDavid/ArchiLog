@@ -1,6 +1,6 @@
 package xshape.model.Builder;
 
-import xshape.model.Button;
+import xshape.model.button.Button;
 
 public interface ToolBarBuilder {
 

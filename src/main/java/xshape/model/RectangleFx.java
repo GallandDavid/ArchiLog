@@ -75,4 +75,9 @@ public class RectangleFx extends Rectangle{
 		_adapted.setHeight(size.getY());
 		_adapted.setFill(Color.BLUE);
 	}
+
+	@Override
+	public void remove() {
+		_grp.getChildren().remove(_adapted);
+	}
 }

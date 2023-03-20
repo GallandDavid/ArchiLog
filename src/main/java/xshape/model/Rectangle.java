@@ -105,4 +105,13 @@ public abstract class Rectangle implements Shape,Iobservable {
 		for(Iobserver obs : _observers)
 			obs.update(code,X,Y,ref);
 	}
+
+    @Override
+    public String toString(){
+        String str = "Rectangle :\n";
+        str += "Pos : (" + _pos.getX() + ", " + _pos.getY() + ")\n";
+        str += "Size : (" + _size.getX() + ", " + _size.getY() + ")\n";
+        str += "Ref : " + getId() + "\n";
+        return str;
+    }
 }

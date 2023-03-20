@@ -47,4 +47,8 @@ public class RectangleAwt extends Rectangle {
         g.setColor(c);
 	}
 
+	@Override
+	public void remove() {
+	}
+
 }

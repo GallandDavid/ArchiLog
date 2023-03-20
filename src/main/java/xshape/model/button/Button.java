@@ -1,7 +1,7 @@
-package xshape.model;
+package xshape.model.button;
 
 
-public abstract class Button{
+public abstract class Button { 
     private String _title;
     
     public Button(){

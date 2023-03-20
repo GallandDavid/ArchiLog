@@ -11,4 +11,6 @@ public interface Shape{
 	Shape translate(Point2D vec);
 	String getId();
 	boolean isSelected();
+	String toString();
+	void remove();
 }

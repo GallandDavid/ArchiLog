@@ -1,4 +1,4 @@
-package xshape.model;
+package xshape.model.button;
 
 public class RectButton extends Button{
     

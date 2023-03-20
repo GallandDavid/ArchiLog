@@ -64,11 +64,54 @@ public abstract class XShape implements CommandHistory, Iobserver{
         selected_item = shape;
     }
 
-    public Shape selectShape(String ref){
-        for (Shape shape : _shapes) {
-            if(shape.getId().equals(ref))
-                return shape;
+    public Shape getShape(String ref){
+        for (Shape s : _shapes) {
+            if(s.getId().equals(ref)){
+                return s;
+            }
         }
         return null;
     }
+
+    public Shape extractShape(String ref){
+        Shape[] shapes = new Shape[_shapes.length - 1];
+        Shape shape = null;
+        for (Shape s : _shapes) {
+            if(s.getId().equals(ref)){
+                shape = s;
+                break;
+            }
+        }
+        if(shape != null){
+            int j = 0;
+            for (int i = 0; i < _shapes.length; i++)
+                if(!(_shapes[i].getId().equals(ref))){
+                    shapes[j] = _shapes[i];
+                    j ++;
+                }
+            _shapes = shapes;
+        }
+        return shape;
+    }
+
+    public void removeShape(String ref){
+        Shape[] shapes = new Shape[_shapes.length - 1];
+        int j = 0;
+        for (int i = 0; i < _shapes.length; i++)
+            if(!(_shapes[i].getId().equals(ref))){
+                shapes[j] = _shapes[i];
+                j ++;
+            }
+            else
+                _shapes[i].remove();
+        _shapes = shapes;
+    }
+
+    public void printShapes(){
+        if(_shapes != null)
+            for(Shape s : _shapes)
+                System.out.println(s.toString());
+    }
+
+    
 }
