@@ -3,6 +3,9 @@ package xshape.model;
 import java.awt.event.MouseListener;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
+import xshape.controleur.XShape;
+import xshape.model.Command.RectangleSelectedCommand;
 import xshape.observer.Iobserver;
 
 public class ToolBarAwt extends ToolBar {
@@ -42,7 +45,7 @@ public class ToolBarAwt extends ToolBar {
 
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
-                notifyObservers("rect selected",e.getX(), e.getY());
+                notifyObservers(new RectangleSelectedCommand((XShape ) _app, br, e.getX(), e.getY()));
             }
 
             @Override
@@ -55,23 +58,13 @@ public class ToolBarAwt extends ToolBar {
 
     }
 
+
     @Override
-    public void notifyObservers(String code, int X, int Y) {
-        for (Iobserver obs : _obs) {
-            obs.update(code, X, Y);
-        }
+    public void createRedoButton() {
     }
 
     @Override
-    public void notifyObservers(String code) {
-    }
-
-    @Override
-    public void notifyObservers(String code, double X, double Y) {
-    }
-
-    @Override
-    public void notifyObservers(String code, double X, double Y, String ref) {
+    public void createUndoButton() {
     }
 
 }

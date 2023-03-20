@@ -1,24 +1,22 @@
 package xshape.controleur;
 
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
-import xshape.Command.CommandHistory;
-import xshape.Command.ICommand;
 import xshape.model.Shape;
+import xshape.model.Command.Command;
+import xshape.model.Command.CommandHistory;
+import xshape.model.Command.ICommand;
+import xshape.model.Command.RectPlaceCommand;
 import xshape.model.abstractFactory.ShapeFactory;
 import xshape.observer.Iobserver;
 
 public abstract class XShape implements CommandHistory, Iobserver{
-    Shape selected_item = null;
+    public Shape _selected_item = null;
     private ShapeFactory _factory = null;
     Shape[] _shapes = null;
-    ArrayList<ICommand> _history = new ArrayList<>();
-
-    @Override
-    public void push(ICommand command){
-        _history.add(command);
-    }
+    LinkedList<ICommand> _history = new LinkedList<>();
+    LinkedList<ICommand> _redos = new LinkedList<>();
 
     //method factory to delegate instanciation of Shapefactory to subclass
     protected abstract ShapeFactory createFactory();
@@ -26,7 +24,7 @@ public abstract class XShape implements CommandHistory, Iobserver{
     public abstract void run();
 
     private void createScene() {
-        addShape((Shape) _factory.createRectangle(15, 15, 50, 50, this));
+        addShape((Shape) _factory.createRectangle(this));
     }
 
     public void draw() {
@@ -34,16 +32,18 @@ public abstract class XShape implements CommandHistory, Iobserver{
             _factory = createFactory();
             createScene();
         }
+
+        if(_selected_item != null)
+            _selected_item.draw();
+
         if(_shapes != null){
             for (Shape s : _shapes){
                 s.draw();
             }
         }
-        if(selected_item != null)
-            selected_item.draw();
     }
 
-    protected ShapeFactory factory(){
+    public ShapeFactory factory(){
         return _factory;
     }
 
@@ -58,10 +58,12 @@ public abstract class XShape implements CommandHistory, Iobserver{
         }
         tmp[tmp.length - 1] = shape;
         _shapes = tmp;
+
+        printShapes();
     }
 
     public void addSelectedShape(Shape shape){
-        selected_item = shape;
+        _selected_item = shape;
     }
 
     public Shape getShape(String ref){
@@ -95,16 +97,20 @@ public abstract class XShape implements CommandHistory, Iobserver{
     }
 
     public void removeShape(String ref){
-        Shape[] shapes = new Shape[_shapes.length - 1];
-        int j = 0;
-        for (int i = 0; i < _shapes.length; i++)
-            if(!(_shapes[i].getId().equals(ref))){
-                shapes[j] = _shapes[i];
-                j ++;
-            }
-            else
-                _shapes[i].remove();
-        _shapes = shapes;
+        printShapes();
+        if(_shapes.length != 0){
+            Shape[] shapes = new Shape[_shapes.length - 1];
+            int j = 0;
+            for (int i = 0; i < _shapes.length; i++)
+                if(!(_shapes[i].getId().equals(ref))){
+                    shapes[j] = _shapes[i];
+                    j ++;
+                }
+                else
+                    _shapes[i].remove();
+            _shapes = shapes;
+            System.gc();
+        }
     }
 
     public void printShapes(){
@@ -113,5 +119,60 @@ public abstract class XShape implements CommandHistory, Iobserver{
                 System.out.println(s.toString());
     }
 
-    
+    @Override
+    public void undo(){
+        if(!asUndo())
+            pushRedo(pop());
+    }
+
+    public boolean asUndo(){
+        return _history.isEmpty();
+    }
+
+    @Override
+    public void redo(){
+        if(!asRedo())
+            push(popRedo());
+    }
+
+    public boolean asRedo(){
+        return _redos.isEmpty();
+    }
+
+    @Override
+    public void push(ICommand command){
+        clearRedo();
+        _history.addLast(command);
+    }
+
+    @Override
+    public void pushRedo(ICommand command){
+        _redos.addLast(command);
+    }
+
+
+    @Override
+    public ICommand pop(){
+        return _history.removeLast();
+    }
+
+    @Override
+    public ICommand popRedo(){
+        return _redos.removeLast();
+    }
+
+    @Override
+    public void clearRedo(){
+        _redos.clear();
+    }
+
+
+    @Override 
+    public void update(Command command){
+        if(command.execute())
+            push(command);;
+        draw();
+    }
+
 }
+

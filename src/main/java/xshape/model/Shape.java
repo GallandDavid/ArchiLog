@@ -13,4 +13,16 @@ public interface Shape{
 	boolean isSelected();
 	String toString();
 	void remove();
+	void setPrevMousePosX(double X);
+    void setPrevMousePosY(double Y);
+    double getPrevMousePosX();
+    double getPrevMousePosY();
+    void setPrevMouse(double x, double y);
+    Point2D getMouseVec(double x, double y);
+	Point2D visiblePosition();
+	Shape visiblePosition(Point2D position);
+	Point2D visibleSize();
+	Shape visibleSize(Point2D vec);
+	Shape visibleTranslate(Point2D vec);
+
 }

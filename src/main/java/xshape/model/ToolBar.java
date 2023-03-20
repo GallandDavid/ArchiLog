@@ -1,10 +1,11 @@
 package xshape.model;
 
-import java.util.ArrayList;
-
 import xshape.model.Builder.ToolBarBuilder;
+import xshape.model.Command.Command;
 import xshape.model.button.Button;
 import xshape.model.button.RectButton;
+import xshape.model.button.RedoButton;
+import xshape.model.button.UndoButton;
 import xshape.observer.Iobservable;
 import xshape.observer.Iobserver;
 
@@ -14,11 +15,13 @@ public abstract class ToolBar implements ToolBarBuilder, Iobservable{
     private double height;
     private double width;
     protected Button _rectbutton = new RectButton();
+    protected Button _undobutton = new UndoButton();
+    protected Button _redobutton = new RedoButton();
     private Object _obj = null;
-    protected ArrayList<Iobserver> _obs = new ArrayList<>();
+    protected Iobserver _app;
 
-    public ToolBar(Iobserver obs){
-        registerOberver(obs);
+    public ToolBar(Iobserver app){
+        registerOberver(app);
     }
 
     @Override
@@ -27,77 +30,63 @@ public abstract class ToolBar implements ToolBarBuilder, Iobservable{
     }
 
     @Override
+    public Button getRedoButton(){
+      return _redobutton;
+    }
+
+    @Override
+    public Button getUndoButton(){
+      return _undobutton;
+    }
+
+    @Override
     public void setProduct(Object obj){
-        _obj = obj;
+      _obj = obj;
     }
 
     @Override
     public Object getProduct(){
-        return _obj;
+      return _obj;
     }
 
     @Override
-        public void registerOberver(Iobserver obs) {
-        _obs.add(obs);
+    public void registerOberver(Iobserver app) {
+      _app = app;
     }
 
     @Override
     public void unRegisterObserver(Iobserver obs) {
-        if(_obs.contains(obs))
-            _obs.remove(obs);
+      _app = null;
     }
 
 
     public double getWidth() {
-        return width;
+      return width;
     }
 
     public void setWidth(double width) {
-        this.width = width;
+      this.width = width;
     }
 
     public double getHeight() {
-        return height;
+      return height;
     }
 
     public static int getVh() {
-        return vh;
+      return vh;
     }
 
     public static int getVw() {
-        return vw;
+      return vw;
     }
 
     public void setHeight(double height) {
-        this.height = height;
+      this.height = height;
     }
-
-    @Override
-  public void notifyObservers(String code) {
-    for (Iobserver obs : _obs) {
-        obs.update(code);
-      }
-  }
 
   @Override
-  public void notifyObservers(String code, int X, int Y) {
-    for (Iobserver obs : _obs) {
-      obs.update(code,X, Y);
-    }
-  }
-
-  @Override
-  public void notifyObservers(String code, double X, double Y) {
-    for (Iobserver obs : _obs) {
-      obs.update(code,X, Y);
-    }
-  }
-
-  @Override
-  public void notifyObservers(String code, double X, double Y, String ref) {
-    for (Iobserver obs : _obs) {
-      obs.update(code,X, Y,ref);
-    }
+  public void notifyObservers(Command command) {
+    _app.update(command);
   }
 
 }

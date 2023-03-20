@@ -66,43 +66,16 @@ public class AwtApp extends XShape implements ToolBarDirector{
     }
 
     @Override
-    public void pop() {
-    }
-
-    @Override
     public void createToolBar() {
         _toolBar.makeProduct();
-    }
-
-    @Override
-    public void update(String code) {
     }
 
     @Override
     public Object getToolBar() {
         return _toolBar.getProduct();
     }
-
     @Override
-    public void update(String code, int X, int Y) {
-        switch(code){
-            case "rect selected":
-            System.out.println("X :" + String.valueOf(X) + "\nY :" + String.valueOf(Y));
-            xshape.model.Shape rect = (xshape.model.Shape) factory().createRectangle(X,Y,true,this);
-                addShape(rect);
-                break;
-            default:
-                break;
-        }
-        draw();
-        _jc.repaint();
-    }
-
-    @Override
-    public void update(String code, double x, double y) {
-    }
-
-    @Override
-    public void update(String code, double x, double y, String ref) {
+    public ToolBar toolBar() {
+        return _toolBar;
     }
 }

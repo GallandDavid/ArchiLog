@@ -3,6 +3,12 @@ package xshape.model;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
+import xshape.controleur.XShape;
+import xshape.model.Command.DragSelectedCommand;
+import xshape.model.Command.RectPlaceCommand;
+import xshape.model.Command.RectangleSelectedCommand;
+import xshape.model.Command.RedoCommand;
+import xshape.model.Command.UndoCommand;
 import xshape.observer.Iobserver;
 public class ToolBarFx extends ToolBar {
 
@@ -21,13 +27,13 @@ public class ToolBarFx extends ToolBar {
     javafx.scene.control.Button bt = new javafx.scene.control.Button(getRectButton().title());
     bt.setOnMouseDragged(new EventHandler <MouseEvent>(){
       public void handle(MouseEvent event){
-        notifyObservers("rect selected drag", event.getX(), event.getY());
+        notifyObservers(new DragSelectedCommand((XShape) _app, (Object) bt, event.getX(), event.getY()));
         event.consume();
       }
     });
     bt.setOnMousePressed(new EventHandler <MouseEvent>(){
       public void handle(MouseEvent event){
-        notifyObservers("rect selected", event.getX(), event.getY());
+        notifyObservers(new RectangleSelectedCommand((XShape) _app, (Object) bt, event.getX(), event.getY()));
         bt.setCursor(Cursor.MOVE);
         event.consume();
       }
@@ -35,7 +41,7 @@ public class ToolBarFx extends ToolBar {
  
     bt.setOnMouseReleased(new EventHandler <MouseEvent>(){
       public void handle(MouseEvent event){
-        notifyObservers("rect select place", event.getX(), event.getY());
+        notifyObservers(new RectPlaceCommand((XShape) _app, bt, event.getX(), event.getY()));
         bt.setCursor(Cursor.HAND);
         event.consume();
       }
@@ -55,5 +61,37 @@ public class ToolBarFx extends ToolBar {
   public void makeProduct() {
     createToolBar();
     createRectButton();
+    createRedoButton();
+    createUndoButton();
+  }
+
+  @Override
+  public void createRedoButton() {
+    javafx.scene.control.ToolBar tb = (javafx.scene.control.ToolBar) getProduct();
+    javafx.scene.control.Button bt = new javafx.scene.control.Button(getRedoButton().title());
+    bt.setOnMouseClicked(new EventHandler <MouseEvent>(){
+      public void handle(MouseEvent event){
+        notifyObservers(new RedoCommand((XShape)_app, bt));
+        bt.setCursor(Cursor.HAND);
+        event.consume();
+      }
+    });
+    tb.getItems().add(bt);
+    setProduct(tb);
+  }
+
+  @Override
+  public void createUndoButton() {
+    javafx.scene.control.ToolBar tb = (javafx.scene.control.ToolBar) getProduct();
+    javafx.scene.control.Button bt = new javafx.scene.control.Button(getUndoButton().title());
+    bt.setOnMouseClicked(new EventHandler <MouseEvent>(){
+      public void handle(MouseEvent event){
+        notifyObservers(new UndoCommand((XShape) _app, bt));
+        bt.setCursor(Cursor.HAND);
+        event.consume();
+      }
+    });
+    tb.getItems().add(bt);
+    setProduct(tb);
   }
 }
