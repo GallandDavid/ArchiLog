@@ -16,8 +16,6 @@ public class RectangleSelectedCommand extends Command{
     @Override
     public boolean execute() {
         _app.addSelectedShape((Shape) _app.factory().createRectangle(_mouse_x, _mouse_y, true, _app));
-        _app.printSelectShape();
-        _app.draw();
         return false;
     }
 

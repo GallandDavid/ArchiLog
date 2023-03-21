@@ -7,11 +7,13 @@ import xshape.model.ToolBarFx;
 import xshape.model.Builder.ToolBarDirector;
 
 public class FxApp extends XShape implements ToolBarDirector {
-    public ToolBar _toolbar = new ToolBarFx(this);
+    public ToolBar _toolbar;
     Group _root;
 
     public FxApp(Group root){
         _root = root;
+        _toolbar = new ToolBarFx(this);
+        createFactory();
     }
 
     @Override

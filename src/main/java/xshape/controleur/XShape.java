@@ -24,17 +24,28 @@ public abstract class XShape implements CommandHistory, Iobserver{
     public abstract void run();
 
     private void createScene() {
-        addShape((Shape) _factory.createRectangle(this));
+        Command command1 = new RectPlaceCommand(this, 20,300, true);
+        Command command2 = new RectPlaceCommand(this, 100, 200, true);
+
+        Command[] tmp = {command1,command2};
+        for(Command cmd : tmp)
+            cmd.execute();/* 
+        addShape((Shape) _factory.createRectangle(false,this));
+
+        addShape((Shape) _factory.createRectangle(100,200,200,20,false,this));*/
     }
 
     public void draw() {
-        if (_shapes == null) {
-            _factory = createFactory();
-            createScene();
-        }
+        System.out.println("Draw\n------------");
+        if(_factory == null)    _factory = createFactory();
+        if (_shapes == null)    createScene();
 
         if(_shapes != null){
+            System.out.println("Draw shapes\n------------");
             for (Shape s : _shapes){
+                if(!s.isSelected())
+                    s.visiblePosition(s.position());
+                System.out.println(s);
                 s.draw();
             }
         }
@@ -49,18 +60,26 @@ public abstract class XShape implements CommandHistory, Iobserver{
     }
 
     public void addShape(Shape shape){
+        if(_selected_item != null)
+            System.out.println(_selected_item);
         Shape[] tmp;
-        if(_shapes == null)
+        if(_shapes == null){
+            System.out.println("_shapes null");
             tmp = new Shape[1];
-        else
+        }
+        else{
+            System.out.println("_shapes not null");
             tmp = new Shape[_shapes.length + 1];
+        }
+        System.out.println("tmp lenght : " + tmp.length);
         for (int i = 0; i < tmp.length - 1; i++) {
+            System.out.println(i + "eme shapes in tmp");
             tmp[i] = _shapes[i];
         }
         tmp[tmp.length - 1] = shape;
+        printArray(tmp);
         _shapes = tmp;
-
-        printShapes();
+        printArray(_shapes);
     }
 
     public void addSelectedShape(Shape shape){
@@ -74,27 +93,6 @@ public abstract class XShape implements CommandHistory, Iobserver{
             }
         }
         return null;
-    }
-
-    public Shape extractShape(String ref){
-        Shape[] shapes = new Shape[_shapes.length - 1];
-        Shape shape = null;
-        for (Shape s : _shapes) {
-            if(s.getId().equals(ref)){
-                shape = s;
-                break;
-            }
-        }
-        if(shape != null){
-            int j = 0;
-            for (int i = 0; i < _shapes.length; i++)
-                if(!(_shapes[i].getId().equals(ref))){
-                    shapes[j] = _shapes[i];
-                    j ++;
-                }
-            _shapes = shapes;
-        }
-        return shape;
     }
 
     public void removeShape(String ref){
@@ -132,8 +130,11 @@ public abstract class XShape implements CommandHistory, Iobserver{
 
     @Override
     public void redo(){
-        if(!asRedo())
-            push(popRedo());
+        if(!asRedo()){
+            ICommand redo = popRedo();
+            redo.execute();
+            push(redo);
+        }
     }
 
     public boolean asRedo(){
@@ -171,20 +172,23 @@ public abstract class XShape implements CommandHistory, Iobserver{
 
     @Override 
     public void update(Command command){
-        printShapes();
-        if(_selected_item != null){
-            printSelectShape();
-        }
-        command.print();
         if(command.execute())
-            push(command);;
-        _shapes = command._app._shapes;
+            push(command);
         draw();
     }
     public void printSelectShape() {
         System.out.println("Start select shape :\n----------");
-        _selected_item.toString();
+        if(_selected_item == null)
+            System.out.println("null");
+        else
+            System.out.println(_selected_item.toString());
         System.out.println("End select shape :\n----------");
+    }
+
+    public void printArray(Shape[] array){
+        for(Shape s : array){
+            System.out.println(s);
+        }
     }
 
 }

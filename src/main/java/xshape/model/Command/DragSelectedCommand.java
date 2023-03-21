@@ -18,7 +18,6 @@ public class DragSelectedCommand extends Command{
     @Override
     public boolean execute() {
         ((Rectangle)_editor).visiblePosition(new Point2D.Double(_mouse_x,_mouse_y));
-        _app.draw();
         return false;
     }
 

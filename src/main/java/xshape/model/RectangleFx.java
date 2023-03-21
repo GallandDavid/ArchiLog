@@ -16,6 +16,7 @@ public class RectangleFx extends Rectangle{
 
 	javafx.scene.shape.Rectangle _adapted;
     Group _grp;
+	boolean _m_p = false;
     
 
 	public RectangleFx( Group grp, Iobserver obs) {
@@ -37,45 +38,45 @@ public class RectangleFx extends Rectangle{
 		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected, obs);
 		RectangleFx rfx = this;
 		_adapted = new javafx.scene.shape.Rectangle();
-    	_adapted.setOnMousePressed(new EventHandler <MouseEvent>()
-        {
-            public void handle(MouseEvent event)
-            {
+		_grp = grp;
+		_grp.getChildren().add(_adapted);
+    	_adapted.setOnMousePressed(new EventHandler <MouseEvent>(){
+            public void handle(MouseEvent event){
+				System.out.println("Rect mouse pressed " + getId());
                 notifyObservers(new ShapeSelectCommand((XShape) _app, rfx, event.getX(), event.getY()));
+				_selected = true;
+				_m_p = true;
 				event.consume();
             }
         });
-		_adapted.setOnMouseDragged(new EventHandler <MouseEvent>()
-        {
-            public void handle(MouseEvent event)
-            {
-              notifyObservers(new ShapeDragCommand((XShape) _app, rfx, event.getX(), event.getY()));
-              event.consume();
+		_adapted.setOnMouseDragged(new EventHandler <MouseEvent>(){
+            public void handle(MouseEvent event){
+				System.out.println("Rect mouse dragged " + getId());
+				if (_m_p)
+              		notifyObservers(new ShapeDragCommand((XShape) _app, rfx, event.getX(), event.getY()));
+              	event.consume();
             }
         });
- 
-    	_adapted.setOnMouseReleased(new EventHandler <MouseEvent>()
-        {
-            public void handle(MouseEvent event)
-            {
-              notifyObservers(new ShapeTranslateCommand((XShape) _app, rfx, event.getX(), event.getY()));
-              event.consume();
+    	_adapted.setOnMouseReleased(new EventHandler <MouseEvent>(){
+            public void handle(MouseEvent event){
+				System.out.println("Rect mouse realeased");
+              	notifyObservers(new ShapeTranslateCommand((XShape) _app, rfx, event.getX(), event.getY()));
+				_selected = true;
+              	event.consume();
             }
         });
-		_grp = grp;
-		_grp.getChildren().add(_adapted);
 	}
 
 	@Override
 	public void draw() {
 		Point2D pos = visiblePosition();
-		Point2D size = visibleSize();
+		Point2D	size = size();
+		
 		_adapted.setX(pos.getX()- size.getX()/2);
 		_adapted.setY(pos.getY()- size.getY()/2);
 		_adapted.setWidth(size.getX());
 		_adapted.setHeight(size.getY());
 		_adapted.setFill(Color.BLUE);
-		_adapted.toBack();
 	}
 
 	@Override

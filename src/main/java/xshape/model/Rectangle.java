@@ -29,8 +29,8 @@ public abstract class Rectangle implements Shape,Iobservable {
         registerOberver(obs);
         _pos  = pos;
         _size = size;
-        _visible_pos  = pos;
-        _visible_size = size;
+        _visible_pos  = _pos;
+        _visible_size = _size;
         _selected = selected;
     }
 
@@ -65,6 +65,7 @@ public abstract class Rectangle implements Shape,Iobservable {
 
     @Override
     public Shape visibleTranslate(Point2D vec) {
+        System.out.println("visibleTranslate(.)"+ getId());
         _visible_pos.setLocation(_visible_pos.getX() + vec.getX(),
                 _visible_pos.getY() + vec.getY());
         return this;
@@ -73,10 +74,12 @@ public abstract class Rectangle implements Shape,Iobservable {
 
 	@Override
 	public Point2D visiblePosition() {
+        System.out.println("visiblePosition()"+ getId());
         return (Point2D) _visible_pos.clone();
 	}
 	@Override
 	public Shape visiblePosition(Point2D position) {
+        System.out.println("visiblePosition(.)"+ getId());
         _visible_pos = (Point2D) position.clone();
         return this;
 	}
@@ -84,10 +87,12 @@ public abstract class Rectangle implements Shape,Iobservable {
 
 	@Override
 	public Point2D visibleSize() {
+        System.out.println("visibleSize()"+ getId());
         return (Point2D) _visible_size.clone();
 	}
 	@Override
 	public Shape visibleSize(Point2D vec) {
+        System.out.println("visibleSize(.)"+ getId());
         _visible_size = (Point2D) vec.clone();
         return this;
 	}
@@ -133,6 +138,7 @@ public abstract class Rectangle implements Shape,Iobservable {
         str += "Visble Pos : (" + _visible_pos.getX() + ", " + _visible_pos.getY() + ")\n";
         str += "Visble Size : (" + _visible_size.getX() + ", " + _visible_size.getY() + ")\n";
         str += "Ref : " + getId() + "\n";
+        str += "Selected : " + _selected;
         return str;
     }
 
