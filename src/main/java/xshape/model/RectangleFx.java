@@ -19,37 +19,38 @@ public class RectangleFx extends Rectangle{
     
 
 	public RectangleFx( Group grp, Iobserver obs) {
-		this(_pos_x, _pos_y, _size_x, _size_y, false, grp, obs);
+		this(_pos_x, _pos_y, _size_y, _size_x, false, grp, obs);
 	}
     public RectangleFx(boolean selected, Group grp, Iobserver obs) {
-		this(_pos_x, _pos_y, _size_x, _size_y, selected, grp, obs);
+		this(_pos_x, _pos_y, _size_y, _size_x, selected, grp, obs);
 	}
     public RectangleFx(double posX, double posY, Group grp, Iobserver obs) {
-		this(posX, posY, _size_x, _size_y, false, grp, obs);
+		this(posX, posY, _size_y, _size_x, false, grp, obs);
 	}
     public RectangleFx(double posX, double posY, boolean selected, Group grp, Iobserver obs) {
-		this(posX, posY, _size_x, _size_y, selected, grp, obs);
+		this(posX, posY, _size_y, _size_x, selected, grp, obs);
 	}
     public RectangleFx(double posX, double posY, double height, double width, Group grp, Iobserver obs) {
 		this(posX, posY, height, width, false, grp, obs);
 	}
     public RectangleFx(double posX, double posY, double height, double width, boolean selected, Group grp, Iobserver obs) {
 		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected, obs);
+		RectangleFx rfx = this;
 		_adapted = new javafx.scene.shape.Rectangle();
-		_adapted.setOnMouseDragged(new EventHandler <MouseEvent>()
-        {
-            public void handle(MouseEvent event)
-            {
-              notifyObservers(new ShapeDragCommand((XShape) _app, _adapted, event.getX(), event.getY(), getId()));
-              event.consume();
-            }
-        });
     	_adapted.setOnMousePressed(new EventHandler <MouseEvent>()
         {
             public void handle(MouseEvent event)
             {
-                notifyObservers(new ShapeSelectCommand((XShape) _app, _adapted, event.getX(), event.getY(), getId()));
+                notifyObservers(new ShapeSelectCommand((XShape) _app, rfx, event.getX(), event.getY()));
 				event.consume();
+            }
+        });
+		_adapted.setOnMouseDragged(new EventHandler <MouseEvent>()
+        {
+            public void handle(MouseEvent event)
+            {
+              notifyObservers(new ShapeDragCommand((XShape) _app, rfx, event.getX(), event.getY()));
+              event.consume();
             }
         });
  
@@ -57,7 +58,7 @@ public class RectangleFx extends Rectangle{
         {
             public void handle(MouseEvent event)
             {
-              notifyObservers(new ShapeTranslateCommand((XShape) _app, _adapted, event.getX(), event.getY(), getId()));
+              notifyObservers(new ShapeTranslateCommand((XShape) _app, rfx, event.getX(), event.getY()));
               event.consume();
             }
         });

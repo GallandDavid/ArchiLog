@@ -33,14 +33,15 @@ public abstract class XShape implements CommandHistory, Iobserver{
             createScene();
         }
 
-        if(_selected_item != null)
-            _selected_item.draw();
-
         if(_shapes != null){
             for (Shape s : _shapes){
                 s.draw();
             }
         }
+
+        if(_selected_item != null)
+            _selected_item.draw();
+
     }
 
     public ShapeFactory factory(){
@@ -63,7 +64,7 @@ public abstract class XShape implements CommandHistory, Iobserver{
     }
 
     public void addSelectedShape(Shape shape){
-        _selected_item = shape;
+        this._selected_item = shape;
     }
 
     public Shape getShape(String ref){
@@ -97,7 +98,7 @@ public abstract class XShape implements CommandHistory, Iobserver{
     }
 
     public void removeShape(String ref){
-        printShapes();
+        System.out.println("remove shape : " + ref);
         if(_shapes.length != 0){
             Shape[] shapes = new Shape[_shapes.length - 1];
             int j = 0;
@@ -148,6 +149,7 @@ public abstract class XShape implements CommandHistory, Iobserver{
     @Override
     public void pushRedo(ICommand command){
         _redos.addLast(command);
+        command.undo();
     }
 
 
@@ -169,9 +171,20 @@ public abstract class XShape implements CommandHistory, Iobserver{
 
     @Override 
     public void update(Command command){
+        printShapes();
+        if(_selected_item != null){
+            printSelectShape();
+        }
+        command.print();
         if(command.execute())
             push(command);;
+        _shapes = command._app._shapes;
         draw();
+    }
+    public void printSelectShape() {
+        System.out.println("Start select shape :\n----------");
+        _selected_item.toString();
+        System.out.println("End select shape :\n----------");
     }
 
 }

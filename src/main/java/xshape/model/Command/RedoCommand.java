@@ -13,5 +13,10 @@ public class RedoCommand extends Command{
         _app.redo();
         return false;
     }
+
+    @Override
+    public void print() {
+        System.out.println("RedoCommand");
+    }
     
 }

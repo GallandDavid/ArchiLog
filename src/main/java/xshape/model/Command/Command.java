@@ -3,7 +3,7 @@ package xshape.model.Command;
 import xshape.controleur.XShape;
 
 public abstract class Command implements ICommand {
-    protected XShape _app;
+    public XShape _app;
     protected Object _editor;
     protected Object _backup;
 
@@ -17,8 +17,9 @@ public abstract class Command implements ICommand {
         _backup = _editor;
     }
 
+    @Override
     public void undo(){
-        
     }
+
     
 }

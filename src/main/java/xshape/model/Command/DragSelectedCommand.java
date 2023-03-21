@@ -3,6 +3,7 @@ package xshape.model.Command;
 import java.awt.geom.Point2D;
 
 import xshape.controleur.XShape;
+import xshape.model.Rectangle;
 
 public class DragSelectedCommand extends Command{
     private double _mouse_x;
@@ -16,8 +17,14 @@ public class DragSelectedCommand extends Command{
 
     @Override
     public boolean execute() {
-        _app._selected_item.visiblePosition(new Point2D.Double(_mouse_x,_mouse_y));
+        ((Rectangle)_editor).visiblePosition(new Point2D.Double(_mouse_x,_mouse_y));
+        _app.draw();
         return false;
+    }
+
+    @Override
+    public void print() {
+        System.out.println("DragSelectedCommand");
     }
 
 }

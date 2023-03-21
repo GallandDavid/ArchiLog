@@ -25,12 +25,6 @@ public class ToolBarFx extends ToolBar {
   public void createRectButton() {
     javafx.scene.control.ToolBar tb = (javafx.scene.control.ToolBar) getProduct();
     javafx.scene.control.Button bt = new javafx.scene.control.Button(getRectButton().title());
-    bt.setOnMouseDragged(new EventHandler <MouseEvent>(){
-      public void handle(MouseEvent event){
-        notifyObservers(new DragSelectedCommand((XShape) _app, (Object) bt, event.getX(), event.getY()));
-        event.consume();
-      }
-    });
     bt.setOnMousePressed(new EventHandler <MouseEvent>(){
       public void handle(MouseEvent event){
         notifyObservers(new RectangleSelectedCommand((XShape) _app, (Object) bt, event.getX(), event.getY()));
@@ -38,21 +32,24 @@ public class ToolBarFx extends ToolBar {
         event.consume();
       }
     });
- 
-    bt.setOnMouseReleased(new EventHandler <MouseEvent>(){
+    bt.setOnMouseDragged(new EventHandler <MouseEvent>(){
       public void handle(MouseEvent event){
-        notifyObservers(new RectPlaceCommand((XShape) _app, bt, event.getX(), event.getY()));
-        bt.setCursor(Cursor.HAND);
+        notifyObservers(new DragSelectedCommand((XShape) _app, ((XShape)_app)._selected_item, event.getX(), event.getY()));
         event.consume();
       }
     });
-
+    bt.setOnMouseReleased(new EventHandler <MouseEvent>(){
+      public void handle(MouseEvent event){
+        notifyObservers(new RectPlaceCommand((XShape) _app, event.getX(), event.getY()));
+        bt.setCursor(Cursor.HAND);
+        event.consume();
+      }
+    }); 
     bt.setOnMouseEntered(new EventHandler<MouseEvent>() {
       @Override public void handle(MouseEvent mouseEvent) {
         bt.setCursor(Cursor.HAND);
       }
     });
-
     tb.getItems().add(bt);
     setProduct(tb);
   }

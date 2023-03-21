@@ -130,6 +130,8 @@ public abstract class Rectangle implements Shape,Iobservable {
         String str = "Rectangle :\n";
         str += "Pos : (" + _pos.getX() + ", " + _pos.getY() + ")\n";
         str += "Size : (" + _size.getX() + ", " + _size.getY() + ")\n";
+        str += "Visble Pos : (" + _visible_pos.getX() + ", " + _visible_pos.getY() + ")\n";
+        str += "Visble Size : (" + _visible_size.getX() + ", " + _visible_size.getY() + ")\n";
         str += "Ref : " + getId() + "\n";
         return str;
     }

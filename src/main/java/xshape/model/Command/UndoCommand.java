@@ -13,5 +13,10 @@ public class UndoCommand extends Command{
         _app.undo();
         return false;
     }
+
+    @Override
+    public void print() {
+        System.out.println("UndoCommand");
+    }
     
 }
