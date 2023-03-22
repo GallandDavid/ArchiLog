@@ -52,6 +52,11 @@ public class AwtApp extends XShape implements ToolBarDirector{
     }
 
     @Override
+    public ToolBar toolBar() {
+        return _toolBar;
+    }
+
+    @Override
     protected ShapeFactory createFactory() {
         return new ShapeFactoryAwt();
     }
@@ -63,10 +68,6 @@ public class AwtApp extends XShape implements ToolBarDirector{
         jc.setBackground(Color.WHITE);
         jc.setPreferredSize(new Dimension(500, 500));
         GUIHelper.showOnFrame(jc, "XShape Swing/AWT Rendering");
-    }
-
-    @Override
-    public void pop() {
     }
 
     @Override
@@ -105,4 +106,5 @@ public class AwtApp extends XShape implements ToolBarDirector{
     @Override
     public void update(String code, double x, double y, String ref) {
     }
+    
 }

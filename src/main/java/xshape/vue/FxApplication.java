@@ -11,12 +11,14 @@ import xshape.controleur.FxApp;
 
 public class FxApplication extends Application   {
     public static Group _root = new Group();
-    private FxApp _fxapp = new FxApp(_root);
+    public static FxApp _fxapp = new FxApp(_root);
 
      
     @Override
     public void init(){
-        _fxapp.run();
+        Platform.runLater(() -> {
+            _fxapp.run();
+        });
     }
 
 

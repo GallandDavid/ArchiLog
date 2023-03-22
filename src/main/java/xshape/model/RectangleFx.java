@@ -74,6 +74,7 @@ public class RectangleFx extends Rectangle{
 		_adapted.setWidth(size.getX());
 		_adapted.setHeight(size.getY());
 		_adapted.setFill(Color.BLUE);
+		_adapted.toBack();
 	}
 
 	@Override

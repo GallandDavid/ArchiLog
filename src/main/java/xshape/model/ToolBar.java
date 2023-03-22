@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import xshape.model.Builder.ToolBarBuilder;
 import xshape.model.button.Button;
 import xshape.model.button.RectButton;
+import xshape.model.button.RedoButton;
+import xshape.model.button.UndoButton;
 import xshape.observer.Iobservable;
 import xshape.observer.Iobserver;
 
@@ -14,16 +16,28 @@ public abstract class ToolBar implements ToolBarBuilder, Iobservable{
     private double height;
     private double width;
     protected Button _rectbutton = new RectButton();
+    protected Button _undobutton = new UndoButton();
+    protected Button _redobutton = new RedoButton();
     private Object _obj = null;
-    protected ArrayList<Iobserver> _obs = new ArrayList<>();
+    protected Iobserver _app;
 
-    public ToolBar(Iobserver obs){
-        registerOberver(obs);
+    public ToolBar(Iobserver app){
+        registerOberver(app);
     }
 
     @Override
     public Button getRectButton(){
         return _rectbutton;
+    }
+
+    @Override
+    public Button getRedoButton(){
+      return _redobutton;
+    }
+
+    @Override
+    public Button getUndoButton(){
+      return _undobutton;
     }
 
     @Override
@@ -37,14 +51,13 @@ public abstract class ToolBar implements ToolBarBuilder, Iobservable{
     }
 
     @Override
-        public void registerOberver(Iobserver obs) {
-        _obs.add(obs);
+        public void registerOberver(Iobserver app) {
+          _app = app;
     }
 
     @Override
     public void unRegisterObserver(Iobserver obs) {
-        if(_obs.contains(obs))
-            _obs.remove(obs);
+      _app = null;
     }
 
 
@@ -74,30 +87,21 @@ public abstract class ToolBar implements ToolBarBuilder, Iobservable{
 
     @Override
   public void notifyObservers(String code) {
-    for (Iobserver obs : _obs) {
-        obs.update(code);
-      }
+    _app.update(code);
   }
 
   @Override
   public void notifyObservers(String code, int X, int Y) {
-    for (Iobserver obs : _obs) {
-      obs.update(code,X, Y);
-    }
+    _app.update(code,X, Y);
   }
 
   @Override
   public void notifyObservers(String code, double X, double Y) {
-    for (Iobserver obs : _obs) {
-      obs.update(code,X, Y);
-    }
+    _app.update(code,X, Y);
   }
 
   @Override
   public void notifyObservers(String code, double X, double Y, String ref) {
-    for (Iobserver obs : _obs) {
-      obs.update(code,X, Y,ref);
-    }
+    _app.update(code,X, Y,ref);
   }
-
 }

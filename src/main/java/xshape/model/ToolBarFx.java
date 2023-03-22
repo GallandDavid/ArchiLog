@@ -55,5 +55,35 @@ public class ToolBarFx extends ToolBar {
   public void makeProduct() {
     createToolBar();
     createRectButton();
+    createRedoButton();
+    createUndoButton();
+  }
+
+  @Override
+  public void createRedoButton() {
+    javafx.scene.control.ToolBar tb = (javafx.scene.control.ToolBar) getProduct();
+    javafx.scene.control.Button bt = new javafx.scene.control.Button(getRedoButton().title());
+    bt.setOnMouseClicked(new EventHandler <MouseEvent>(){
+      public void handle(MouseEvent event){
+        bt.setCursor(Cursor.HAND);
+        event.consume();
+      }
+    });
+    tb.getItems().add(bt);
+    setProduct(tb);
+  }
+
+  @Override
+  public void createUndoButton() {
+    javafx.scene.control.ToolBar tb = (javafx.scene.control.ToolBar) getProduct();
+    javafx.scene.control.Button bt = new javafx.scene.control.Button(getUndoButton().title());
+    bt.setOnMouseClicked(new EventHandler <MouseEvent>(){
+      public void handle(MouseEvent event){
+        bt.setCursor(Cursor.HAND);
+        event.consume();
+      }
+    });
+    tb.getItems().add(bt);
+    setProduct(tb);
   }
 }

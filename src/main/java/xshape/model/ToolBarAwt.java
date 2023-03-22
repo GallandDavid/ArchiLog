@@ -56,22 +56,20 @@ public class ToolBarAwt extends ToolBar {
     }
 
     @Override
-    public void notifyObservers(String code, int X, int Y) {
-        for (Iobserver obs : _obs) {
-            obs.update(code, X, Y);
-        }
+    public void createRedoButton() {
+        JMenuBar mb = (JMenuBar) getProduct();
+        JMenuItem br = new JMenuItem(getRedoButton().title());
+        mb.add(br);
+        
+        setProduct(mb);
     }
 
     @Override
-    public void notifyObservers(String code) {
+    public void createUndoButton() {
+        JMenuBar mb = (JMenuBar) getProduct();
+        JMenuItem br = new JMenuItem(getUndoButton().title());
+        mb.add(br);
+        
+        setProduct(mb);
     }
-
-    @Override
-    public void notifyObservers(String code, double X, double Y) {
-    }
-
-    @Override
-    public void notifyObservers(String code, double X, double Y, String ref) {
-    }
-
 }

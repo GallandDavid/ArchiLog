@@ -44,25 +44,22 @@ public class FxApp extends XShape implements ToolBarDirector {
         return _toolbar.getProduct();
     }
 
-    @Override
-    public void pop() {
-    }
 
     @Override
     public void update(String code, double X, double Y) {
         switch(code){
             case "rect selected":
-                addSelectedShape((xshape.model.Shape) factory().createRectangle(X,Y,true,this));
+                selectedShape((xshape.model.Shape) factory().createRectangle(X,Y,true,this));
                 break;
             case "rect selected drag":
             
-                selected_item.position(new Point2D.Double(X,Y));
+                _selected_item.position(new Point2D.Double(X,Y));
                 break;
             case "rect select place":
-                if((Y - (selected_item.size().getY() / 2)) > _toolbar.getHeight())
+                if((Y - (_selected_item.size().getY() / 2)) > _toolbar.getHeight())
                     addShape(factory().createRectangle(X,Y,this));
-                selected_item.remove();
-                selected_item = null;
+                _selected_item.remove();
+                _selected_item = null;
                 System.gc();
                 break;
             default:
@@ -92,5 +89,10 @@ public class FxApp extends XShape implements ToolBarDirector {
                 break;
         }
         draw();
+    }
+
+    @Override
+    public ToolBar toolBar() {
+        return _toolbar;
     }
 }
