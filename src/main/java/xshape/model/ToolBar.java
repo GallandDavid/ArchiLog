@@ -3,6 +3,7 @@ package xshape.model;
 import java.util.ArrayList;
 
 import xshape.model.Builder.ToolBarBuilder;
+import xshape.model.Command.Command;
 import xshape.model.button.Button;
 import xshape.model.button.RectButton;
 import xshape.model.button.RedoButton;
@@ -103,5 +104,10 @@ public abstract class ToolBar implements ToolBarBuilder, Iobservable{
   @Override
   public void notifyObservers(String code, double X, double Y, String ref) {
     _app.update(code,X, Y,ref);
+  }
+
+  @Override
+  public void notifyObservers(Command command) {
+    _app.update(command);
   }
 }

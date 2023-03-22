@@ -14,8 +14,8 @@ public abstract class Rectangle implements Shape,Iobservable {
     private final UUID ID = UUID.randomUUID();
     private Point2D _pos;
     private Point2D _size;
-    protected static Point2D _visible_pos;
-    protected static Point2D _visible_size;
+    protected Point2D _visible_pos;
+    protected Point2D _visible_size;
     protected boolean _selected;
     protected static double _pos_x = 200;
     protected static double _pos_y = 200;
@@ -124,6 +124,11 @@ public abstract class Rectangle implements Shape,Iobservable {
 	public void unRegisterObserver(Iobserver obs) {
 		_app = null;
 	}
+
+    @Override
+    public void notifyObservers(Command command){
+        _app.update(command);
+    }
 
     /* 
     @Override

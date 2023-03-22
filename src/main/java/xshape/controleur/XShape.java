@@ -2,6 +2,7 @@ package xshape.controleur;
 
 import java.util.LinkedList;
 import xshape.model.Shape;
+import xshape.model.Command.Command;
 import xshape.model.Command.CommandHistory;
 import xshape.model.Command.ICommand;
 import xshape.model.abstractFactory.ShapeFactory;
@@ -174,5 +175,12 @@ public abstract class XShape implements CommandHistory, Iobserver{
         for(Shape s : array){
             System.out.println(s);
         }
+    }
+    
+    @Override 
+    public void update(Command command){
+        if(command.execute())
+            push(command);
+        draw();
     }
 }

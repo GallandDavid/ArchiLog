@@ -3,6 +3,9 @@ package xshape.model;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
+import xshape.controleur.XShape;
+import xshape.model.Command.RedoCommand;
+import xshape.model.Command.UndoCommand;
 import xshape.observer.Iobserver;
 public class ToolBarFx extends ToolBar {
 
@@ -65,6 +68,7 @@ public class ToolBarFx extends ToolBar {
     javafx.scene.control.Button bt = new javafx.scene.control.Button(getRedoButton().title());
     bt.setOnMouseClicked(new EventHandler <MouseEvent>(){
       public void handle(MouseEvent event){
+        notifyObservers(new RedoCommand((XShape) _app));
         bt.setCursor(Cursor.HAND);
         event.consume();
       }
@@ -79,6 +83,7 @@ public class ToolBarFx extends ToolBar {
     javafx.scene.control.Button bt = new javafx.scene.control.Button(getUndoButton().title());
     bt.setOnMouseClicked(new EventHandler <MouseEvent>(){
       public void handle(MouseEvent event){
+        notifyObservers(new UndoCommand((XShape) _app));
         bt.setCursor(Cursor.HAND);
         event.consume();
       }
