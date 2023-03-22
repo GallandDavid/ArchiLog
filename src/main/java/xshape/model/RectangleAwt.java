@@ -11,7 +11,6 @@ public class RectangleAwt extends Rectangle {
 
 	public RectangleAwt(Shape shape){
 		this(shape.position().getX(), shape.position().getY(), shape.size().getX(), shape.size().getY(), shape.isSelected(), shape._app);
-		ID = shape.ID;
 		visiblePosition(shape.visiblePosition());
 		visibleSize(shape.visibleSize());
 		_prev_mouse_pos_X = shape._prev_mouse_pos_X;

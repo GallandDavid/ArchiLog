@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import xshape.controleur.XShape;
-import xshape.model.Shape;
 
 public abstract class Command implements ICommand {
     public XShape _app;
@@ -18,24 +17,33 @@ public abstract class Command implements ICommand {
         num = count;
         _app = app;
         _editor = editor;
-
     }
 
-    @Override
-    public void saveBackup() {
+    public Command(XShape app){
+        count ++;
+        num = count;
+        _app = app;
+    }
+
+    public Object instanceShape(Object editor){
         Class<?> classe = null;
-        Shape shape = null;
+        Object shape = null;
         try {
-            classe = Class.forName (_editor.getClass().getName());
-            Constructor<?> constructeur = classe.getConstructor (new Class [] {Class.forName ("xshape.model.Shape")});
-            shape = (Shape) constructeur.newInstance (new Object [] {_editor});
+            classe = Class.forName (editor.getClass().getName());
+            Constructor<?> constructeur = classe.getConstructor (editor.getClass());
+            shape = constructeur.newInstance (new Object [] {editor});
         } 
         catch (ClassNotFoundException e) {  e.printStackTrace();    }
         catch (InstantiationException e) {  e.printStackTrace();    } 
         catch (IllegalAccessException e) {  e.printStackTrace();    } 
         catch (InvocationTargetException e) { e.printStackTrace();    } 
         catch (NoSuchMethodException e) { e.printStackTrace();    }
-        _backup = shape;
+        return shape;
+    }
+
+    @Override
+    public void saveBackup() {
+        _backup = instanceShape(_editor);
     }
 
     @Override

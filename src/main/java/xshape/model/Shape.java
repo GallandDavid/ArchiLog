@@ -10,7 +10,7 @@ import xshape.observer.Iobserver;
 public abstract class Shape implements IShape,Iobservable{
 
 	Iobserver _app;
-    protected UUID ID = UUID.randomUUID();
+    protected final String ID;
     private Point2D _pos;
     private Point2D _size;
     private Point2D _visible_pos;
@@ -26,11 +26,24 @@ public abstract class Shape implements IShape,Iobservable{
 
 	public Shape(Point2D pos, Point2D size, boolean selected, Iobserver obs){
         registerOberver(obs);
+        ID = UUID.randomUUID().toString();
         _pos  = pos;
         _size = size;
         _visible_pos  = pos;
         _visible_size = size;
         _selected = selected;
+    }
+
+    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, Iobserver obs){
+        _pos  = pos;
+        _size = size;
+        _visible_pos  = visible_pos;
+        _visible_size = visible_size;
+        _selected = selected;
+        _prev_mouse_pos_X = prev_mouse_pos_X;
+        _prev_mouse_pos_Y = prev_mouse_pos_Y;
+        this.ID = ID;
+        registerOberver(obs);
     }
 
 	@Override
@@ -64,7 +77,7 @@ public abstract class Shape implements IShape,Iobservable{
 	public Shape visibleSize(Point2D vec) { _visible_size = (Point2D) vec.clone(); return this; }
 
     @Override
-    public String getId(){ return ID.toString(); }
+    public String getId(){ return ID; }
 
     @Override
     public boolean isSelected(){ return _selected; }
@@ -99,20 +112,64 @@ public abstract class Shape implements IShape,Iobservable{
     @Override
     public String toString(){
         String str = "Rectangle :\n";
-        str += "Pos : (" + _pos.getX() + ", " + _pos.getY() + ")\n";
-        str += "Size : (" + _size.getX() + ", " + _size.getY() + ")\n";
-        str += "Visble Pos : (" + _visible_pos.getX() + ", " + _visible_pos.getY() + ")\n";
+        str += "Pos : (" + _pos.getX() + ", " + _pos.getY() + ")   |   ";
+        str += "Size : (" + _size.getX() + ", " + _size.getY() + ")   |   ";
+        str += "Visble Pos : (" + _visible_pos.getX() + ", " + _visible_pos.getY() + ")   |   ";
         str += "Visble Size : (" + _visible_size.getX() + ", " + _visible_size.getY() + ")\n";
-        str += "Ref : " + getId() + "\n";
+        str += "Ref : " + getId() + "   |   ";
         str += "Selected : " + _selected;
         return str;
     }
 
     @Override
     public boolean equals(Object obj){
-        Rectangle object = (Rectangle) obj;
-        if(object.getId() == this.getId())
-            return true;
-        return false;
+        if(obj == this) return true;
+        Shape object = (Shape) obj;
+        boolean ret = true;
+        if(!object.getId().equals(this.getId())){
+            System.out.println("Different ID");
+            ret = false;
+        }
+        if(!_pos.equals(object._pos)){
+            System.out.println("Different pos");
+            ret = false;
+        }
+        if(!_size.equals(object._size)){
+            System.out.println("Different size");
+            ret = false;
+        }
+        if(!_visible_pos.equals(object._visible_pos)){
+            System.out.println("Different visible pos");
+            ret = false;
+        }
+        if(!_visible_size.equals(object._visible_size) ){
+            System.out.println("Different visible size");
+            ret = false;
+        }
+        if(_selected != object._selected){
+            System.out.println("Selected different");
+            ret = false;
+        }
+
+        if(_prev_mouse_pos_X != object._prev_mouse_pos_X ){
+            System.out.println("Different mouse X");
+            ret = false;
+        }
+        if(_prev_mouse_pos_Y != object._prev_mouse_pos_Y){
+            System.out.println("Different mouse Y");
+            ret = false;
+        }
+        return ret;
+    }
+
+    @Override
+    public void duplicate(Shape shape){
+        this.position(shape.position());
+        this.size(shape.size());
+        this.visiblePosition(shape.visiblePosition());
+        this.visibleSize(shape.visibleSize());
+        this._selected = shape.isSelected();
+        this._prev_mouse_pos_X = shape.getPrevMousePosX();
+        this._prev_mouse_pos_Y = shape.getPrevMousePosY();
     }
 }

@@ -1,8 +1,11 @@
 package xshape.model.Command;
 
 import java.awt.geom.Point2D;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import xshape.controleur.XShape;
+import xshape.model.RectangleFx;
 import xshape.model.Shape;
 import xshape.model.Builder.ToolBarDirector;
 
@@ -24,6 +27,7 @@ public class ShapeTranslateCommand extends Command{
         Point2D tmp = (Point2D) ((Shape) _editor).visiblePosition();
         ((Shape) _editor).visiblePosition((Point2D) ((Shape) _editor).position());
         saveBackup();
+        System.out.println("editor = backup : " +((Shape) _editor).equals(_backup));
         if(_mouse_y < ((ToolBarDirector)_app).toolBar().getHeight()) return false;
         ((Shape) _editor).position((Point2D)tmp.clone());
         ((Shape) _editor).visiblePosition((Point2D)tmp.clone());
@@ -33,6 +37,7 @@ public class ShapeTranslateCommand extends Command{
         return  true;
     }
 
+
     @Override
     public String print() { return "ShapeTranslateCommand" + super.print(); }
 
@@ -40,20 +45,18 @@ public class ShapeTranslateCommand extends Command{
     @Override
     public void backup(){
         System.out.println("----------------\nbackup :" + print());
-        System.out.println((Shape)_editor);
-        _app.removeShape(((Shape)_backup).getId());
-        _app.addShape((Shape)_editor);
-        System.out.println((Shape)_backup);
+        Shape tmp = (Shape) instanceShape((Shape)_editor);
+        ((Shape)_editor).duplicate((Shape)_backup);
+        ((Shape)_backup).duplicate(tmp);
         System.out.println("backup\n-----------------");
     }
 
     @Override
     public void undo(){
         System.out.println("----------------\nundo :" + print());
-        System.out.println((Shape)_editor);
-        _app.removeShape(((Shape)_editor).getId());
-        _app.addShape((Shape)_backup);
-        System.out.println((Shape)_backup);
+        Shape tmp = (Shape) instanceShape((Shape)_editor);
+        ((Shape)_editor).duplicate((Shape)_backup);
+        ((Shape)_backup).duplicate(tmp);
         System.out.println("undo\n-----------------");
     }
 

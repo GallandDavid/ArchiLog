@@ -25,4 +25,6 @@ public interface IShape {
 	Point2D visibleSize();
 	Shape visibleSize(Point2D vec);
 	Shape visibleTranslate(Point2D vec);
+	boolean equals(Object obj);
+	void duplicate(Shape shape);
 }

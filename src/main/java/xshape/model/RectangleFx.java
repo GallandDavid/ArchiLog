@@ -17,13 +17,32 @@ public class RectangleFx extends Rectangle{
 	javafx.scene.shape.Rectangle _adapted;
     Group _grp;
     
-	public RectangleFx(Shape shape){
-		this(shape.position().getX(), shape.position().getY(), shape.size().getY(), shape.size().getX(), shape.isSelected(), ((RectangleFx)shape)._grp, shape._app);
-		ID = shape.ID;
-		visiblePosition(shape.visiblePosition());
-		visibleSize(shape.visibleSize());
-		_prev_mouse_pos_X = shape._prev_mouse_pos_X;
-		_prev_mouse_pos_Y = shape._prev_mouse_pos_Y;
+	public RectangleFx(RectangleFx shape){
+		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.isSelected(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape._app);
+		RectangleFx rfx = this;
+		_adapted = new javafx.scene.shape.Rectangle();
+		_grp = shape._grp;
+		_grp.getChildren().add(_adapted);
+    	_adapted.setOnMousePressed(new EventHandler <MouseEvent>(){
+            public void handle(MouseEvent event){
+                notifyObservers(new ShapeSelectCommand((XShape) _app, rfx, event.getX(), event.getY()));
+				_selected = true;
+				event.consume();
+            }
+        });
+		_adapted.setOnMouseDragged(new EventHandler <MouseEvent>(){
+            public void handle(MouseEvent event){
+              	notifyObservers(new ShapeDragCommand((XShape) _app, rfx, event.getX(), event.getY()));
+              	event.consume();
+            }
+        });
+    	_adapted.setOnMouseReleased(new EventHandler <MouseEvent>(){
+            public void handle(MouseEvent event){
+              	notifyObservers(new ShapeTranslateCommand((XShape) _app, rfx, event.getX(), event.getY()));
+				_selected = false;
+              	event.consume();
+            }
+        });
 	}
 
 	public RectangleFx( Group grp, Iobserver obs) {
@@ -71,7 +90,10 @@ public class RectangleFx extends Rectangle{
 
 	@Override
 	public void draw() {
-		if(!_grp.getChildren().contains(_adapted))
+		if(!_grp.
+		getChildren().
+		contains(
+			_adapted))
 			_grp.getChildren().add(_adapted);
 		Point2D p = visiblePosition();
 		Point2D	s = visibleSize();
@@ -88,5 +110,10 @@ public class RectangleFx extends Rectangle{
 	public void remove() {
 		_grp.getChildren().remove(_adapted);
 		System.gc();
+	}
+
+	@Override
+    public boolean equals(Object obj){
+		return super.equals(obj);
 	}
 }

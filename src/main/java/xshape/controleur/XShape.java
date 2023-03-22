@@ -130,15 +130,19 @@ public abstract class XShape implements CommandHistory, Iobserver{
     }
 
     private void printRedosHistory() {
-        System.out.println("--------------------\nprintRedosHistory :");
-        for (ICommand cmd : _redos) System.out.println(cmd.print());
-        System.out.println("printRedosHistory\n --------------------");
+        if(!_redos.isEmpty()){
+            System.out.println("--------------------\nprintRedosHistory :");
+            for (ICommand cmd : _redos) System.out.println(cmd.print());
+            System.out.println("printRedosHistory\n --------------------");
+        }
     }
 
     private void printCommandHistory() {
-        System.out.println("--------------------\nprintCommandHistory :");
-        for (ICommand cmd : _history) System.out.println(cmd.print());
-        System.out.println("printCommandHistory\n --------------------");
+        if(!_history.isEmpty()){
+            System.out.println("--------------------\nprintCommandHistory :");
+            for (ICommand cmd : _history) System.out.println(cmd.print());
+            System.out.println("printCommandHistory\n --------------------");
+        }
     }
 
     public void printSelectShape() {
