@@ -1,47 +1,22 @@
 package xshape.model;
 
 import java.awt.geom.Point2D;
+import java.util.UUID;
 
-public abstract class Rectangle implements Shape {
-    private Point2D _pos;
-    private Point2D _size;
-    
-    public Rectangle(){
-        _pos  = new Point2D.Double(0, 0);
-        _size = new Point2D.Double(1, 1);
+import xshape.observer.Iobserver;
+
+public abstract class Rectangle extends Shape {
+
+    public Rectangle(Point2D pos, Point2D size, boolean selected, Iobserver obs){
+        super(pos, size, selected, obs);
     }
 
-    public Rectangle(Point2D pos, Point2D size){
-        this._pos  = pos;
-        this._size = size;
-    }
-
-    @Override
-    public Point2D size() {
-        return (Point2D) _size.clone();
+    public Rectangle(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, Iobserver obs){
+        super(pos, size, visible_pos, visible_size, selected, prev_mouse_pos_X, prev_mouse_pos_Y, ID, obs);
     }
 
     @Override
-    public Shape size(Point2D vec) {
-        _size = (Point2D) vec.clone();
-        return this;
-    }
-
-    @Override
-    public Point2D position() {
-        return (Point2D) _pos.clone();
-    }
-
-    @Override
-    public Shape position(Point2D position) {
-        _pos = (Point2D) position.clone();
-        return this;
-    }
-
-    @Override
-    public Shape translate(Point2D vec) {
-        _pos.setLocation(_pos.getX() + vec.getX(),
-                _pos.getY() + vec.getY());
-        return this;
-    }
+    public boolean equals(Object obj){
+		return super.equals(obj);
+	}
 }

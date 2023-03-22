@@ -1,18 +1,17 @@
 package xshape.model.Builder;
 
-import xshape.model.Button;
+import xshape.model.button.Button;
 
 public interface ToolBarBuilder {
 
     void makeProduct();
-
-    Button getRectButton();
-
     void setProduct(Object obj);
-
-    void createToolBar();
-
+    Button getRectButton();
+    Button getRedoButton();
+    Button getUndoButton();
     Object getProduct();
-
+    void createToolBar();
     void createRectButton();
+    void createRedoButton();
+    void createUndoButton();
 }

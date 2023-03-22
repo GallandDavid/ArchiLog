@@ -2,21 +2,14 @@ package xshape.controleur;
 
 import java.awt.*;
 import javax.swing.*;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-
 import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.abstractFactory.ShapeFactoryAwt;
+import xshape.vue.AwtContext;
 import xshape.model.ToolBar;
-import xshape.model.Button;
 import xshape.model.ToolBarAwt;
 import xshape.model.Builder.ToolBarDirector;
-import xshape.vue.AwtContext;
 import xshape.controleur.AwtApp.JCanvas;
 
 class GUIHelper {
@@ -28,8 +21,7 @@ class GUIHelper {
             }
         };
         JCanvas jc = (JCanvas) component;
-        ToolBar tb = jc._toolBar;
-        frame.setJMenuBar((JMenuBar) tb.getProduct());
+        frame.setJMenuBar((JMenuBar) ((ToolBarDirector) jc._xshape).getToolBar());
 
         frame.addWindowListener(wa);
         frame.getContentPane().add(component);
@@ -38,15 +30,16 @@ class GUIHelper {
     }
 }
 
-public class AwtApp extends XShape {
-    class JCanvas extends JPanel implements ToolBarDirector {
+public class AwtApp extends XShape implements ToolBarDirector{
+    protected ToolBar _toolBar = new ToolBarAwt(this);
+    JCanvas _jc = null;
+    class JCanvas extends JPanel  {
         XShape _xshape = null;
-        protected ToolBar _toolBar = null;
 
         public JCanvas(XShape xs) {
-            _toolBar = new ToolBarAwt();
             _xshape = xs;
-            createToolBar();
+            ToolBarDirector tb = (ToolBarDirector) _xshape;
+            tb.createToolBar();
         }
 
         public void paint(Graphics g) {
@@ -55,10 +48,7 @@ public class AwtApp extends XShape {
             _xshape.draw();
         }
 
-        @Override
-        public void createToolBar() {
-            _toolBar.makeProduct();
-        }
+        
     }
 
     @Override
@@ -69,9 +59,23 @@ public class AwtApp extends XShape {
     @Override
     public void run() {
         JCanvas jc = new JCanvas(this);
+        _jc = jc;
         jc.setBackground(Color.WHITE);
         jc.setPreferredSize(new Dimension(500, 500));
         GUIHelper.showOnFrame(jc, "XShape Swing/AWT Rendering");
     }
 
+    @Override
+    public void createToolBar() {
+        _toolBar.makeProduct();
+    }
+
+    @Override
+    public Object getToolBar() {
+        return _toolBar.getProduct();
+    }
+    @Override
+    public ToolBar toolBar() {
+        return _toolBar;
+    }
 }
