@@ -22,8 +22,14 @@ public class DragSelectedCommand extends Command{
     }
 
     @Override
-    public void print() {
-        System.out.println("DragSelectedCommand");
-    }
+    public String print() { return "DragSelectedCommand" + super.print(); }
 
+    @Override
+    public void saveBackup(){}
+
+    @Override
+    public void backup() {}
+
+    @Override
+    public void undo() {}
 }

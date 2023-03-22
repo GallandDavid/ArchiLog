@@ -1,6 +1,5 @@
 package xshape.model.Command;
 import xshape.controleur.XShape;
-import xshape.model.Rectangle;
 import xshape.model.Shape;
 import xshape.model.Builder.ToolBarDirector;
 
@@ -35,32 +34,39 @@ public class RectPlaceCommand extends Command{
         if(_god_place){
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y,false, _app);
             _editor = shape;
+            saveBackup();
             _app.addShape(shape);
             return false;
         }
         _app._selected_item.remove();
         _app._selected_item = null;
-        System.out.println("y = " + _mouse_y + "   /   tb height : " + ((ToolBarDirector)_app).toolBar().getHeight() + "\n y > tb : " + (_mouse_y > ((ToolBarDirector)_app).toolBar().getHeight()));
         if(_mouse_y > ((ToolBarDirector)_app).toolBar().getHeight()){
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y, false, _app);
             _editor = shape;
+            saveBackup();
             _app.addShape(shape);
             return true;
         }
-
-        
         return false;
     }
 
     @Override
-    public void print() {
-        System.out.println("RectPlaceCommand");
-    }
+    public String print() { return "RectPlaceCommand" + super.print(); }
+
 
     @Override
     public void undo(){
-        _app.removeShape(((Rectangle) _editor).getId());
+        _app.removeShape(((Shape) _editor).getId());
+        System.gc();
     }
-    
+
+    @Override
+    public void backup(){
+        Shape s = (Shape)_backup;
+        if(s != null)
+            _app.addShape(s);
+        else    
+            System.out.println("backup null");
+    }
     
 }

@@ -20,8 +20,19 @@ public class RectangleSelectedCommand extends Command{
     }
 
     @Override
-    public void print() {
-        System.out.println("RectangleSelectedCommand");
-    }
+    public String print() { return "RectangleSelectedCommand" + super.print(); }
+
     
+
+    @Override
+    public void saveBackup(){
+    }
+
+    @Override
+    public void backup() {
+    }
+
+    @Override
+    public void undo() {
+    }
 }

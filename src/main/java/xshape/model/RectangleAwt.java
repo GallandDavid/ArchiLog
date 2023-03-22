@@ -9,6 +9,15 @@ import java.awt.*;
 
 public class RectangleAwt extends Rectangle {
 
+	public RectangleAwt(Shape shape){
+		this(shape.position().getX(), shape.position().getY(), shape.size().getX(), shape.size().getY(), shape.isSelected(), shape._app);
+		ID = shape.ID;
+		visiblePosition(shape.visiblePosition());
+		visibleSize(shape.visibleSize());
+		_prev_mouse_pos_X = shape._prev_mouse_pos_X;
+		_prev_mouse_pos_Y = shape._prev_mouse_pos_Y;
+	}
+
 	public RectangleAwt(Iobserver obs) {
 		this(_pos_x, _pos_y, _size_x, _size_y, false, obs);
 	}
@@ -49,6 +58,13 @@ public class RectangleAwt extends Rectangle {
 
 	@Override
 	public void remove() {
+	}
+
+	@Override
+	public Object clone(){
+
+
+		return null;
 	}
 
 }

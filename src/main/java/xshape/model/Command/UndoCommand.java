@@ -15,8 +15,19 @@ public class UndoCommand extends Command{
     }
 
     @Override
-    public void print() {
-        System.out.println("UndoCommand");
+    public String print() { return "UndoCommand" + super.print(); }
+
+
+    @Override
+    public void saveBackup(){
+    }
+
+    @Override
+    public void backup() {
+    }
+
+    @Override
+    public void undo() {
     }
     
 }

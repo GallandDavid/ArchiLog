@@ -26,77 +26,43 @@ public abstract class XShape implements CommandHistory, Iobserver{
     private void createScene() {
         Command command1 = new RectPlaceCommand(this, 20,300, true);
         Command command2 = new RectPlaceCommand(this, 100, 200, true);
-
         Command[] tmp = {command1,command2};
         for(Command cmd : tmp)
-            cmd.execute();/* 
-        addShape((Shape) _factory.createRectangle(false,this));
-
-        addShape((Shape) _factory.createRectangle(100,200,200,20,false,this));*/
+            cmd.execute();
     }
 
     public void draw() {
-        System.out.println("Draw\n------------");
         if(_factory == null)    _factory = createFactory();
         if (_shapes == null)    createScene();
 
-        if(_shapes != null){
-            System.out.println("Draw shapes\n------------");
-            for (Shape s : _shapes){
-                if(!s.isSelected())
-                    s.visiblePosition(s.position());
-                System.out.println(s);
+        if(_shapes != null)
+            for (Shape s : _shapes)
                 s.draw();
-            }
-        }
 
         if(_selected_item != null)
             _selected_item.draw();
 
     }
 
-    public ShapeFactory factory(){
-        return _factory;
-    }
+    public ShapeFactory factory(){ return _factory; }
 
     public void addShape(Shape shape){
-        if(_selected_item != null)
-            System.out.println(_selected_item);
         Shape[] tmp;
-        if(_shapes == null){
-            System.out.println("_shapes null");
+        if(_shapes == null)
             tmp = new Shape[1];
-        }
-        else{
-            System.out.println("_shapes not null");
+        else
             tmp = new Shape[_shapes.length + 1];
-        }
-        System.out.println("tmp lenght : " + tmp.length);
-        for (int i = 0; i < tmp.length - 1; i++) {
-            System.out.println(i + "eme shapes in tmp");
+        for (int i = 0; i < tmp.length - 1; i++) 
             tmp[i] = _shapes[i];
-        }
         tmp[tmp.length - 1] = shape;
-        printArray(tmp);
         _shapes = tmp;
-        printArray(_shapes);
     }
 
-    public void addSelectedShape(Shape shape){
-        this._selected_item = shape;
-    }
+    public void addSelectedShape(Shape shape){ this._selected_item = shape; }
 
-    public Shape getShape(String ref){
-        for (Shape s : _shapes) {
-            if(s.getId().equals(ref)){
-                return s;
-            }
-        }
-        return null;
-    }
+    public Shape getShape(String ref){ for (Shape s : _shapes) if(s.getId().equals(ref)) return s; return null; }
 
     public void removeShape(String ref){
-        System.out.println("remove shape : " + ref);
         if(_shapes.length != 0){
             Shape[] shapes = new Shape[_shapes.length - 1];
             int j = 0;
@@ -112,70 +78,69 @@ public abstract class XShape implements CommandHistory, Iobserver{
         }
     }
 
-    public void printShapes(){
-        if(_shapes != null)
-            for(Shape s : _shapes)
-                System.out.println(s.toString());
-    }
+    public void printShapes(){ if(_shapes != null) for(Shape s : _shapes) System.out.println(s.toString()); }
 
     @Override
-    public void undo(){
-        if(!asUndo())
-            pushRedo(pop());
-    }
+    public void undo(){ if(!asUndo()) pushRedo(pop()); }
 
-    public boolean asUndo(){
-        return _history.isEmpty();
-    }
+    public boolean asUndo(){ return _history.isEmpty(); }
 
     @Override
-    public void redo(){
-        if(!asRedo()){
-            ICommand redo = popRedo();
-            redo.execute();
-            push(redo);
-        }
-    }
+    public void redo(){ if(!asRedo()) push(popRedo()); }
 
-    public boolean asRedo(){
-        return _redos.isEmpty();
-    }
+    public boolean asRedo(){ return _redos.isEmpty(); }
 
     @Override
-    public void push(ICommand command){
-        clearRedo();
-        _history.addLast(command);
-    }
+    public void push(ICommand command){ _history.addLast(command); }
 
     @Override
-    public void pushRedo(ICommand command){
-        _redos.addLast(command);
-        command.undo();
-    }
+    public void pushRedo(ICommand command){ _redos.addLast(command); }
 
 
     @Override
     public ICommand pop(){
-        return _history.removeLast();
+        ICommand cmd = _history.removeLast();
+        cmd.undo();
+        return cmd;
     }
 
     @Override
     public ICommand popRedo(){
-        return _redos.removeLast();
+        ICommand cmd = _redos.removeLast();
+        cmd.backup();
+        return cmd;
     }
 
     @Override
-    public void clearRedo(){
-        _redos.clear();
-    }
-
+    public void clearRedo(){ _redos.clear(); }
 
     @Override 
     public void update(Command command){
-        if(command.execute())
+        
+        if(command.execute()){
+            printCommandHistory();
+            printRedosHistory();
             push(command);
+            clearRedo();
+            printCommandHistory();
+            printRedosHistory();
+        }
         draw();
+        
     }
+
+    private void printRedosHistory() {
+        System.out.println("--------------------\nprintRedosHistory :");
+        for (ICommand cmd : _redos) System.out.println(cmd.print());
+        System.out.println("printRedosHistory\n --------------------");
+    }
+
+    private void printCommandHistory() {
+        System.out.println("--------------------\nprintCommandHistory :");
+        for (ICommand cmd : _history) System.out.println(cmd.print());
+        System.out.println("printCommandHistory\n --------------------");
+    }
+
     public void printSelectShape() {
         System.out.println("Start select shape :\n----------");
         if(_selected_item == null)
@@ -185,11 +150,7 @@ public abstract class XShape implements CommandHistory, Iobserver{
         System.out.println("End select shape :\n----------");
     }
 
-    public void printArray(Shape[] array){
-        for(Shape s : array){
-            System.out.println(s);
-        }
-    }
+    public void printArray(Shape[] array){ for(Shape s : array) System.out.println(s); }
 
 }
 

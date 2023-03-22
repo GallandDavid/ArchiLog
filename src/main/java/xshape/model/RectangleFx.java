@@ -16,8 +16,15 @@ public class RectangleFx extends Rectangle{
 
 	javafx.scene.shape.Rectangle _adapted;
     Group _grp;
-	boolean _m_p = false;
     
+	public RectangleFx(Shape shape){
+		this(shape.position().getX(), shape.position().getY(), shape.size().getY(), shape.size().getX(), shape.isSelected(), ((RectangleFx)shape)._grp, shape._app);
+		ID = shape.ID;
+		visiblePosition(shape.visiblePosition());
+		visibleSize(shape.visibleSize());
+		_prev_mouse_pos_X = shape._prev_mouse_pos_X;
+		_prev_mouse_pos_Y = shape._prev_mouse_pos_Y;
+	}
 
 	public RectangleFx( Group grp, Iobserver obs) {
 		this(_pos_x, _pos_y, _size_y, _size_x, false, grp, obs);
@@ -42,26 +49,21 @@ public class RectangleFx extends Rectangle{
 		_grp.getChildren().add(_adapted);
     	_adapted.setOnMousePressed(new EventHandler <MouseEvent>(){
             public void handle(MouseEvent event){
-				System.out.println("Rect mouse pressed " + getId());
                 notifyObservers(new ShapeSelectCommand((XShape) _app, rfx, event.getX(), event.getY()));
 				_selected = true;
-				_m_p = true;
 				event.consume();
             }
         });
 		_adapted.setOnMouseDragged(new EventHandler <MouseEvent>(){
             public void handle(MouseEvent event){
-				System.out.println("Rect mouse dragged " + getId());
-				if (_m_p)
-              		notifyObservers(new ShapeDragCommand((XShape) _app, rfx, event.getX(), event.getY()));
+              	notifyObservers(new ShapeDragCommand((XShape) _app, rfx, event.getX(), event.getY()));
               	event.consume();
             }
         });
     	_adapted.setOnMouseReleased(new EventHandler <MouseEvent>(){
             public void handle(MouseEvent event){
-				System.out.println("Rect mouse realeased");
               	notifyObservers(new ShapeTranslateCommand((XShape) _app, rfx, event.getX(), event.getY()));
-				_selected = true;
+				_selected = false;
               	event.consume();
             }
         });
@@ -69,18 +71,22 @@ public class RectangleFx extends Rectangle{
 
 	@Override
 	public void draw() {
-		Point2D pos = visiblePosition();
-		Point2D	size = size();
+		if(!_grp.getChildren().contains(_adapted))
+			_grp.getChildren().add(_adapted);
+		Point2D p = visiblePosition();
+		Point2D	s = visibleSize();
 		
-		_adapted.setX(pos.getX()- size.getX()/2);
-		_adapted.setY(pos.getY()- size.getY()/2);
-		_adapted.setWidth(size.getX());
-		_adapted.setHeight(size.getY());
+		_adapted.setX(p.getX()- s.getX()/2);
+		_adapted.setY(p.getY()- s.getY()/2);
+		_adapted.setWidth(s.getX());
+		_adapted.setHeight(s.getY());
 		_adapted.setFill(Color.BLUE);
+		_adapted.toBack();
 	}
 
 	@Override
 	public void remove() {
 		_grp.getChildren().remove(_adapted);
+		System.gc();
 	}
 }

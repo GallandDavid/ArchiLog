@@ -15,8 +15,20 @@ public class RedoCommand extends Command{
     }
 
     @Override
-    public void print() {
-        System.out.println("RedoCommand");
+    public String print() { return "RedoCommand" + super.print(); }
+
+
+
+    @Override
+    public void saveBackup(){
+    }
+
+    @Override
+    public void backup() {
+    }
+
+    @Override
+    public void undo() {
     }
     
 }

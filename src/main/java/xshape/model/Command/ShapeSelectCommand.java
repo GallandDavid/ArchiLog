@@ -16,13 +16,26 @@ public class ShapeSelectCommand extends Command{
     @Override
     public boolean execute() {
         Shape shape =  (Shape) _editor;
+        shape._selected = true;
         shape.setPrevMouse(_mouse_x, _mouse_y);
         return false;
     }
 
     @Override
-    public void print() {
-        System.out.println("ShapeSelectCommand");
+    public String print() { return "ShapeSelectCommand" + super.print(); }
+
+
+
+    @Override
+    public void saveBackup()  {
+    }
+
+    @Override
+    public void backup() {
+    }
+
+    @Override
+    public void undo() {
     }
     
 }
