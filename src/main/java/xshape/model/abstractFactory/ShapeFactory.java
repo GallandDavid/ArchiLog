@@ -1,6 +1,6 @@
 package xshape.model.abstractFactory;
 
-import xshape.model.Rectangle;
+import xshape.model.shape.Rectangle;
 import xshape.observer.Iobserver;
 
 public interface ShapeFactory {

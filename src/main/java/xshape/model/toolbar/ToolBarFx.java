@@ -1,4 +1,4 @@
-package xshape.model;
+package xshape.model.toolbar;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;

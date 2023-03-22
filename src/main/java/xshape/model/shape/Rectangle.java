@@ -1,4 +1,4 @@
-package xshape.model;
+package xshape.model.shape;
 
 import java.awt.geom.Point2D;
 import java.util.UUID;

@@ -1,13 +1,9 @@
 package xshape.model.Command;
 
 import java.awt.geom.Point2D;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import xshape.controleur.XShape;
-import xshape.model.RectangleFx;
-import xshape.model.Shape;
 import xshape.model.Builder.ToolBarDirector;
+import xshape.model.shape.Shape;
 
 public class ShapeTranslateCommand extends Command{
     private double _mouse_x;
