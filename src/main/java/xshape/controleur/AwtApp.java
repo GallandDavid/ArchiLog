@@ -6,9 +6,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.abstractFactory.ShapeFactoryAwt;
+import xshape.model.toolbar.ToolBar;
+import xshape.model.toolbar.ToolBarAwt;
 import xshape.vue.AwtContext;
-import xshape.model.ToolBar;
-import xshape.model.ToolBarAwt;
 import xshape.model.Builder.ToolBarDirector;
 import xshape.controleur.AwtApp.JCanvas;
 

@@ -3,7 +3,7 @@ package xshape.model.Command;
 import java.awt.geom.Point2D;
 
 import xshape.controleur.XShape;
-import xshape.model.Shape;
+import xshape.model.shape.Shape;
 
 public class ShapeDragCommand extends Command{
     private double _mouse_x;

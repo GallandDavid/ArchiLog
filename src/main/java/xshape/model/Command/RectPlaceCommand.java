@@ -1,7 +1,7 @@
 package xshape.model.Command;
 import xshape.controleur.XShape;
-import xshape.model.Shape;
 import xshape.model.Builder.ToolBarDirector;
+import xshape.model.shape.Shape;
 
 public class RectPlaceCommand extends Command{
     private double _mouse_x;

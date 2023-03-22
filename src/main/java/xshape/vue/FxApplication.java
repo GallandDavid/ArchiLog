@@ -29,8 +29,8 @@ public class FxApplication extends Application   {
             _root.getChildren().add(tb);
             Scene scene = new Scene(_root, 500, 500);
 
-            tb.prefWidthProperty().bind(scene.widthProperty().divide(100).multiply(xshape.model.ToolBar.getVw()));
-            tb.prefHeightProperty().bind(scene.heightProperty().divide(100).multiply(xshape.model.ToolBar.getVh()));
+            tb.prefWidthProperty().bind(scene.widthProperty().divide(100).multiply(xshape.model.toolbar.ToolBar.getVw()));
+            tb.prefHeightProperty().bind(scene.heightProperty().divide(100).multiply(xshape.model.toolbar.ToolBar.getVh()));
             _fxapp._toolbar.setWidth(tb.getPrefWidth());
             _fxapp._toolbar.setHeight(tb.getPrefHeight());
             primaryStage.setScene(scene);
