@@ -1,4 +1,4 @@
-package xshape.model;
+package xshape.model.toolbar;
 
 import xshape.model.Builder.ToolBarBuilder;
 import xshape.model.Command.Command;

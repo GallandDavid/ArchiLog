@@ -1,4 +1,4 @@
-package xshape.model;
+package xshape.model.toolbar;
 
 import java.awt.event.MouseListener;
 import javax.swing.JMenuBar;

@@ -1,9 +1,9 @@
 package xshape.controleur;
 
 import xshape.model.abstractFactory.*;
+import xshape.model.toolbar.ToolBar;
+import xshape.model.toolbar.ToolBarFx;
 import javafx.scene.Group;
-import xshape.model.ToolBar;
-import xshape.model.ToolBarFx;
 import xshape.model.Builder.ToolBarDirector;
 
 public class FxApp extends XShape implements ToolBarDirector {

@@ -3,8 +3,8 @@ package xshape.model.Command;
 import java.awt.geom.Point2D;
 
 import xshape.controleur.XShape;
-import xshape.model.Rectangle;
-import xshape.model.RectangleFx;
+import xshape.model.shape.Rectangle;
+import xshape.model.shape.RectangleFx;
 
 public class DragSelectedCommand extends Command{
     private double _mouse_x;

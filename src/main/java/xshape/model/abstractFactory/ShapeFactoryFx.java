@@ -1,7 +1,7 @@
 package xshape.model.abstractFactory;
 
-import xshape.model.Rectangle;
-import xshape.model.RectangleFx;
+import xshape.model.shape.Rectangle;
+import xshape.model.shape.RectangleFx;
 import xshape.observer.Iobserver;
 import javafx.scene.Group;
 

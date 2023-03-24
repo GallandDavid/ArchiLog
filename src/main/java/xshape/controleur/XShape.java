@@ -3,12 +3,12 @@ package xshape.controleur;
 
 import java.util.LinkedList;
 
-import xshape.model.Shape;
 import xshape.model.Command.Command;
 import xshape.model.Command.CommandHistory;
 import xshape.model.Command.ICommand;
 import xshape.model.Command.RectPlaceCommand;
 import xshape.model.abstractFactory.ShapeFactory;
+import xshape.model.shape.Shape;
 import xshape.observer.Iobserver;
 
 public abstract class XShape implements CommandHistory, Iobserver{
