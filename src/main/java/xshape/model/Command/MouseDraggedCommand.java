@@ -15,7 +15,7 @@ public class MouseDraggedCommand extends MouseCommand{
     @Override
     public boolean execute() {
         for (Object shape : _editor) {
-            ((Shape)shape).visiblePosition(new Point2D.Double(_mouse_x,_mouse_y));
+            ((Shape) shape).visibleTranslate((Point2D)  ((Shape) shape).getMouseVec(_mouse_x,_mouse_y));
             ((Shape)shape).setPrevMouse(_mouse_x,_mouse_y);
         }
         return false;

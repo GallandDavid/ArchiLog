@@ -16,8 +16,5 @@ public abstract class Rectangle extends Shape {
 
     @Override public boolean equals(Object obj){ return super.equals(obj); }
 
-    @Override
-	public boolean isInside(Point2D pos){
-        return pos.getX() > position().getX() && pos.getX() < position().getX() + size().getX() && pos.getY() > position().getY() && pos.getY() < position().getY() + size().getY();
-    }
+    
 }

@@ -66,4 +66,8 @@ public class RectangleAwt extends Rectangle {
 		return null;
 	}
 
+	@Override
+	public boolean isInside(Point2D pos){
+        return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() - 8 > position().getY() && pos.getY() - 8 <= position().getY() + size().getY();}
+
 }

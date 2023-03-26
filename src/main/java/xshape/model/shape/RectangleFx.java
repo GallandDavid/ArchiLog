@@ -74,4 +74,9 @@ public class RectangleFx extends Rectangle{
     public boolean equals(Object obj){
 		return super.equals(obj);
 	}
+
+	@Override
+	public boolean isInside(Point2D pos){
+        return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() > position().getY() - size().getY() / 2 && pos.getY() < position().getY() + size().getY() / 2;
+    }
 }
