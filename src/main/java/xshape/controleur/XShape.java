@@ -5,17 +5,19 @@ import java.util.LinkedList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import xshape.model.Builder.ToolBarDirector;
 import xshape.model.Command.Command;
 import xshape.model.Command.CommandHistory;
 import xshape.model.Command.ICommand;
-import xshape.model.Command.MouseCommand;
 import xshape.model.Command.RectPlaceCommand;
 import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.observer.Iobserver;
 import xshape.model.shape.Shape;
+import xshape.model.toolbar.ToolBar;
 import xshape.model.visitor.InputCommandVisitor;
 
-public abstract class XShape implements CommandHistory, Iobserver{
+public abstract class XShape implements ToolBarDirector, CommandHistory, Iobserver{
+    private ToolBar _toolBar = null;
     public boolean _selection = false;
     public Shape _selected_item = null;
     private ShapeFactory _factory = null;
@@ -49,6 +51,20 @@ public abstract class XShape implements CommandHistory, Iobserver{
         for (Shape s : _shapes)
             map.put(s.deepth(), s);
         return map;
+    }
+
+    protected void toolBar(ToolBar toolBar){
+        _toolBar = toolBar;
+    }
+
+    @Override
+    public Object getToolBar() {
+        return _toolBar.getProduct();
+    }
+
+    @Override
+    public ToolBar toolBar() {
+        return _toolBar;
     }
 
     public void draw(){

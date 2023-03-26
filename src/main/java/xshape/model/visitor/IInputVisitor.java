@@ -7,6 +7,7 @@ import xshape.model.Command.MouseExitedCommand;
 import xshape.model.Command.MouseMovedCommand;
 import xshape.model.Command.MousePressedCommand;
 import xshape.model.Command.MouseReleasedCommand;
+import xshape.model.Command.TrashBinCommand;
 
 public interface IInputVisitor {
     void visit(MouseClickedCommand mc);
@@ -16,4 +17,5 @@ public interface IInputVisitor {
     void visit(MouseMovedCommand mc);
     void visit(MousePressedCommand mc);
     void visit(MouseReleasedCommand mc);
+    void visit(TrashBinCommand mc);
 }   

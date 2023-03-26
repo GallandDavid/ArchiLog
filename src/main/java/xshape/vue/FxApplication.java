@@ -18,8 +18,10 @@ import xshape.model.Command.MouseExitedCommand;
 import xshape.model.Command.MouseMovedCommand;
 import xshape.model.Command.MousePressedCommand;
 import xshape.model.Command.MouseReleasedCommand;
+import xshape.model.Command.TrashBinCommand;
 import xshape.model.observer.Iobservable;
 import xshape.model.observer.Iobserver;
+import xshape.model.toolbar.ToolBarFx;
 
 public class FxApplication extends Application implements Iobservable{
     public static Group _root = new Group();
@@ -55,7 +57,12 @@ public class FxApplication extends Application implements Iobservable{
             scene.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    notifyObservers(new MouseReleasedCommand(_fxapp, e.getX(), e.getY()));
+                    System.out.println("released");
+                    System.out.println(e.getTarget());
+                    if(e.getTarget() == ((ToolBarFx) _fxapp.toolBar())._trashbin)
+                        notifyObservers(new TrashBinCommand(_fxapp));
+                    else
+                        notifyObservers(new MouseReleasedCommand(_fxapp, e.getX(), e.getY()));
                 }
             });
             scene.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
@@ -97,8 +104,8 @@ public class FxApplication extends Application implements Iobservable{
 
             tb.prefWidthProperty().bind(scene.widthProperty().divide(100).multiply(xshape.model.toolbar.ToolBar.getVw()));
             tb.prefHeightProperty().bind(scene.heightProperty().divide(100).multiply(xshape.model.toolbar.ToolBar.getVh()));
-            _fxapp._toolbar.setWidth(tb.getPrefWidth());
-            _fxapp._toolbar.setHeight(tb.getPrefHeight());
+            _fxapp.toolBar().setWidth(tb.getPrefWidth());
+            _fxapp.toolBar().setHeight(tb.getPrefHeight());
             primaryStage.setScene(scene);
             primaryStage.show();
         });

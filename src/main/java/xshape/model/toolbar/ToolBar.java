@@ -5,6 +5,7 @@ import xshape.model.Command.Command;
 import xshape.model.button.Button;
 import xshape.model.button.RectButton;
 import xshape.model.button.RedoButton;
+import xshape.model.button.TrashBinButton;
 import xshape.model.button.UndoButton;
 import xshape.model.observer.Iobservable;
 import xshape.model.observer.Iobserver;
@@ -17,8 +18,14 @@ public abstract class ToolBar implements ToolBarBuilder, Iobservable{
     protected Button _rectbutton = new RectButton();
     protected Button _undobutton = new UndoButton();
     protected Button _redobutton = new RedoButton();
+    protected Button _trashbinbutton = new TrashBinButton();
     private Object _obj = null;
     protected Iobserver _app;
+
+    public abstract double getTrashBinPosX();
+    public abstract double getTrashBinPosY();
+    public abstract double getTrashBinSizeX();
+    public abstract double getTrashBinSizeY();
 
     public ToolBar(Iobserver app){
         registerOberver(app);
@@ -37,6 +44,11 @@ public abstract class ToolBar implements ToolBarBuilder, Iobservable{
     @Override
     public Button getUndoButton(){
       return _undobutton;
+    }
+
+    @Override
+    public Button getTrashBinButton(){
+      return _trashbinbutton;
     }
 
     @Override

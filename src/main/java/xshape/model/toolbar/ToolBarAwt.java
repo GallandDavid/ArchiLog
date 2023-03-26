@@ -12,27 +12,29 @@ import xshape.controleur.XShape;
 import xshape.model.Command.DragSelectedCommand;
 import xshape.model.Command.RectPlaceCommand;
 import xshape.model.Command.RectangleSelectedCommand;
+import xshape.model.Command.RedoCommand;
+import xshape.model.Command.TrashBinCommand;
+import xshape.model.Command.UndoCommand;
 import xshape.model.observer.Iobserver;
 
 public class ToolBarAwt extends ToolBar {
+    private JMenuItem _trashbin = new JMenuItem();
 
     public ToolBarAwt(Iobserver obs) {
         super(obs);
     }
 
-    @Override
-    public void makeProduct() {
+    @Override public void makeProduct() {
         createToolBar();
         createRectButton();
+        createUndoButton();
+        createRedoButton();
+        createTrashBinButton();
     }
 
-    @Override
-    public void createToolBar() {
-        setProduct(new JMenuBar());
-    }
+    @Override public void createToolBar() { setProduct(new JMenuBar()); }
 
-    @Override
-    public void createRectButton() {
+    @Override public void createRectButton() {
         JMenuBar mb = (JMenuBar) getProduct();
         JMenuItem br = new JMenuItem(getRectButton().title());
         br.addMouseMotionListener(new MouseMotionListener() {
@@ -82,18 +84,71 @@ public class ToolBarAwt extends ToolBar {
             }
         });
         mb.add(br);
-        
         setProduct(mb);
-
     }
 
 
     @Override
     public void createRedoButton() {
+        JMenuBar mb = (JMenuBar) getProduct();
+        JMenuItem br = new JMenuItem(getRedoButton().title());
+        br.addMouseListener(new MouseListener() {
+            @Override public void mouseClicked(java.awt.event.MouseEvent e) { 
+                notifyObservers(new RedoCommand((XShape)_app, br));
+                br.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                e.consume(); 
+            }
+            @Override public void mouseEntered(java.awt.event.MouseEvent e) { e.consume(); }
+            @Override public void mouseExited(java.awt.event.MouseEvent e) { e.consume(); }
+            @Override public void mousePressed(java.awt.event.MouseEvent e) { e.consume(); }
+            @Override public void mouseReleased(java.awt.event.MouseEvent e) { e.consume(); }
+        });
+        mb.add(br);
+        setProduct(mb);
     }
 
     @Override
     public void createUndoButton() {
+        JMenuBar mb = (JMenuBar) getProduct();
+        JMenuItem br = new JMenuItem(getUndoButton().title());
+        br.addMouseListener(new MouseListener() {
+            @Override public void mouseClicked(java.awt.event.MouseEvent e) { 
+                notifyObservers(new UndoCommand((XShape)_app, br));
+                br.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                e.consume(); 
+            }
+            @Override public void mouseEntered(java.awt.event.MouseEvent e) { e.consume(); }
+            @Override public void mouseExited(java.awt.event.MouseEvent e) { e.consume(); }
+            @Override public void mousePressed(java.awt.event.MouseEvent e) { e.consume(); }
+            @Override public void mouseReleased(java.awt.event.MouseEvent e) { e.consume(); }
+        });
+        mb.add(br);
+        setProduct(mb);
     }
 
+    @Override
+    public void createTrashBinButton() {
+        JMenuBar mb = (JMenuBar) getProduct();
+        JMenuItem br = new JMenuItem(getTrashBinButton().title());
+        br.addMouseListener(new MouseListener() {
+            @Override public void mouseClicked(java.awt.event.MouseEvent e) { e.consume(); }
+            @Override public void mouseEntered(java.awt.event.MouseEvent e) { e.consume(); }
+            @Override public void mouseExited(java.awt.event.MouseEvent e) { e.consume(); }
+            @Override public void mousePressed(java.awt.event.MouseEvent e) { e.consume(); }
+            @Override public void mouseReleased(java.awt.event.MouseEvent e) { 
+                notifyObservers(new TrashBinCommand((XShape) _app));
+                br.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                e.consume();
+             }
+        });
+        _trashbin = br;
+        mb.add(br);
+        setProduct(mb);
+    }
+
+    @Override public void createSeparation() {}
+    @Override public double getTrashBinPosX() { return _trashbin.getLocation().getX(); }
+    @Override public double getTrashBinPosY() { return _trashbin.getLocation().getY(); }
+    @Override public double getTrashBinSizeX() { return _trashbin.getWidth();}
+    @Override public double getTrashBinSizeY() { return _trashbin.getHeight();}
 }

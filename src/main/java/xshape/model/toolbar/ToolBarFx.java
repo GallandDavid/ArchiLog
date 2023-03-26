@@ -1,16 +1,21 @@
 package xshape.model.toolbar;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.input.MouseEvent;
 import xshape.controleur.XShape;
 import xshape.model.Command.DragSelectedCommand;
 import xshape.model.Command.RectPlaceCommand;
 import xshape.model.Command.RectangleSelectedCommand;
 import xshape.model.Command.RedoCommand;
+import xshape.model.Command.TrashBinCommand;
 import xshape.model.Command.UndoCommand;
 import xshape.model.observer.Iobserver;
 public class ToolBarFx extends ToolBar {
+  public Button _trashbin;
 
   public ToolBarFx(Iobserver obs) {
     super(obs);
@@ -60,6 +65,8 @@ public class ToolBarFx extends ToolBar {
     createRectButton();
     createRedoButton();
     createUndoButton();
+    createSeparation();
+    createTrashBinButton();
   }
 
   @Override
@@ -90,5 +97,48 @@ public class ToolBarFx extends ToolBar {
     });
     tb.getItems().add(bt);
     setProduct(tb);
+  }
+
+  @Override
+  public void createTrashBinButton() {
+    javafx.scene.control.ToolBar tb = (javafx.scene.control.ToolBar) getProduct();
+    javafx.scene.control.Button bt = new javafx.scene.control.Button(getTrashBinButton().title());
+    bt.setOnMouseReleased(new EventHandler <MouseEvent>(){
+      public void handle(MouseEvent event){
+        notifyObservers(new TrashBinCommand((XShape) _app));
+        bt.setCursor(Cursor.HAND);
+        event.consume();
+      }
+    });
+    bt.setAlignment(Pos.CENTER_RIGHT);
+    _trashbin = bt;
+    tb.getItems().add(bt);
+    setProduct(tb);
+  }
+
+  @Override
+  public void createSeparation() {
+      ((javafx.scene.control.ToolBar) getProduct()).getItems().add(new Separator());
+  }
+
+  @Override
+  public double getTrashBinPosX() {
+    return _trashbin.getLayoutX();
+  }
+
+  @Override
+  public double getTrashBinPosY() {
+    return _trashbin.getLayoutY();
+  }
+
+  @Override
+  public double getTrashBinSizeX() {
+    return _trashbin.getWidth();
+  }
+
+  @Override
+  public double getTrashBinSizeY() {
+    return _trashbin.getHeight();
+
   }
 }

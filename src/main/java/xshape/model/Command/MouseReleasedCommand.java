@@ -16,7 +16,6 @@ public class MouseReleasedCommand extends MouseCommand{
     @Override
     public boolean execute() {
         for (Object shape : _editor) {
-            ((Shape) shape).setSelected(false);
             Point2D tmp = (Point2D) ((Shape) shape).visiblePosition();
             ((Shape) shape).visiblePosition((Point2D) ((Shape) shape).position());
             saveBackup();

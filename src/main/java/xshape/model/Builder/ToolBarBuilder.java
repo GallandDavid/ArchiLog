@@ -9,9 +9,12 @@ public interface ToolBarBuilder {
     Button getRectButton();
     Button getRedoButton();
     Button getUndoButton();
+    Button getTrashBinButton();
     Object getProduct();
     void createToolBar();
     void createRectButton();
     void createRedoButton();
     void createUndoButton();
+    void createTrashBinButton();
+    void createSeparation();
 }
