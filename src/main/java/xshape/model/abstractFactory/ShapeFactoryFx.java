@@ -1,8 +1,8 @@
 package xshape.model.abstractFactory;
 
+import xshape.model.observer.Iobserver;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.RectangleFx;
-import xshape.observer.Iobserver;
 import javafx.scene.Group;
 
 public class ShapeFactoryFx implements ShapeFactory {

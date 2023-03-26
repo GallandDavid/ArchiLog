@@ -2,13 +2,16 @@ package xshape.model.Command;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 import xshape.controleur.XShape;
+import xshape.model.visitor.IInputVisitor;
+import xshape.model.visitor.IVisitable;
 
-public abstract class Command implements ICommand {
+public abstract class Command implements ICommand, IVisitable{
     public XShape _app;
-    protected Object _editor;
-    protected Object _backup;
+    protected ArrayList<Object> _editor = new ArrayList<>();
+    protected ArrayList<Object> _backup = new ArrayList<>();
     private static int count = 0;
     private int num;
 
@@ -16,13 +19,18 @@ public abstract class Command implements ICommand {
         count ++;
         num = count;
         _app = app;
-        _editor = editor;
+        _editor.add(editor);
     }
 
     public Command(XShape app){
         count ++;
         num = count;
         _app = app;
+    }
+
+    @Override
+    public void add(Object obj){
+        _editor.add(obj);
     }
 
     public Object instanceShape(Object editor){
@@ -43,12 +51,16 @@ public abstract class Command implements ICommand {
 
     @Override
     public void saveBackup() {
-        _backup = instanceShape(_editor);
+        for (Object editor : _editor) {
+            _backup.add(instanceShape(editor));
+        }
+        
     }
 
     @Override
     public String print(){
         return "" + num;
     }
+
     
 }

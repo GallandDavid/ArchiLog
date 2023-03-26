@@ -1,27 +1,35 @@
 package xshape.controleur;
 
-
+import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import xshape.model.Command.Command;
 import xshape.model.Command.CommandHistory;
 import xshape.model.Command.ICommand;
+import xshape.model.Command.MouseCommand;
 import xshape.model.Command.RectPlaceCommand;
 import xshape.model.abstractFactory.ShapeFactory;
+import xshape.model.observer.Iobserver;
 import xshape.model.shape.Shape;
-import xshape.observer.Iobserver;
+import xshape.model.visitor.InputCommandVisitor;
 
 public abstract class XShape implements CommandHistory, Iobserver{
+    public boolean _selection = false;
     public Shape _selected_item = null;
     private ShapeFactory _factory = null;
     Shape[] _shapes = null;
     LinkedList<ICommand> _history = new LinkedList<>();
     LinkedList<ICommand> _redos = new LinkedList<>();
+    InputCommandVisitor _ic_visitor = new InputCommandVisitor();
 
     //method factory to delegate instanciation of Shapefactory to subclass
     protected abstract ShapeFactory createFactory();
     //Handler to start the GUI
     public abstract void run();
+
+    abstract void render();
 
     private void createScene() {
         Command command1 = new RectPlaceCommand(this, 20,300, true);
@@ -31,17 +39,28 @@ public abstract class XShape implements CommandHistory, Iobserver{
             cmd.execute();
     }
 
-    public void draw() {
+    public SortedMap<Integer, Shape> orderShapes() {
+        SortedMap<Integer, Shape> map = new TreeMap<Integer, Shape>(
+                                            new Comparator<Integer>() {
+                                                public int compare(Integer a, Integer b){
+                                                    return b.compareTo(a);
+                                                    }
+                                            });
+        for (Shape s : _shapes)
+            map.put(s.deepth(), s);
+        return map;
+    }
+
+    public void draw(){
         if(_factory == null)    _factory = createFactory();
         if (_shapes == null)    createScene();
 
         if(_shapes != null)
-            for (Shape s : _shapes)
+            for(Shape s : orderShapes().values())
                 s.draw();
-
         if(_selected_item != null)
             _selected_item.draw();
-
+        render();
     }
 
     public ShapeFactory factory(){ return _factory; }
@@ -116,6 +135,7 @@ public abstract class XShape implements CommandHistory, Iobserver{
 
     @Override 
     public void update(Command command){
+        command.accept(_ic_visitor);
         
         if(command.execute()){
             printCommandHistory();
@@ -155,6 +175,19 @@ public abstract class XShape implements CommandHistory, Iobserver{
     }
 
     public void printArray(Shape[] array){ for(Shape s : array) System.out.println(s); }
+
+    public Shape[] getShapes() {
+        return _shapes;
+    }
+
+    public void selection(boolean sel){
+        _selection = sel;
+    }
+
+    public boolean selection(){
+        return _selection;
+    }
+
 
 }
 

@@ -42,4 +42,8 @@ public class FxApp extends XShape implements ToolBarDirector {
     public ToolBar toolBar() {
         return _toolbar;
     }
+
+    @Override
+    void render() {
+    }
 }

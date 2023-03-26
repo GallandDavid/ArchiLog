@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 
 import xshape.controleur.XShape;
 import xshape.model.shape.Shape;
+import xshape.model.visitor.IInputVisitor;
 
 public class ShapeDragCommand extends Command{
     private double _mouse_x;
@@ -17,9 +18,8 @@ public class ShapeDragCommand extends Command{
 
     @Override
     public boolean execute() {
-        Shape shape =  (Shape) _editor;
-        shape.visibleTranslate((Point2D) shape.getMouseVec(_mouse_x,_mouse_y).clone());
-        shape.setPrevMouse(_mouse_x,_mouse_y);
+        for (Object shape : _editor) 
+            ((Shape) shape).visibleTranslate((Point2D)  ((Shape) shape).getMouseVec(_mouse_x,_mouse_y).clone());
         return false;
     }
 
@@ -38,5 +38,9 @@ public class ShapeDragCommand extends Command{
 
     @Override
     public void undo() {
+    }
+
+    @Override
+    public void accept(IInputVisitor visitor) {
     }
 }

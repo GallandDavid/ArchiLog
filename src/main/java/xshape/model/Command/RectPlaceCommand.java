@@ -2,6 +2,7 @@ package xshape.model.Command;
 import xshape.controleur.XShape;
 import xshape.model.Builder.ToolBarDirector;
 import xshape.model.shape.Shape;
+import xshape.model.visitor.IInputVisitor;
 
 public class RectPlaceCommand extends Command{
     private double _mouse_x;
@@ -33,7 +34,7 @@ public class RectPlaceCommand extends Command{
     public boolean execute() {
         if(_god_place){
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y,false, _app);
-            _editor = shape;
+            _editor.add(shape);
             _app.addShape(shape);
             return false;
         }
@@ -41,7 +42,7 @@ public class RectPlaceCommand extends Command{
         _app._selected_item = null;
         if(_mouse_y > ((ToolBarDirector)_app).toolBar().getHeight()){
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y, false, _app);
-            _editor = shape;
+            _editor.add(shape);
             saveBackup();
             _app.addShape(shape);
             return true;
@@ -55,17 +56,20 @@ public class RectPlaceCommand extends Command{
 
     @Override
     public void undo(){
-        _app.removeShape(((Shape) _editor).getId());
+        for (Object shape : _editor)
+            _app.removeShape(((Shape) shape).getId());
         System.gc();
     }
 
     @Override
     public void backup(){
-        Shape s = (Shape)_backup;
-        if(s != null)
-            _app.addShape(s);
-        else    
-            System.out.println("backup null");
+        if(_editor != null || !_editor.isEmpty())
+            for (Object shape : _editor)
+                _app.addShape((Shape) shape);
+    }
+
+    @Override
+    public void accept(IInputVisitor visitor) {
     }
     
 }

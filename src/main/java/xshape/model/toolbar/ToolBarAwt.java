@@ -6,7 +6,7 @@ import javax.swing.JMenuItem;
 
 import xshape.controleur.XShape;
 import xshape.model.Command.RectangleSelectedCommand;
-import xshape.observer.Iobserver;
+import xshape.model.observer.Iobserver;
 
 public class ToolBarAwt extends ToolBar {
 

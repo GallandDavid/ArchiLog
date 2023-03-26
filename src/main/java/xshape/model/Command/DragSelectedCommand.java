@@ -4,7 +4,7 @@ import java.awt.geom.Point2D;
 
 import xshape.controleur.XShape;
 import xshape.model.shape.Rectangle;
-import xshape.model.shape.RectangleFx;
+import xshape.model.visitor.IInputVisitor;
 
 public class DragSelectedCommand extends Command{
     private double _mouse_x;
@@ -18,8 +18,8 @@ public class DragSelectedCommand extends Command{
 
     @Override
     public boolean execute() {
-        System.out.println(((RectangleFx)_editor).toString());
-        ((Rectangle)_editor).visiblePosition(new Point2D.Double(_mouse_x,_mouse_y));
+        for (Object shape : _editor) 
+            ((Rectangle) shape).visiblePosition(new Point2D.Double(_mouse_x,_mouse_y));
         return false;
     }
 
@@ -34,4 +34,8 @@ public class DragSelectedCommand extends Command{
 
     @Override
     public void undo() {}
+
+    @Override
+    public void accept(IInputVisitor visitor) {
+    }
 }

@@ -1,6 +1,7 @@
 package xshape.model.Command;
 
 import xshape.controleur.XShape;
+import xshape.model.visitor.IInputVisitor;
 
 public class RedoCommand extends Command{
 
@@ -29,6 +30,10 @@ public class RedoCommand extends Command{
 
     @Override
     public void undo() {
+    }
+
+    @Override
+    public void accept(IInputVisitor visitor) {
     }
     
 }

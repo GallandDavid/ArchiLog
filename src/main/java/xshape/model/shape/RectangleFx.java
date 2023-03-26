@@ -10,7 +10,7 @@ import xshape.controleur.XShape;
 import xshape.model.Command.ShapeDragCommand;
 import xshape.model.Command.ShapeSelectCommand;
 import xshape.model.Command.ShapeTranslateCommand;
-import xshape.observer.Iobserver;
+import xshape.model.observer.Iobserver;
 
 public class RectangleFx extends Rectangle{
 
@@ -18,31 +18,10 @@ public class RectangleFx extends Rectangle{
     Group _grp;
     
 	public RectangleFx(RectangleFx shape){
-		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.isSelected(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape._app);
-		RectangleFx rfx = this;
+		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.isSelected(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth(), shape._app);
 		_adapted = new javafx.scene.shape.Rectangle();
 		_grp = shape._grp;
 		_grp.getChildren().add(_adapted);
-    	_adapted.setOnMousePressed(new EventHandler <MouseEvent>(){
-            public void handle(MouseEvent event){
-                notifyObservers(new ShapeSelectCommand((XShape) _app, rfx, event.getX(), event.getY()));
-				_selected = true;
-				event.consume();
-            }
-        });
-		_adapted.setOnMouseDragged(new EventHandler <MouseEvent>(){
-            public void handle(MouseEvent event){
-              	notifyObservers(new ShapeDragCommand((XShape) _app, rfx, event.getX(), event.getY()));
-              	event.consume();
-            }
-        });
-    	_adapted.setOnMouseReleased(new EventHandler <MouseEvent>(){
-            public void handle(MouseEvent event){
-              	notifyObservers(new ShapeTranslateCommand((XShape) _app, rfx, event.getX(), event.getY()));
-				_selected = false;
-              	event.consume();
-            }
-        });
 	}
 
 	public RectangleFx( Group grp, Iobserver obs) {
@@ -62,30 +41,9 @@ public class RectangleFx extends Rectangle{
 	}
     public RectangleFx(double posX, double posY, double height, double width, boolean selected, Group grp, Iobserver obs) {
 		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected, obs);
-		RectangleFx rfx = this;
 		_adapted = new javafx.scene.shape.Rectangle();
 		_grp = grp;
 		_grp.getChildren().add(_adapted);
-    	_adapted.setOnMousePressed(new EventHandler <MouseEvent>(){
-            public void handle(MouseEvent event){
-                notifyObservers(new ShapeSelectCommand((XShape) _app, rfx, event.getX(), event.getY()));
-				_selected = true;
-				event.consume();
-            }
-        });
-		_adapted.setOnMouseDragged(new EventHandler <MouseEvent>(){
-            public void handle(MouseEvent event){
-              	notifyObservers(new ShapeDragCommand((XShape) _app, rfx, event.getX(), event.getY()));
-              	event.consume();
-            }
-        });
-    	_adapted.setOnMouseReleased(new EventHandler <MouseEvent>(){
-            public void handle(MouseEvent event){
-              	notifyObservers(new ShapeTranslateCommand((XShape) _app, rfx, event.getX(), event.getY()));
-				_selected = false;
-              	event.consume();
-            }
-        });
 	}
 
 	@Override

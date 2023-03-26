@@ -9,7 +9,7 @@ import xshape.model.Command.RectPlaceCommand;
 import xshape.model.Command.RectangleSelectedCommand;
 import xshape.model.Command.RedoCommand;
 import xshape.model.Command.UndoCommand;
-import xshape.observer.Iobserver;
+import xshape.model.observer.Iobserver;
 public class ToolBarFx extends ToolBar {
 
   public ToolBarFx(Iobserver obs) {

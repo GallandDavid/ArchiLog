@@ -1,4 +1,4 @@
-package xshape.observer;
+package xshape.model.observer;
 
 import xshape.model.Command.Command;
 
