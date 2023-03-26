@@ -2,6 +2,7 @@ package xshape.model.Command;
 
 import xshape.controleur.XShape;
 import xshape.model.shape.Shape;
+import xshape.model.visitor.IInputVisitor;
 
 public class RectangleSelectedCommand extends Command{
     private double _mouse_x;
@@ -34,5 +35,9 @@ public class RectangleSelectedCommand extends Command{
 
     @Override
     public void undo() {
+    }
+
+    @Override
+    public void accept(IInputVisitor visitor) {
     }
 }

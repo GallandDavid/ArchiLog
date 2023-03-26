@@ -4,27 +4,31 @@ import java.awt.geom.Point2D;
 import java.util.UUID;
 
 import xshape.model.Command.Command;
-import xshape.observer.Iobservable;
-import xshape.observer.Iobserver;
+import xshape.model.observer.Iobservable;
+import xshape.model.observer.Iobserver;
 
 public abstract class Shape implements IShape,Iobservable{
+    private static int _max_deepth = -1;
+    protected static double _pos_x = 200;
+    protected static double _pos_y = 200;
+    protected static double _size_x = 100;
+    protected static double _size_y = 100;
 
 	Iobserver _app;
     protected final String ID;
     private Point2D _pos;
     private Point2D _size;
+
+    private int _deepth;
+    private boolean _selected;
+    private boolean _placed;
     private Point2D _visible_pos;
     private Point2D _visible_size;
-    public boolean _selected;
-    protected static double _pos_x = 200;
-    protected static double _pos_y = 200;
-    protected static double _size_x = 100;
-    protected static double _size_y = 100;
     protected double _prev_mouse_pos_X;
     protected double _prev_mouse_pos_Y;
-	
 
 	public Shape(Point2D pos, Point2D size, boolean selected, Iobserver obs){
+        _max_deepth ++;
         registerOberver(obs);
         ID = UUID.randomUUID().toString();
         _pos  = pos;
@@ -32,9 +36,11 @@ public abstract class Shape implements IShape,Iobservable{
         _visible_pos  = pos;
         _visible_size = size;
         _selected = selected;
+        _placed = true;
+        _deepth = _max_deepth;
     }
 
-    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, Iobserver obs){
+    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, Iobserver obs){
         _pos  = pos;
         _size = size;
         _visible_pos  = visible_pos;
@@ -43,6 +49,8 @@ public abstract class Shape implements IShape,Iobservable{
         _prev_mouse_pos_X = prev_mouse_pos_X;
         _prev_mouse_pos_Y = prev_mouse_pos_Y;
         this.ID = ID;
+        _placed = placed;
+        _deepth = deepth;
         registerOberver(obs);
     }
 
@@ -78,9 +86,6 @@ public abstract class Shape implements IShape,Iobservable{
 
     @Override
     public String getId(){ return ID; }
-
-    @Override
-    public boolean isSelected(){ return _selected; }
 
     @Override
 	public void registerOberver(Iobserver obs) { _app = obs; }
@@ -172,4 +177,28 @@ public abstract class Shape implements IShape,Iobservable{
         this._prev_mouse_pos_X = shape.getPrevMousePosX();
         this._prev_mouse_pos_Y = shape.getPrevMousePosY();
     }
+
+    /**
+     * @return boolean return the _selected
+     */
+    @Override
+    public boolean isSelected() { return _selected; }
+
+    /**
+     * @param _selected the _selected to set
+     */
+    public void setSelected(boolean selected) { _selected = selected; }
+
+    /**
+     * @return boolean return the _placed
+     */
+    public boolean isPlaced() { return _placed; }
+
+    /**
+     * @param _placed the _placed to set
+     */
+    public void setPlaced(boolean placed) { _placed = placed; }
+    public int deepth(){ return _deepth; }
+    public void deepth(int deepth){ _deepth = deepth; }
+
 }

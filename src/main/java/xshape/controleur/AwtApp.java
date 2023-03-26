@@ -2,14 +2,28 @@ package xshape.controleur;
 
 import java.awt.*;
 import javax.swing.*;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.abstractFactory.ShapeFactoryAwt;
+import xshape.model.observer.Iobservable;
+import xshape.model.observer.Iobserver;
 import xshape.model.toolbar.ToolBar;
 import xshape.model.toolbar.ToolBarAwt;
 import xshape.vue.AwtContext;
 import xshape.model.Builder.ToolBarDirector;
+import xshape.model.Command.Command;
+import xshape.model.Command.MouseClickedCommand;
+import xshape.model.Command.MouseDraggedCommand;
+import xshape.model.Command.MouseEnteredCommand;
+import xshape.model.Command.MouseExitedCommand;
+import xshape.model.Command.MouseMovedCommand;
+import xshape.model.Command.MousePressedCommand;
+import xshape.model.Command.MouseReleasedCommand;
 import xshape.controleur.AwtApp.JCanvas;
 
 class GUIHelper {
@@ -21,6 +35,9 @@ class GUIHelper {
             }
         };
         JCanvas jc = (JCanvas) component;
+        frame.addMouseListener(jc);
+
+        frame.addMouseMotionListener(jc);
         frame.setJMenuBar((JMenuBar) ((ToolBarDirector) jc._xshape).getToolBar());
 
         frame.addWindowListener(wa);
@@ -33,11 +50,11 @@ class GUIHelper {
 public class AwtApp extends XShape implements ToolBarDirector{
     protected ToolBar _toolBar = new ToolBarAwt(this);
     JCanvas _jc = null;
-    class JCanvas extends JPanel  {
+    class JCanvas extends JPanel implements MouseListener, MouseMotionListener, Iobservable  {
         XShape _xshape = null;
 
         public JCanvas(XShape xs) {
-            _xshape = xs;
+            registerOberver(xs);
             ToolBarDirector tb = (ToolBarDirector) _xshape;
             tb.createToolBar();
         }
@@ -48,13 +65,20 @@ public class AwtApp extends XShape implements ToolBarDirector{
             _xshape.draw();
         }
 
-        
+        @Override public void mouseClicked(MouseEvent e) { notifyObservers(new MouseClickedCommand(_xshape, e.getX(), e.getY())); }
+        @Override public void mouseEntered(MouseEvent e) { notifyObservers(new MouseEnteredCommand(_xshape, e.getX(), e.getY())); }
+        @Override public void mouseExited(MouseEvent e) { notifyObservers(new MouseExitedCommand(_xshape, e.getX(), e.getY())); }
+        @Override public void mousePressed(MouseEvent e) { notifyObservers(new MousePressedCommand(_xshape, e.getX(), e.getY())); }
+        @Override public void mouseReleased(MouseEvent e) { notifyObservers(new MouseReleasedCommand(_xshape, e.getX(), e.getY())); }
+        @Override public void mouseDragged(MouseEvent e) { notifyObservers(new MouseDraggedCommand(_xshape, e.getX(), e.getY())); }
+        @Override public void mouseMoved(MouseEvent e) { notifyObservers(new MouseMovedCommand(_xshape, e.getX(), e.getY())); }
+
+        @Override public void registerOberver(Iobserver obs) { _xshape = (XShape) obs; }
+        @Override public void unRegisterObserver(Iobserver obs) { _xshape = null; }
+        @Override public void notifyObservers(Command command) { _xshape.update(command); }
     }
 
-    @Override
-    protected ShapeFactory createFactory() {
-        return new ShapeFactoryAwt();
-    }
+    @Override protected ShapeFactory createFactory() { return new ShapeFactoryAwt(); }
 
     @Override
     public void run() {
@@ -66,9 +90,7 @@ public class AwtApp extends XShape implements ToolBarDirector{
     }
 
     @Override
-    public void createToolBar() {
-        _toolBar.makeProduct();
-    }
+    public void createToolBar() { _toolBar.makeProduct(); }
 
     @Override
     public Object getToolBar() {
@@ -77,5 +99,10 @@ public class AwtApp extends XShape implements ToolBarDirector{
     @Override
     public ToolBar toolBar() {
         return _toolBar;
+    }
+
+    @Override
+    void render() {
+        _jc.repaint();
     }
 }

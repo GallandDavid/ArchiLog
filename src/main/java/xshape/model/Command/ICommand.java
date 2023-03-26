@@ -6,4 +6,5 @@ public interface ICommand {
     boolean execute();
     void undo();
     String print();
+    void add(Object obj);
 }

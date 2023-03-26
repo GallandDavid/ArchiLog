@@ -1,7 +1,7 @@
 package xshape.model.abstractFactory;
 
+import xshape.model.observer.Iobserver;
 import xshape.model.shape.Rectangle;
-import xshape.observer.Iobserver;
 
 public interface ShapeFactory {
     Rectangle createRectangle(Iobserver obs);

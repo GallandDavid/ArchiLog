@@ -27,4 +27,5 @@ public interface IShape {
 	Shape visibleTranslate(Point2D vec);
 	boolean equals(Object obj);
 	void duplicate(Shape shape);
+	boolean isInside(Point2D pos);
 }

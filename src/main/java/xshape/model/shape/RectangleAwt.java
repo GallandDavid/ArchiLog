@@ -2,15 +2,15 @@ package xshape.model.shape;
 
 import java.awt.geom.Point2D;
 
-import xshape.observer.Iobserver;
+import xshape.model.observer.Iobserver;
 import xshape.vue.AwtContext;
 
 import java.awt.*;
 
 public class RectangleAwt extends Rectangle {
 
-	public RectangleAwt(Shape shape){
-		this(shape.position().getX(), shape.position().getY(), shape.size().getX(), shape.size().getY(), shape.isSelected(), shape._app);
+	public RectangleAwt(RectangleAwt shape){
+		super((Point2D) shape.position(), (Point2D) shape.size(), (Point2D) shape.visiblePosition(), (Point2D) shape.visibleSize(), shape.isSelected(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth(), shape._app);
 		visiblePosition(shape.visiblePosition());
 		visibleSize(shape.visibleSize());
 		_prev_mouse_pos_X = shape._prev_mouse_pos_X;
@@ -45,8 +45,8 @@ public class RectangleAwt extends Rectangle {
 	public void draw() {
         Graphics g = AwtContext.instance().graphics();
         Color c = g.getColor();
-		Point2D pos = position();
-		Point2D size = size();
+		Point2D pos = visiblePosition();
+		Point2D size = visibleSize();
         g.setColor(Color.BLUE);
         g.fillRect((int)(pos.getX() - size.getX()/2),
         (int)(pos.getY() - size.getY()/2),        
@@ -65,5 +65,9 @@ public class RectangleAwt extends Rectangle {
 
 		return null;
 	}
+
+	@Override
+	public boolean isInside(Point2D pos){
+        return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() - 8 > position().getY() && pos.getY() - 8 <= position().getY() + size().getY();}
 
 }

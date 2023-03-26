@@ -6,8 +6,8 @@ import xshape.model.button.Button;
 import xshape.model.button.RectButton;
 import xshape.model.button.RedoButton;
 import xshape.model.button.UndoButton;
-import xshape.observer.Iobservable;
-import xshape.observer.Iobserver;
+import xshape.model.observer.Iobservable;
+import xshape.model.observer.Iobserver;
 
 public abstract class ToolBar implements ToolBarBuilder, Iobservable{
     private static int vw = 100;

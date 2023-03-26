@@ -2,6 +2,7 @@ package xshape.model.Command;
 
 import xshape.controleur.XShape;
 import xshape.model.shape.Shape;
+import xshape.model.visitor.IInputVisitor;
 
 public class ShapeSelectCommand extends Command{
     private double _mouse_x;
@@ -15,9 +16,10 @@ public class ShapeSelectCommand extends Command{
 
     @Override
     public boolean execute() {
-        Shape shape =  (Shape) _editor;
-        shape._selected = true;
-        shape.setPrevMouse(_mouse_x, _mouse_y);
+        for (Object shape : _editor) {
+            ((Shape) shape).setSelected(true);
+            ((Shape) shape).setPrevMouse(_mouse_x, _mouse_y);
+        }
         return false;
     }
 
@@ -36,6 +38,10 @@ public class ShapeSelectCommand extends Command{
 
     @Override
     public void undo() {
+    }
+
+    @Override
+    public void accept(IInputVisitor visitor) {
     }
     
 }
