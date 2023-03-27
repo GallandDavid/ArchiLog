@@ -1,15 +1,8 @@
 package xshape.model.shape;
 
 import java.awt.geom.Point2D;
-
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import xshape.controleur.XShape;
-import xshape.model.Command.ShapeDragCommand;
-import xshape.model.Command.ShapeSelectCommand;
-import xshape.model.Command.ShapeTranslateCommand;
 import xshape.model.observer.Iobserver;
 
 public class RectangleFx extends Rectangle{
@@ -18,7 +11,7 @@ public class RectangleFx extends Rectangle{
     Group _grp;
     
 	public RectangleFx(RectangleFx shape){
-		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.isSelected(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth(), shape._app);
+		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.isMovable(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth(), shape._app);
 		_adapted = new javafx.scene.shape.Rectangle();
 		_grp = shape._grp;
 		_grp.getChildren().add(_adapted);
@@ -62,6 +55,8 @@ public class RectangleFx extends Rectangle{
 		_adapted.setHeight(s.getY());
 		_adapted.setFill(Color.BLUE);
 		_adapted.toBack();
+		if(isMovable()) _adapted.setStroke(Color.RED); else _adapted.setStroke(null);
+		if(selected()) _adapted.setOpacity(0.5); else _adapted.setOpacity(1.0);
 	}
 
 	@Override

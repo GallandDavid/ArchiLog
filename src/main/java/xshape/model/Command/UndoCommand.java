@@ -33,6 +33,7 @@ public class UndoCommand extends Command{
 
     @Override
     public void accept(IInputVisitor visitor) {
+        visitor.visit(this);
     }
     
 }

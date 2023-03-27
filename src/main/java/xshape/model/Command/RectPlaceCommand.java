@@ -34,7 +34,7 @@ public class RectPlaceCommand extends Command{
     public boolean execute() {
         if(_god_place){
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y,false, _app);
-            _editor.add(shape);
+            shape.selected(false);
             _app.addShape(shape);
             return false;
         }
@@ -42,6 +42,7 @@ public class RectPlaceCommand extends Command{
         _app._selected_item = null;
         if(_mouse_y > ((ToolBarDirector)_app).toolBar().getHeight()){
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y, false, _app);
+            shape.selected(true);
             _editor.add(shape);
             saveBackup();
             _app.addShape(shape);
@@ -70,6 +71,7 @@ public class RectPlaceCommand extends Command{
 
     @Override
     public void accept(IInputVisitor visitor) {
+        visitor.visit(this);
     }
     
 }

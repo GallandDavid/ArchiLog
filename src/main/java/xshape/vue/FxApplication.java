@@ -16,8 +16,10 @@ import xshape.model.Command.MouseDraggedCommand;
 import xshape.model.Command.MouseEnteredCommand;
 import xshape.model.Command.MouseExitedCommand;
 import xshape.model.Command.MouseMovedCommand;
-import xshape.model.Command.MousePressedCommand;
+import xshape.model.Command.MouseLeftClickPressedCommand;
 import xshape.model.Command.MouseReleasedCommand;
+import xshape.model.Command.MouseRightClickClickedCommand;
+import xshape.model.Command.MouseShiftLeftClickClickedCommand;
 import xshape.model.Command.TrashBinCommand;
 import xshape.model.observer.Iobservable;
 import xshape.model.observer.Iobserver;
@@ -45,42 +47,45 @@ public class FxApplication extends Application implements Iobservable{
             scene.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    notifyObservers(new MousePressedCommand(_fxapp, e.getX(), e.getY()));
+                    if(e.isPrimaryButtonDown() && e.isControlDown()) {}
+                    else if (e.isPrimaryButtonDown())  notifyObservers(new MouseLeftClickPressedCommand(_fxapp, e.getX(), e.getY()));
                 }
             });
             scene.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    notifyObservers(new MouseClickedCommand(_fxapp, e.getX(), e.getY()));
+                    if (!e.isPrimaryButtonDown()) notifyObservers(new MouseClickedCommand(_fxapp, e.getX(), e.getY()));
+                    if (!e.isSecondaryButtonDown()) notifyObservers(new MouseRightClickClickedCommand(_fxapp, e.getX(), e.getY()));
                 }
             });
             scene.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    System.out.println("released");
-                    System.out.println(e.getTarget());
-                    if(e.getTarget() == ((ToolBarFx) _fxapp.toolBar())._trashbin)
-                        notifyObservers(new TrashBinCommand(_fxapp));
-                    else
-                        notifyObservers(new MouseReleasedCommand(_fxapp, e.getX(), e.getY()));
+                    if(!e.isPrimaryButtonDown() && e.isControlDown()) notifyObservers(new MouseShiftLeftClickClickedCommand(_fxapp, e.getX(), e.getY()));
+                    else if (!e.isPrimaryButtonDown()){
+                        if(e.getTarget() == ((ToolBarFx) _fxapp.toolBar())._trashbin)
+                            notifyObservers(new TrashBinCommand(_fxapp));
+                        else
+                            notifyObservers(new MouseReleasedCommand(_fxapp, e.getX(), e.getY()));
+                    }
                 }
             });
             scene.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    notifyObservers(new MouseMovedCommand(_fxapp, e.getX(), e.getY()));
+                    if (e.isPrimaryButtonDown()) notifyObservers(new MouseMovedCommand(_fxapp, e.getX(), e.getY()));
                 }
             });
             scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    notifyObservers(new MouseDraggedCommand(_fxapp, e.getX(), e.getY()));
+                    if (e.isPrimaryButtonDown()) notifyObservers(new MouseDraggedCommand(_fxapp, e.getX(), e.getY()));
                 }
             });
             scene.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    notifyObservers(new MouseEnteredCommand(_fxapp, e.getX(), e.getY()));
+                    if (e.isPrimaryButtonDown()) notifyObservers(new MouseEnteredCommand(_fxapp, e.getX(), e.getY()));
                 }
             });
             scene.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, new EventHandler<MouseEvent>() {
@@ -92,7 +97,7 @@ public class FxApplication extends Application implements Iobservable{
             scene.addEventFilter(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    notifyObservers(new MouseExitedCommand(_fxapp, e.getX(), e.getY()));
+                    if (e.isPrimaryButtonDown()) notifyObservers(new MouseExitedCommand(_fxapp, e.getX(), e.getY()));
                 }
             });
 

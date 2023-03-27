@@ -1,5 +1,7 @@
 package xshape.model.Command;
 
+import java.util.ArrayList;
+
 import xshape.controleur.XShape;
 import xshape.model.shape.Shape;
 import xshape.model.visitor.IInputVisitor;
@@ -19,8 +21,13 @@ public class TrashBinCommand extends Command{
     @Override
     public boolean execute() {
         saveBackup();
-        for(Object shape : _editor)
-            _app.removeShape(((Shape) shape).getId());
+        ArrayList<String> tmp = new ArrayList<>();
+        for(Object shape : _editor){
+            System.out.println((Shape) shape);
+            tmp.add(((Shape) shape).getId());
+        }
+        for(String id : tmp)
+            _app.removeShape(id);
         return false;
     }
 

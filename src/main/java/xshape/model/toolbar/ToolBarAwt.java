@@ -148,7 +148,7 @@ public class ToolBarAwt extends ToolBar {
 
     @Override public void createSeparation() {}
     @Override public double getTrashBinPosX() { return _trashbin.getLocation().getX(); }
-    @Override public double getTrashBinPosY() { return _trashbin.getLocation().getY(); }
+    @Override public double getTrashBinPosY() { return _trashbin.getLocation().getY() + 40; }
     @Override public double getTrashBinSizeX() { return _trashbin.getWidth();}
     @Override public double getTrashBinSizeY() { return _trashbin.getHeight();}
 }

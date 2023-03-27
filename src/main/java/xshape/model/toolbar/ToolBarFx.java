@@ -120,25 +120,8 @@ public class ToolBarFx extends ToolBar {
   public void createSeparation() {
       ((javafx.scene.control.ToolBar) getProduct()).getItems().add(new Separator());
   }
-
-  @Override
-  public double getTrashBinPosX() {
-    return _trashbin.getLayoutX();
-  }
-
-  @Override
-  public double getTrashBinPosY() {
-    return _trashbin.getLayoutY();
-  }
-
-  @Override
-  public double getTrashBinSizeX() {
-    return _trashbin.getWidth();
-  }
-
-  @Override
-  public double getTrashBinSizeY() {
-    return _trashbin.getHeight();
-
-  }
+    @Override public double getTrashBinPosX() { return _trashbin.getLayoutX(); }
+    @Override public double getTrashBinPosY() { return _trashbin.getLayoutY(); }
+    @Override public double getTrashBinSizeX() { return _trashbin.getWidth();}
+    @Override public double getTrashBinSizeY() { return _trashbin.getHeight();}
 }

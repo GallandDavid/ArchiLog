@@ -34,6 +34,7 @@ public class RedoCommand extends Command{
 
     @Override
     public void accept(IInputVisitor visitor) {
+        visitor.visit(this);
     }
     
 }

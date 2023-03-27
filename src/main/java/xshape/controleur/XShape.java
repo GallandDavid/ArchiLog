@@ -98,6 +98,7 @@ public abstract class XShape implements ToolBarDirector, CommandHistory, Iobserv
     public Shape getShape(String ref){ for (Shape s : _shapes) if(s.getId().equals(ref)) return s; return null; }
 
     public void removeShape(String ref){
+        System.out.println(_shapes.length);
         if(_shapes.length != 0){
             Shape[] shapes = new Shape[_shapes.length - 1];
             int j = 0;
@@ -154,12 +155,8 @@ public abstract class XShape implements ToolBarDirector, CommandHistory, Iobserv
         command.accept(_ic_visitor);
         
         if(command.execute()){
-            printCommandHistory();
-            printRedosHistory();
             push(command);
             clearRedo();
-            printCommandHistory();
-            printRedosHistory();
         }
         draw();
         
@@ -193,6 +190,11 @@ public abstract class XShape implements ToolBarDirector, CommandHistory, Iobserv
     public void printArray(Shape[] array){ for(Shape s : array) System.out.println(s); }
 
     public Shape[] getShapes() {
+        System.out.println("get shape");
+        for (Shape s : _shapes) {
+            System.out.println(s);
+        }
+        System.out.println("get shape");
         return _shapes;
     }
 

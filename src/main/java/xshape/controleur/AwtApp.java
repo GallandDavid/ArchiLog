@@ -22,8 +22,10 @@ import xshape.model.Command.MouseDraggedCommand;
 import xshape.model.Command.MouseEnteredCommand;
 import xshape.model.Command.MouseExitedCommand;
 import xshape.model.Command.MouseMovedCommand;
-import xshape.model.Command.MousePressedCommand;
+import xshape.model.Command.MouseLeftClickPressedCommand;
 import xshape.model.Command.MouseReleasedCommand;
+import xshape.model.Command.MouseRightClickClickedCommand;
+import xshape.model.Command.MouseShiftLeftClickClickedCommand;
 import xshape.controleur.AwtApp.JCanvas;
 
 class GUIHelper {
@@ -38,7 +40,13 @@ class GUIHelper {
         frame.addMouseListener(jc);
 
         frame.addMouseMotionListener(jc);
-        frame.setJMenuBar((JMenuBar) ((ToolBarDirector) jc._xshape).getToolBar());
+        JMenuBar jb = (JMenuBar) ((ToolBarDirector) jc._xshape).getToolBar();
+            System.out.println("Size : (" + jc.getPreferredSize().getWidth() + ", " + component.getHeight()/100*ToolBar.getVh() + ")   |   ");
+        jb.setSize(new Dimension((int)(jc.getPreferredSize().getWidth()/100*ToolBar.getVw()), (int) component.getPreferredSize().getWidth()/100*ToolBar.getVh()));
+        frame.setJMenuBar(jb);
+        jc._xshape.toolBar().setWidth(jb.getPreferredSize().getWidth());
+        jc._xshape.toolBar().setHeight(jb.getPreferredSize().getHeight() + 40);
+        
 
         frame.addWindowListener(wa);
         frame.getContentPane().add(component);
@@ -47,8 +55,7 @@ class GUIHelper {
     }
 }
 
-public class AwtApp extends XShape implements ToolBarDirector{
-    protected ToolBar _toolBar = new ToolBarAwt(this);
+public class AwtApp extends XShape{
     JCanvas _jc = null;
     class JCanvas extends JPanel implements MouseListener, MouseMotionListener, Iobservable  {
         XShape _xshape = null;
@@ -65,13 +72,30 @@ public class AwtApp extends XShape implements ToolBarDirector{
             _xshape.draw();
         }
 
-        @Override public void mouseClicked(MouseEvent e) { notifyObservers(new MouseClickedCommand(_xshape, e.getX(), e.getY())); }
-        @Override public void mouseEntered(MouseEvent e) { notifyObservers(new MouseEnteredCommand(_xshape, e.getX(), e.getY())); }
-        @Override public void mouseExited(MouseEvent e) { notifyObservers(new MouseExitedCommand(_xshape, e.getX(), e.getY())); }
-        @Override public void mousePressed(MouseEvent e) { notifyObservers(new MousePressedCommand(_xshape, e.getX(), e.getY())); }
-        @Override public void mouseReleased(MouseEvent e) { notifyObservers(new MouseReleasedCommand(_xshape, e.getX(), e.getY())); }
-        @Override public void mouseDragged(MouseEvent e) { notifyObservers(new MouseDraggedCommand(_xshape, e.getX(), e.getY())); }
-        @Override public void mouseMoved(MouseEvent e) { notifyObservers(new MouseMovedCommand(_xshape, e.getX(), e.getY())); }
+        @Override public void mouseClicked(MouseEvent e) { 
+            if ((e.getButton() == MouseEvent.BUTTON1)) notifyObservers(new MouseClickedCommand(_xshape, e.getX(), e.getY()));
+            if ((e.getButton() == MouseEvent.BUTTON3)) notifyObservers(new MouseRightClickClickedCommand(_xshape, e.getX(), e.getY()));
+        }
+        @Override public void mouseEntered(MouseEvent e) { if((e.getButton() == MouseEvent.BUTTON1)) notifyObservers(new MouseEnteredCommand(_xshape, e.getX(), e.getY())); }
+        @Override public void mouseExited(MouseEvent e) { if((e.getButton() == MouseEvent.BUTTON1)) notifyObservers(new MouseExitedCommand(_xshape, e.getX(), e.getY())); }
+        @Override public void mousePressed(MouseEvent e) { 
+            if(e.getButton() == MouseEvent.BUTTON1 && e.isControlDown()) {}
+            else if (e.getButton() == MouseEvent.BUTTON1){ 
+                notifyObservers(new MouseLeftClickPressedCommand(_xshape, e.getX(), e.getY())); 
+            }
+        }
+        @Override public void mouseReleased(MouseEvent e) { 
+            if((e.getButton() == MouseEvent.BUTTON1) && e.isControlDown()){
+                System.out.println("ok");
+                notifyObservers(new MouseShiftLeftClickClickedCommand(_xshape, e.getX(), e.getY()));
+            }else if ((e.getButton() == MouseEvent.BUTTON1)){
+                notifyObservers(new MouseReleasedCommand(_xshape, e.getX(), e.getY()));
+            }
+        }
+        @Override public void mouseDragged(MouseEvent e) { 
+            notifyObservers(new MouseDraggedCommand(_xshape, e.getX(), e.getY())); 
+        }
+        @Override public void mouseMoved(MouseEvent e) { if((e.getButton() == MouseEvent.BUTTON1)) notifyObservers(new MouseMovedCommand(_xshape, e.getX(), e.getY())); }
 
         @Override public void registerOberver(Iobserver obs) { _xshape = (XShape) obs; }
         @Override public void unRegisterObserver(Iobserver obs) { _xshape = null; }
@@ -90,16 +114,11 @@ public class AwtApp extends XShape implements ToolBarDirector{
     }
 
     @Override
-    public void createToolBar() { _toolBar.makeProduct(); }
+    public void createToolBar() { 
+        toolBar(new ToolBarAwt(this));
+        toolBar().makeProduct(); 
+    }
 
-    @Override
-    public Object getToolBar() {
-        return _toolBar.getProduct();
-    }
-    @Override
-    public ToolBar toolBar() {
-        return _toolBar;
-    }
 
     @Override
     void render() {

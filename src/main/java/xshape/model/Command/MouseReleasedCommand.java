@@ -1,6 +1,7 @@
 package xshape.model.Command;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import xshape.controleur.XShape;
 import xshape.model.Builder.ToolBarDirector;
@@ -15,15 +16,20 @@ public class MouseReleasedCommand extends MouseCommand{
 
     @Override
     public boolean execute() {
-        for (Object shape : _editor) {
-            Point2D tmp = (Point2D) ((Shape) shape).visiblePosition();
-            ((Shape) shape).visiblePosition((Point2D) ((Shape) shape).position());
-            saveBackup();
-            if(_mouse_y < ((ToolBarDirector)_app).toolBar().getHeight()) return false;
-            ((Shape) shape).position((Point2D)tmp.clone());
-            ((Shape) shape).visiblePosition((Point2D)tmp.clone());
+        if(_editor.isEmpty()) return false;
+        if(_mouse_y < ((ToolBarDirector)_app).toolBar().getHeight()) return false;
+        ArrayList<Point2D> tmp = new ArrayList<>();
+        for (int i = 0; i < _editor.size(); i++) {
+            tmp.add(((Shape) _editor.get(i)).visiblePosition());
+            ((Shape) _editor.get(i)).setMovable(false);
+            ((Shape) _editor.get(i)).visiblePosition((Point2D) ((Shape) _editor.get(i)).position());
         }
-        return false;
+        saveBackup();
+        for (int i = 0; i < _editor.size(); i++) {
+            ((Shape) _editor.get(i)).position((Point2D)tmp.get(i).clone());
+            ((Shape) _editor.get(i)).visiblePosition((Point2D)tmp.get(i).clone());
+        }
+        return true;
     }
 
     @Override
@@ -36,7 +42,7 @@ public class MouseReleasedCommand extends MouseCommand{
         for (int i = 0; i < _editor.size(); i ++) {
             Shape tmp = (Shape) instanceShape((Shape)_editor.get(i));
             ((Shape)_editor.get(i)).duplicate((Shape)_backup.get(i));
-            ((Shape)_editor.get(i)).duplicate(tmp);
+            ((Shape)_backup.get(i)).duplicate(tmp);
         }
     }
 

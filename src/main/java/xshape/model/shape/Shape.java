@@ -19,15 +19,16 @@ public abstract class Shape implements IShape,Iobservable{
     private Point2D _pos;
     private Point2D _size;
 
-    private int _deepth;
     private boolean _selected;
+    private int _deepth;
+    private boolean _movable;
     private boolean _placed;
     private Point2D _visible_pos;
     private Point2D _visible_size;
     protected double _prev_mouse_pos_X;
     protected double _prev_mouse_pos_Y;
 
-	public Shape(Point2D pos, Point2D size, boolean selected, Iobserver obs){
+	public Shape(Point2D pos, Point2D size, boolean movable, Iobserver obs){
         _max_deepth ++;
         registerOberver(obs);
         ID = UUID.randomUUID().toString();
@@ -35,17 +36,17 @@ public abstract class Shape implements IShape,Iobservable{
         _size = size;
         _visible_pos  = pos;
         _visible_size = size;
-        _selected = selected;
+        _movable = movable;
         _placed = true;
         _deepth = _max_deepth;
     }
 
-    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, Iobserver obs){
+    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean movable, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, Iobserver obs){
         _pos  = pos;
         _size = size;
         _visible_pos  = visible_pos;
         _visible_size = visible_size;
-        _selected = selected;
+        _movable = movable;
         _prev_mouse_pos_X = prev_mouse_pos_X;
         _prev_mouse_pos_Y = prev_mouse_pos_Y;
         this.ID = ID;
@@ -122,7 +123,7 @@ public abstract class Shape implements IShape,Iobservable{
         str += "Visble Pos : (" + _visible_pos.getX() + ", " + _visible_pos.getY() + ")   |   ";
         str += "Visble Size : (" + _visible_size.getX() + ", " + _visible_size.getY() + ")\n";
         str += "Ref : " + getId() + "   |   ";
-        str += "Selected : " + _selected;
+        str += "movable : " + _movable;
         return str;
     }
 
@@ -151,8 +152,8 @@ public abstract class Shape implements IShape,Iobservable{
             System.out.println("Different visible size");
             ret = false;
         }
-        if(_selected != object._selected){
-            System.out.println("Selected different");
+        if(_movable != object._movable){
+            System.out.println("movable different");
             ret = false;
         }
 
@@ -169,25 +170,28 @@ public abstract class Shape implements IShape,Iobservable{
 
     @Override
     public void duplicate(Shape shape){
+        this.deepth(shape.deepth());
         this.position(shape.position());
         this.size(shape.size());
         this.visiblePosition(shape.visiblePosition());
         this.visibleSize(shape.visibleSize());
-        this._selected = shape.isSelected();
+        this._movable = shape.isMovable();
+        this._placed = shape.isPlaced();
+        this._app = shape._app;
         this._prev_mouse_pos_X = shape.getPrevMousePosX();
         this._prev_mouse_pos_Y = shape.getPrevMousePosY();
     }
 
     /**
-     * @return boolean return the _selected
+     * @return boolean return the _movable
      */
     @Override
-    public boolean isSelected() { return _selected; }
+    public boolean isMovable() { return _movable; }
 
     /**
-     * @param _selected the _selected to set
+     * @param _movable the _movable to set
      */
-    public void setSelected(boolean selected) { _selected = selected; }
+    public void setMovable(boolean movable) { _movable = movable; }
 
     /**
      * @return boolean return the _placed
@@ -200,5 +204,13 @@ public abstract class Shape implements IShape,Iobservable{
     public void setPlaced(boolean placed) { _placed = placed; }
     public int deepth(){ return _deepth; }
     public void deepth(int deepth){ _deepth = deepth; }
+
+    public boolean selected() {
+        return _selected;
+    }
+
+    public void selected(boolean selected) {
+        _selected = selected;
+    }
 
 }

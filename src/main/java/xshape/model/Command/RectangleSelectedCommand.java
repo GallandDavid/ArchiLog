@@ -16,7 +16,9 @@ public class RectangleSelectedCommand extends Command{
 
     @Override
     public boolean execute() {
-        _app.addSelectedShape((Shape) _app.factory().createRectangle(_mouse_x, _mouse_y, true, _app));
+        Shape s = (Shape) _app.factory().createRectangle(_mouse_x, _mouse_y, true, _app);
+        s.selected(true);
+        _app.addSelectedShape(s);
         return false;
     }
 
@@ -39,5 +41,6 @@ public class RectangleSelectedCommand extends Command{
 
     @Override
     public void accept(IInputVisitor visitor) {
+        visitor.visit(this);
     }
 }

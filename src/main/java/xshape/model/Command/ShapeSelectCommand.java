@@ -17,7 +17,7 @@ public class ShapeSelectCommand extends Command{
     @Override
     public boolean execute() {
         for (Object shape : _editor) {
-            ((Shape) shape).setSelected(true);
+            ((Shape) shape).setMovable(true);
             ((Shape) shape).setPrevMouse(_mouse_x, _mouse_y);
         }
         return false;
@@ -42,6 +42,7 @@ public class ShapeSelectCommand extends Command{
 
     @Override
     public void accept(IInputVisitor visitor) {
+        visitor.visit(this);
     }
     
 }

@@ -11,7 +11,7 @@ public interface IShape {
 	Shape position(Point2D position);
 	Shape translate(Point2D vec);
 	String getId();
-	boolean isSelected();
+	boolean isMovable();
 	String toString();
 	void remove();
 	void setPrevMousePosX(double X);

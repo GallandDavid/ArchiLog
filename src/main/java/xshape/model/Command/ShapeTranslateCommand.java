@@ -20,7 +20,7 @@ public class ShapeTranslateCommand extends Command{
     public boolean execute() {
         System.out.println("----------------\nexecute :" + print());
         for (Object shape : _editor) {
-            ((Shape) shape).setSelected(false);
+            ((Shape) shape).setMovable(false);
             Point2D tmp = (Point2D) ((Shape) shape).visiblePosition();
             ((Shape) shape).visiblePosition((Point2D) ((Shape) shape).position());
             saveBackup();
@@ -54,6 +54,7 @@ public class ShapeTranslateCommand extends Command{
 
     @Override
     public void accept(IInputVisitor visitor) {
+        visitor.visit(this);
     }
 
 
