@@ -10,7 +10,7 @@ public class Group extends Shape{
     private ArrayList<Shape> _group = new ArrayList<>();
 
     public Group(Point2D pos, Point2D size, boolean selected, Iobserver obs, ArrayList<Shape> group) {
-        super(pos, size, selected, obs);
+        super(pos, size, selected, obs, true);
         for (Shape shape : group)
             _group.add(shape);
         init();
@@ -29,10 +29,12 @@ public class Group extends Shape{
         }
         position(new Point2D.Double(min_x, min_y));
         size(new Point2D.Double(max_x - min_x, max_y - min_y));
+        visiblePosition(position());
+        visibleSize(size());
     }
 
     public Group(Point2D pos, Point2D size, boolean selected, Iobserver obs, Shape shape) {
-        super(pos, size, selected, obs);
+        super(pos, size, selected, obs, true);
         _group.add(shape);
     }
 
@@ -80,6 +82,15 @@ public class Group extends Shape{
     public boolean isInside(Point2D pos) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'isInside'");
+    }
+    
+    @Override
+    public String toString(){
+        String str = "Group : " + getId() + "\n";
+        for (Shape s : _group) {
+            str += s.toString() + "\n";
+        }
+        return str;
     }
     
 }

@@ -1,6 +1,6 @@
 package xshape.model.Command;
 import xshape.controleur.XShape;
-import xshape.model.Builder.ToolBarDirector;
+import xshape.model.Builder.toolbar.ToolBarDirector;
 import xshape.model.shape.Shape;
 import xshape.model.visitor.IInputVisitor;
 

@@ -1,6 +1,7 @@
 package xshape.model.visitor;
 
 import xshape.model.Command.DragSelectedCommand;
+import xshape.model.Command.GroupCommand;
 import xshape.model.Command.MouseClickedCommand;
 import xshape.model.Command.MouseDraggedCommand;
 import xshape.model.Command.MouseEnteredCommand;
@@ -17,6 +18,7 @@ import xshape.model.Command.ShapeDragCommand;
 import xshape.model.Command.ShapeSelectCommand;
 import xshape.model.Command.ShapeTranslateCommand;
 import xshape.model.Command.TrashBinCommand;
+import xshape.model.Command.UnGroupCommand;
 import xshape.model.Command.UndoCommand;
 
 public interface IInputVisitor {
@@ -38,4 +40,6 @@ public interface IInputVisitor {
     void visit(ShapeTranslateCommand shapeTranslateCommand);
     void visit(UndoCommand undoCommand);
     void visit(MouseShiftLeftClickClickedCommand mouseShiftRightClickClickedCommand);
+    void visit(GroupCommand groupCommand);
+    void visit(UnGroupCommand unGroupCommand);
 }   

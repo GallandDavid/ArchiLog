@@ -1,11 +1,15 @@
 package xshape.controleur;
 
+import java.awt.geom.Point2D;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import xshape.model.Builder.ToolBarDirector;
+import xshape.model.Builder.popupmenu.PopUpMenu;
+import xshape.model.Builder.popupmenu.PopUpMenuDirector;
+import xshape.model.Builder.toolbar.ToolBar;
+import xshape.model.Builder.toolbar.ToolBarDirector;
 import xshape.model.Command.Command;
 import xshape.model.Command.CommandHistory;
 import xshape.model.Command.ICommand;
@@ -13,11 +17,11 @@ import xshape.model.Command.RectPlaceCommand;
 import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.observer.Iobserver;
 import xshape.model.shape.Shape;
-import xshape.model.toolbar.ToolBar;
 import xshape.model.visitor.InputCommandVisitor;
 
-public abstract class XShape implements ToolBarDirector, CommandHistory, Iobserver{
+public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, CommandHistory, Iobserver{
     private ToolBar _toolBar = null;
+    private PopUpMenu _popUpMenu = null;
     public boolean _selection = false;
     public Shape _selected_item = null;
     private ShapeFactory _factory = null;
@@ -30,8 +34,9 @@ public abstract class XShape implements ToolBarDirector, CommandHistory, Iobserv
     protected abstract ShapeFactory createFactory();
     //Handler to start the GUI
     public abstract void run();
-
-    abstract void render();
+    public abstract void render();
+    public abstract void setPopUpMenu(Point2D pos, int selected, boolean grouped);
+    public abstract void removePopUpMenu();
 
     private void createScene() {
         Command command1 = new RectPlaceCommand(this, 20,300, true);
@@ -66,6 +71,21 @@ public abstract class XShape implements ToolBarDirector, CommandHistory, Iobserv
     public ToolBar toolBar() {
         return _toolBar;
     }
+
+    protected void popUpMenu(PopUpMenu popUpMenu){
+        _popUpMenu = popUpMenu;
+    }
+
+    @Override
+    public Object getPopUpMenu() {
+        return _popUpMenu.getProduct();
+    }
+
+    @Override
+    public PopUpMenu popUpMenu() {
+        return _popUpMenu;
+    }
+
 
     public void draw(){
         if(_factory == null)    _factory = createFactory();

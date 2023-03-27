@@ -19,6 +19,7 @@ public abstract class Shape implements IShape,Iobservable{
     private Point2D _pos;
     private Point2D _size;
 
+    private boolean _grouped;
     private boolean _selected;
     private int _deepth;
     private boolean _movable;
@@ -28,7 +29,8 @@ public abstract class Shape implements IShape,Iobservable{
     protected double _prev_mouse_pos_X;
     protected double _prev_mouse_pos_Y;
 
-	public Shape(Point2D pos, Point2D size, boolean movable, Iobserver obs){
+	public Shape(Point2D pos, Point2D size, boolean movable, Iobserver obs, boolean grouped){
+        _grouped = grouped;
         _max_deepth ++;
         registerOberver(obs);
         ID = UUID.randomUUID().toString();
@@ -41,7 +43,8 @@ public abstract class Shape implements IShape,Iobservable{
         _deepth = _max_deepth;
     }
 
-    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean movable, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, Iobserver obs){
+    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean movable, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, Iobserver obs, boolean grouped){
+        _grouped = grouped;
         _pos  = pos;
         _size = size;
         _visible_pos  = visible_pos;
@@ -55,65 +58,27 @@ public abstract class Shape implements IShape,Iobservable{
         registerOberver(obs);
     }
 
-	@Override
-    public Point2D size() { return (Point2D) _size.clone(); }
-
-    @Override
-    public Shape size(Point2D vec) { _size = (Point2D) vec.clone(); return this; }
-
-    @Override
-    public Point2D position() { return (Point2D) _pos.clone(); }
-
-    @Override
-    public Shape position(Point2D position) { _pos = (Point2D) position.clone(); return this; }
-
-    @Override
-    public Shape translate(Point2D vec) { _pos =  new Point2D.Double(_pos.getX() + vec.getX(),_pos.getY() + vec.getY()); return this; }
-
-    @Override
-    public Shape visibleTranslate(Point2D vec) { _visible_pos = new Point2D.Double(_visible_pos.getX() + vec.getX(),_visible_pos.getY() + vec.getY()); return this; }
-
-	@Override
-	public Point2D visiblePosition() { return (Point2D) _visible_pos.clone(); }
-
-	@Override
-	public Shape visiblePosition(Point2D position) { _visible_pos = (Point2D) position.clone(); return this; }
-
-	@Override
-	public Point2D visibleSize() { return (Point2D) _visible_size.clone(); }
-
-	@Override
-	public Shape visibleSize(Point2D vec) { _visible_size = (Point2D) vec.clone(); return this; }
-
-    @Override
-    public String getId(){ return ID; }
-
-    @Override
-	public void registerOberver(Iobserver obs) { _app = obs; }
-
-	@Override
-	public void unRegisterObserver(Iobserver obs) { _app = null; }
-
-    @Override
-    public void notifyObservers(Command command){ _app.update(command); }
-
-    @Override
-    public void setPrevMousePosX(double X){ _prev_mouse_pos_X = X; }
-
-    @Override
-    public void setPrevMousePosY(double Y){ _prev_mouse_pos_Y = Y; }
-
-    @Override
-    public void setPrevMouse(double x, double y){ _prev_mouse_pos_X = x; _prev_mouse_pos_Y = y; }
-
-    @Override
-    public double getPrevMousePosX(){ return _prev_mouse_pos_X; }
-
-    @Override
-    public double getPrevMousePosY(){ return _prev_mouse_pos_Y; }
-
-    @Override
-    public Point2D getMouseVec(double x, double y){ return new Point2D.Double(x - getPrevMousePosX(), y - getPrevMousePosY()); }
+    @Override public boolean grouped() { return _grouped; }
+	@Override public Point2D size() { return (Point2D) _size.clone(); }
+    @Override public Shape size(Point2D vec) { _size = (Point2D) vec.clone(); return this; }
+    @Override public Point2D position() { return (Point2D) _pos.clone(); }
+    @Override public Shape position(Point2D position) { _pos = (Point2D) position.clone(); return this; }
+    @Override public Shape translate(Point2D vec) { _pos =  new Point2D.Double(_pos.getX() + vec.getX(),_pos.getY() + vec.getY()); return this; }
+    @Override public Shape visibleTranslate(Point2D vec) { _visible_pos = new Point2D.Double(_visible_pos.getX() + vec.getX(),_visible_pos.getY() + vec.getY()); return this; }
+	@Override public Point2D visiblePosition() { return (Point2D) _visible_pos.clone(); }
+	@Override public Shape visiblePosition(Point2D position) { _visible_pos = (Point2D) position.clone(); return this; }
+	@Override public Point2D visibleSize() { return (Point2D) _visible_size.clone(); }
+	@Override public Shape visibleSize(Point2D vec) { _visible_size = (Point2D) vec.clone(); return this; }
+    @Override public String getId(){ return ID; }
+    @Override public void registerOberver(Iobserver obs) { _app = obs; }
+	@Override public void unRegisterObserver(Iobserver obs) { _app = null; }
+    @Override public void notifyObservers(Command command){ _app.update(command); }
+    @Override public void setPrevMousePosX(double X){ _prev_mouse_pos_X = X; }
+    @Override public void setPrevMousePosY(double Y){ _prev_mouse_pos_Y = Y; }
+    @Override public void setPrevMouse(double x, double y){ _prev_mouse_pos_X = x; _prev_mouse_pos_Y = y; }
+    @Override public double getPrevMousePosX(){ return _prev_mouse_pos_X; }
+    @Override public double getPrevMousePosY(){ return _prev_mouse_pos_Y; }
+    @Override public Point2D getMouseVec(double x, double y){ return new Point2D.Double(x - getPrevMousePosX(), y - getPrevMousePosY()); }
 
     @Override
     public String toString(){

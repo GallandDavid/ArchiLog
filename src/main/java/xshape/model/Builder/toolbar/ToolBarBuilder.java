@@ -1,4 +1,4 @@
-package xshape.model.Builder;
+package xshape.model.Builder.toolbar;
 
 import xshape.model.button.Button;
 

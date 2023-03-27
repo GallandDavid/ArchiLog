@@ -1,6 +1,5 @@
-package xshape.model.toolbar;
+package xshape.model.Builder.toolbar;
 
-import xshape.model.Builder.ToolBarBuilder;
 import xshape.model.Command.Command;
 import xshape.model.button.Button;
 import xshape.model.button.RectButton;

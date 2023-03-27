@@ -2,7 +2,7 @@ package xshape.model.Command;
 
 import java.awt.geom.Point2D;
 import xshape.controleur.XShape;
-import xshape.model.Builder.ToolBarDirector;
+import xshape.model.Builder.toolbar.ToolBarDirector;
 import xshape.model.shape.Shape;
 import xshape.model.visitor.IInputVisitor;
 

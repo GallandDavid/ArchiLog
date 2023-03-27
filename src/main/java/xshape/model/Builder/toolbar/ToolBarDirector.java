@@ -1,6 +1,4 @@
-package xshape.model.Builder;
-
-import xshape.model.toolbar.ToolBar;
+package xshape.model.Builder.toolbar;
 
 public interface ToolBarDirector {
     void createToolBar();
