@@ -25,12 +25,6 @@ public class RectangleSelectedCommand extends Command{
     @Override
     public String print() { return "RectangleSelectedCommand" + super.print(); }
 
-    
-
-    @Override
-    public void saveBackup(){
-    }
-
     @Override
     public void backup() {
     }

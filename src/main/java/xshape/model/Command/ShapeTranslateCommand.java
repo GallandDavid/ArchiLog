@@ -23,7 +23,7 @@ public class ShapeTranslateCommand extends Command{
             ((Shape) shape).setMovable(false);
             Point2D tmp = (Point2D) ((Shape) shape).visiblePosition();
             ((Shape) shape).visiblePosition((Point2D) ((Shape) shape).position());
-            saveBackup();
+            saveBackup(null);
             System.out.println("editor = backup : " +((Shape) shape).equals(_backup));
             if(_mouse_y < ((ToolBarDirector)_app).toolBar().getHeight()) return false;
             ((Shape) shape).position((Point2D)tmp.clone());
@@ -46,7 +46,7 @@ public class ShapeTranslateCommand extends Command{
     @Override
     public void undo(){
         for (int i = 0; i < _editor.size(); i ++) {
-            Shape tmp = (Shape) instanceShape((Shape)_editor.get(i));
+            Shape tmp = (Shape) instanceShape((Shape)_editor.get(i), null);
             ((Shape)_editor.get(i)).duplicate((Shape)_backup.get(i));
             ((Shape)_editor.get(i)).duplicate(tmp);
         }

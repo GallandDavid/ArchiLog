@@ -18,12 +18,6 @@ public class RedoCommand extends Command{
     @Override
     public String print() { return "RedoCommand" + super.print(); }
 
-
-
-    @Override
-    public void saveBackup(){
-    }
-
     @Override
     public void backup() {
     }

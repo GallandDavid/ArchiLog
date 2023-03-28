@@ -2,9 +2,13 @@ package xshape.model.Command;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import xshape.controleur.XShape;
+import xshape.model.shape.Shape;
 import xshape.model.visitor.IInputVisitor;
 import xshape.model.visitor.IVisitable;
 
@@ -33,13 +37,22 @@ public abstract class Command implements ICommand, IVisitable{
         _editor.add(obj);
     }
 
-    public Object instanceShape(Object editor){
+    public Object instanceShape(Object editor, ArrayList<Shape> shapes){
         Class<?> classe = null;
         Object shape = null;
         try {
+            Constructor<?> constructeur;
             classe = Class.forName (editor.getClass().getName());
-            Constructor<?> constructeur = classe.getConstructor (editor.getClass());
-            shape = constructeur.newInstance (new Object [] {editor});
+            if(shapes != null){
+                System.out.println(shapes.getClass());
+
+                constructeur = classe.getConstructor (editor.getClass(), ArrayList.class );
+                shape = constructeur.newInstance (new Object [] {editor}, shapes);
+            }
+            else{
+                constructeur = classe.getConstructor (editor.getClass());
+                shape = constructeur.newInstance (new Object [] {editor});
+            }
         } 
         catch (ClassNotFoundException e) {  e.printStackTrace();    }
         catch (InstantiationException e) {  e.printStackTrace();    } 
@@ -50,9 +63,9 @@ public abstract class Command implements ICommand, IVisitable{
     }
 
     @Override
-    public void saveBackup() {
+    public void saveBackup(ArrayList<Shape> shapes) {
         for (Object editor : _editor) {
-            _backup.add(instanceShape(editor));
+            _backup.add(instanceShape(editor,shapes));
         }
         
     }

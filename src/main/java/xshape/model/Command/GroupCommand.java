@@ -1,9 +1,12 @@
 package xshape.model.Command;
 
 import java.awt.geom.Point2D;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import xshape.controleur.XShape;
+import xshape.model.observer.Iobserver;
 import xshape.model.shape.Group;
 import xshape.model.shape.Shape;
 import xshape.model.visitor.IInputVisitor;
@@ -23,17 +26,27 @@ public class GroupCommand extends Command{
 
     @Override
     public boolean execute() {
-        saveBackup();
-        ArrayList<Shape> array = new ArrayList<>();
+        System.out.println("execute group cmd");
+        saveBackup(null);
+        ArrayList<Shape> array_backup = new ArrayList<>();
         for (Object s : _backup) {
             Shape shape = (Shape) s;
-            array.add(shape);
+            array_backup.add(shape);
             _app.removeShape(shape.getId());
         }
-        Group grp = new Group(new Point2D.Double(0,0), new Point2D.Double(0,0), false, _app, array);
+        Group grp = _app.factory().createGroup(new Point2D.Double(0,0), new Point2D.Double(0,0), false, _app, array_backup);
+        saveBackup(null);
+        _backup = new ArrayList<>();
+        ArrayList<Shape> groupe_array_backup = new ArrayList<>();
+        for (Object s : _backup) {
+            Shape shape = (Shape) s;
+            groupe_array_backup.add(shape);
+        }
         grp.selected(true);
-        grp.toString();
+        System.out.println(grp.toString());
+        instanceShape(grp, groupe_array_backup);
         _backup.add((Object) grp);
+        _app.addShape(grp);
         return true;
     }
 

@@ -44,7 +44,7 @@ public class RectPlaceCommand extends Command{
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y, false, _app);
             shape.selected(true);
             _editor.add(shape);
-            saveBackup();
+            saveBackup(null);
             _app.addShape(shape);
             return true;
         }

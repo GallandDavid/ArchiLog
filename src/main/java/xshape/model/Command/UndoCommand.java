@@ -18,11 +18,6 @@ public class UndoCommand extends Command{
     @Override
     public String print() { return "UndoCommand" + super.print(); }
 
-
-    @Override
-    public void saveBackup(){
-    }
-
     @Override
     public void backup() {
     }

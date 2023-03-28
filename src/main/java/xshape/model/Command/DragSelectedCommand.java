@@ -1,9 +1,11 @@
 package xshape.model.Command;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import xshape.controleur.XShape;
 import xshape.model.shape.Rectangle;
+import xshape.model.shape.Shape;
 import xshape.model.visitor.IInputVisitor;
 
 public class DragSelectedCommand extends Command{
@@ -27,7 +29,7 @@ public class DragSelectedCommand extends Command{
     public String print() { return "DragSelectedCommand" + super.print(); }
 
     @Override
-    public void saveBackup(){}
+    public void saveBackup(ArrayList<Shape> shapes){}
 
     @Override
     public void backup() {}

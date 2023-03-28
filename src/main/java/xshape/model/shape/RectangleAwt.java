@@ -61,19 +61,8 @@ public class RectangleAwt extends Rectangle {
         (int)(size.getY()));
 	}
 
-	@Override
-	public void remove() {
-	}
-
-	@Override
-	public Object clone(){
-
-
-		return null;
-	}
-
-	@Override
-	public boolean isInside(Point2D pos){
-        return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() - 8 > position().getY() && pos.getY() - 8 <= position().getY() + size().getY();}
+	@Override public void remove() { }
+	@Override public boolean isInside(Point2D pos){ return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() - 8 > position().getY() && pos.getY() - 8 <= position().getY() + size().getY();}
+	@Override public Object adapted() { return null;}
 
 }

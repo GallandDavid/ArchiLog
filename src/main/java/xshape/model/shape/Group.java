@@ -5,9 +5,13 @@ import java.util.ArrayList;
 
 import xshape.model.observer.Iobserver;
 
-public class Group extends Shape{
+public abstract class Group extends Shape{
 
     private ArrayList<Shape> _group = new ArrayList<>();
+
+    public Group(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, Iobserver obs){
+        super(pos, size, visible_pos, visible_size, selected, prev_mouse_pos_X, prev_mouse_pos_Y, ID, placed, deepth, obs, false);
+    }
 
     public Group(Point2D pos, Point2D size, boolean selected, Iobserver obs, ArrayList<Shape> group) {
         super(pos, size, selected, obs, true);
@@ -22,10 +26,10 @@ public class Group extends Shape{
         double min_x = 100000;
         double min_y = 100000;
         for (Shape shape : _group) {
-            if(shape.position().getX() > max_x) max_x = shape.position().getX();
-            if(shape.position().getY() > max_y) max_y = shape.position().getY();
-            if(shape.position().getX() < min_x) min_x = shape.position().getX();
-            if(shape.position().getX() < min_y) min_y = shape.position().getX();
+            if(shape.position().getX() + shape.size().getX() / 2 > max_x) max_x = shape.position().getX() + shape.size().getX() / 2;
+            if(shape.position().getY() + shape.size().getY() / 2 > max_y) max_y = shape.position().getY() + shape.size().getY() / 2;
+            if(shape.position().getX() - shape.size().getX() / 2  < min_x) min_x = shape.position().getX() - shape.size().getX() / 2;
+            if(shape.position().getX() - shape.size().getY() / 2 < min_y) min_y = shape.position().getX() - shape.size().getY() / 2;
         }
         position(new Point2D.Double(min_x, min_y));
         size(new Point2D.Double(max_x - min_x, max_y - min_y));
@@ -43,45 +47,19 @@ public class Group extends Shape{
         resize(shape);
     }
 
-    private void resize(Shape shape) {
-        /////
+    private void resize(Shape shape) {  }
+    @Override public boolean equals(Object obj){ return false; }
+    @Override public void duplicate(Shape shape){ }
+    @Override public Shape translate(Point2D vec) { return null; }
+    @Override public Shape visibleTranslate(Point2D vec) { 
+        for (Shape s : group()) s.visibleTranslate(vec);
+        visiblePosition(new Point2D.Double(visiblePosition().getX() + vec.getX(),visiblePosition().getY() + vec.getY()));
+        return this;
     }
 
     @Override
-    public void draw() {
-        for (Shape shape : _group)
-            shape.draw();
-    }
-
-    @Override
-    public void remove() {
-        for (Shape shape : _group)
-            _group.remove(shape);
-    }
-
-    @Override
-    public boolean equals(Object obj){
-        return false;
-    }
-
-    @Override
-    public void duplicate(Shape shape){
-    }
-
-    @Override
-    public Shape translate(Point2D vec) {
-        return null;
-    }
-
-    @Override
-    public Shape visibleTranslate(Point2D vec) {
-        return null;
-    }
-
-    @Override
-    public boolean isInside(Point2D pos) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isInside'");
+	public boolean isInside(Point2D pos){
+        return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() > position().getY() - size().getY() / 2 && pos.getY() < position().getY() + size().getY() / 2;
     }
     
     @Override
@@ -93,5 +71,16 @@ public class Group extends Shape{
         return str;
     }
     
+
+    /**
+     * @return ArrayList<Shape> return the _group
+     */
+    public ArrayList<Shape> group() { return _group; }
+
+    /**
+     * @param _group the _group to set
+     */
+    public void group(ArrayList<Shape> _group) { this._group = _group;}
+
 }
 

@@ -24,7 +24,7 @@ public class MouseReleasedCommand extends MouseCommand{
             ((Shape) _editor.get(i)).setMovable(false);
             ((Shape) _editor.get(i)).visiblePosition((Point2D) ((Shape) _editor.get(i)).position());
         }
-        saveBackup();
+        saveBackup(null);
         for (int i = 0; i < _editor.size(); i++) {
             ((Shape) _editor.get(i)).position((Point2D)tmp.get(i).clone());
             ((Shape) _editor.get(i)).visiblePosition((Point2D)tmp.get(i).clone());
@@ -40,7 +40,7 @@ public class MouseReleasedCommand extends MouseCommand{
     @Override
     public void undo(){
         for (int i = 0; i < _editor.size(); i ++) {
-            Shape tmp = (Shape) instanceShape((Shape)_editor.get(i));
+            Shape tmp = (Shape) instanceShape((Shape)_editor.get(i), null);
             ((Shape)_editor.get(i)).duplicate((Shape)_backup.get(i));
             ((Shape)_backup.get(i)).duplicate(tmp);
         }

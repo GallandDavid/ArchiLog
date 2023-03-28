@@ -29,4 +29,5 @@ public interface IShape {
 	void duplicate(Shape shape);
 	boolean isInside(Point2D pos);
 	boolean grouped();
+	Object adapted();
 }

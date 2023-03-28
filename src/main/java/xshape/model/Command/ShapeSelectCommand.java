@@ -27,11 +27,6 @@ public class ShapeSelectCommand extends Command{
     public String print() { return "ShapeSelectCommand" + super.print(); }
 
 
-
-    @Override
-    public void saveBackup()  {
-    }
-
     @Override
     public void backup() {
     }
