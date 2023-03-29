@@ -1,12 +1,9 @@
 package xshape.model.Command;
 
 import java.awt.geom.Point2D;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import xshape.controleur.XShape;
-import xshape.model.observer.Iobserver;
 import xshape.model.shape.Group;
 import xshape.model.shape.Shape;
 import xshape.model.visitor.IInputVisitor;
@@ -34,7 +31,7 @@ public class GroupCommand extends Command{
             array_backup.add(shape);
             _app.removeShape(shape.getId());
         }
-        Group grp = _app.factory().createGroup(new Point2D.Double(0,0), new Point2D.Double(0,0), false, _app, array_backup);
+        Group grp = _app.factory().createGroup(new Point2D.Double(0,0), new Point2D.Double(0,0), false, array_backup);
         saveBackup(null);
         _backup = new ArrayList<>();
         ArrayList<Shape> groupe_array_backup = new ArrayList<>();

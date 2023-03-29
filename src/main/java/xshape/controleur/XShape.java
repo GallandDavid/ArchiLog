@@ -1,26 +1,30 @@
 package xshape.controleur;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import xshape.model.Builder.popupmenu.PopUpMenu;
-import xshape.model.Builder.popupmenu.PopUpMenuDirector;
-import xshape.model.Builder.toolbar.ToolBar;
-import xshape.model.Builder.toolbar.ToolBarDirector;
+import xshape.model.Builder.menu.popupmenu.PopUpMenu;
+import xshape.model.Builder.menu.popupmenu.PopUpMenuDirector;
+import xshape.model.Builder.menu.toolbar.ToolBarDirector;
 import xshape.model.Command.Command;
 import xshape.model.Command.CommandHistory;
 import xshape.model.Command.ICommand;
 import xshape.model.Command.RectPlaceCommand;
+import xshape.model.Command.ShapeTranslateCommand;
+import xshape.model.Command.TrashBinCommand;
 import xshape.model.abstractFactory.ShapeFactory;
-import xshape.model.observer.Iobserver;
+import xshape.model.controlInput.InputControl;
+import xshape.model.observer.IInputObserver;
 import xshape.model.shape.Shape;
+import xshape.model.shape.SystemToolBar;
 import xshape.model.visitor.InputCommandVisitor;
 
-public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, CommandHistory, Iobserver{
-    private ToolBar _toolBar = null;
+public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, CommandHistory, IInputObserver{
+    private SystemToolBar _toolBar = null;
     private PopUpMenu _popUpMenu = null;
     public boolean _selection = false;
     public Shape _selected_item = null;
@@ -58,7 +62,7 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
         return map;
     }
 
-    protected void toolBar(ToolBar toolBar){
+    protected void toolBar(SystemToolBar toolBar){
         _toolBar = toolBar;
     }
 
@@ -68,7 +72,7 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
     }
 
     @Override
-    public ToolBar toolBar() {
+    public SystemToolBar toolBar() {
         return _toolBar;
     }
 
@@ -180,6 +184,117 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
         }
         draw();
         
+    }
+
+
+    @Override
+    public void update(InputControl inputControleur) {
+        Command cmd = null;
+        if(inputControleur.leftPressed()){
+            if(!isInPopUpMenu(inputControleur.position())){
+                Shape shape = topShape(inputControleur.position());
+                if(shape == null){
+                    if(!inputControleur.ctrl().pressEvent()){
+                        for (Shape s : getShapes()) {
+                            if(s.selected()){
+                                s.selected(false);
+                            }
+                        }
+                    }
+                }else{
+                    if(shape.selected()){
+                        if(inputControleur.ctrl().pressEvent()){
+                            shape.selected(false);
+                        }else{
+                            for (Shape s : getShapes()) {
+                                if(s.selected()){
+                                    s.selected(false);
+                                }
+                            }
+                            shape.setSelected(inputControleur.position());
+                        }
+                    }else{
+                        if((!inputControleur.ctrl().pressEvent()) && selection()){
+                            for(Shape s : getShapes()){
+                                if(s.selected()){
+                                    s.setSelected(inputControleur.position());
+                                }
+                            }
+                        }
+                        shape.setSelected(inputControleur.position());
+                    }
+                }
+            }
+        }else if(inputControleur.leftPressed() && inputControleur.mouseMoved()){
+            for (Shape s : getShapes()) {
+                if(s.selected()){
+                    s.visibleTranslate(s.getMouseVec(inputControleur.position().getX(), inputControleur.position().getY()));
+                    s.setPrevMouse(inputControleur.position().getX(), inputControleur.position().getY());
+                }
+            }
+        }
+        
+        ////*/ */
+        else if(inputControleur.left().releaseEvent()){
+            if(!isInPopUpMenu(inputControleur.position())){
+                removePopUpMenu();
+                if(inputControleur.position().getY() > toolBar().getHeight()){
+                    ArrayList<Object> shapes = new ArrayList<>();
+                    for (Shape shape : getShapes()){
+                        if(shape.selected()){
+                            shapes.add(shape);
+                        }
+                    }
+                    if(!shapes.isEmpty()){
+                        cmd = new ShapeTranslateCommand(this, shapes, inputControleur.position().getX(),inputControleur.position().getY());
+                    }
+                }
+                else{
+                    if(inputControleur.position().getX() > toolBar().getTrashBinPosX() && inputControleur.position().getX() - toolBar().getTrashBinSizeX() / 2 < toolBar().getTrashBinPosX() + toolBar().getTrashBinSizeX() && inputControleur.position().getY() / 2 > toolBar().getTrashBinPosY() - toolBar().getTrashBinSizeY() && inputControleur.position().getY() / 2 < toolBar().getTrashBinPosY() + toolBar().getTrashBinSizeY() / 2){
+                        ArrayList<Object> shapes = new ArrayList<>();
+                        for (Shape shape : getShapes()){
+                            if(shape.selected()){
+                                shapes.add(shape);
+                            }
+                        }
+                        cmd = new TrashBinCommand(this,shapes);
+                    }else{
+                        for (Shape s : getShapes())
+                            if(s.selected()){
+                                s.visiblePosition(s.position());
+                            }
+                    }
+                }
+            }
+        }else if (inputControleur.rightReleased()){
+            int selected = 0;
+            boolean grouped = true;
+            for (Shape shape : orderShapes().values())
+                if(shape.selected()){
+                    if(!shape.grouped())
+                        grouped = false;
+                    selected ++;
+                }
+            setPopUpMenu(inputControleur.position(), selected, grouped);
+        }
+
+        if(cmd != null){
+            if(cmd.execute()){
+                push(cmd);
+                clearRedo();
+            }
+        }
+
+        draw();
+    }
+
+    private Shape topShape(Point2D pos){
+        for (Shape s : orderShapes().values()) {
+            if(s.isInside(pos)){
+                return s;
+            }
+        }
+        return null;
     }
 
     private void printRedosHistory() {

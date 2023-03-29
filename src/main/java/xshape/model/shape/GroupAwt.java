@@ -3,11 +3,9 @@ package xshape.model.shape;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import xshape.model.observer.Iobserver;
-
 public class GroupAwt extends Group{
-    public GroupAwt(Point2D pos, Point2D size, boolean selected, Iobserver obs, ArrayList<Shape> group) {
-        super(pos, size, selected, obs, group);
+    public GroupAwt(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> group) {
+        super(pos, size, selected, group);
     }
 
     @Override

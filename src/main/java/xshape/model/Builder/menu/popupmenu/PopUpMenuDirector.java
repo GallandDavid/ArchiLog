@@ -1,4 +1,4 @@
-package xshape.model.Builder.popupmenu;
+package xshape.model.Builder.menu.popupmenu;
 
 import java.awt.geom.Point2D;
 

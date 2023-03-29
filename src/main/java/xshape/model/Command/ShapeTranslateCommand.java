@@ -1,8 +1,10 @@
 package xshape.model.Command;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+
 import xshape.controleur.XShape;
-import xshape.model.Builder.toolbar.ToolBarDirector;
+import xshape.model.Builder.menu.toolbar.ToolBarDirector;
 import xshape.model.shape.Shape;
 import xshape.model.visitor.IInputVisitor;
 
@@ -10,7 +12,7 @@ public class ShapeTranslateCommand extends Command{
     private double _mouse_x;
     private double _mouse_y;
 
-    public ShapeTranslateCommand(XShape app, Object editor, double x, double y ) {
+    public ShapeTranslateCommand(XShape app, ArrayList<Object> editor, double x, double y ) {
         super(app, editor);
         _mouse_x = x;
         _mouse_y = y;

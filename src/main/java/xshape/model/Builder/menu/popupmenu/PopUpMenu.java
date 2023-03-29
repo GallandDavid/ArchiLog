@@ -1,20 +1,20 @@
-package xshape.model.Builder.popupmenu;
+package xshape.model.Builder.menu.popupmenu;
 
 import java.awt.geom.Point2D;
 
 import xshape.model.Command.Command;
-import xshape.model.observer.Iobservable;
-import xshape.model.observer.Iobserver;
+import xshape.model.observer.IInputObservable;
+import xshape.model.observer.IInputObserver;
 
-public abstract class PopUpMenu implements PopUpMenuBuilder, Iobservable{
+public abstract class PopUpMenu implements PopUpMenuBuilder, IInputObservable{
     private Point2D _pos;
     private Point2D _size = null;
     private Object _obj = null;
-    protected Iobserver _app;
+    protected IInputObserver _app;
     private int _selected;
     private boolean _grouped;
     
-    public PopUpMenu(Iobserver app, Point2D pos, int selected, boolean grouped){
+    public PopUpMenu(IInputObserver app, Point2D pos, int selected, boolean grouped){
         _grouped = grouped;
         _pos = pos;
         _selected = selected;
@@ -46,8 +46,8 @@ public abstract class PopUpMenu implements PopUpMenuBuilder, Iobservable{
 
     @Override public int selected() { return _selected; }
     @Override public Object getProduct(){ return _obj; }
-    @Override public void registerOberver(Iobserver app) { _app = app; }
-    @Override public void unRegisterObserver(Iobserver obs) { _app = null; }
+    @Override public void registerOberver(IInputObserver app) { _app = app; }
+    @Override public void unRegisterObserver(IInputObserver obs) { _app = null; }
     @Override public void notifyObservers(Command command) { _app.update(command); }
     @Override public double getWidth() { return _size.getX(); }
     @Override public double getHeight() { return _size.getX(); }

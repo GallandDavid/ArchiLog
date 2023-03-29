@@ -1,8 +1,6 @@
 package xshape.model.shape;
 
 import java.awt.geom.Point2D;
-
-import xshape.model.observer.Iobserver;
 import xshape.vue.AwtContext;
 
 import java.awt.*;
@@ -10,35 +8,31 @@ import java.awt.*;
 public class RectangleAwt extends Rectangle {
 
 	public RectangleAwt(RectangleAwt shape){
-		super((Point2D) shape.position(), (Point2D) shape.size(), (Point2D) shape.visiblePosition(), (Point2D) shape.visibleSize(), shape.isMovable(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth(), shape._app);
-		visiblePosition(shape.visiblePosition());
-		visibleSize(shape.visibleSize());
-		_prev_mouse_pos_X = shape._prev_mouse_pos_X;
-		_prev_mouse_pos_Y = shape._prev_mouse_pos_Y;
+		super((Point2D) shape.position(), (Point2D) shape.size(), (Point2D) shape.visiblePosition(), (Point2D) shape.visibleSize(), shape.isMovable(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth());
 	}
 
-	public RectangleAwt(Iobserver obs) {
-		this(_pos_x, _pos_y, _size_x, _size_y, false, obs);
+	public RectangleAwt() {
+		this(_pos_x, _pos_y, _size_x, _size_y, false);
 	}
 
-    public RectangleAwt(boolean selected, Iobserver obs) {
-		this(_pos_x, _pos_y, _size_x, _size_y, selected, obs);
+    public RectangleAwt(boolean selected) {
+		this(_pos_x, _pos_y, _size_x, _size_y, selected);
 	}
 
-    public RectangleAwt(double posX, double posY, Iobserver obs) {
-		this(posX, posY, _size_x, _size_y, false, obs);
+    public RectangleAwt(double posX, double posY) {
+		this(posX, posY, _size_x, _size_y, false);
 	}
 
-    public RectangleAwt(double posX, double posY, boolean selected, Iobserver obs) {
-		this(posX, posY, _size_x, _size_y, selected, obs);
+    public RectangleAwt(double posX, double posY, boolean selected) {
+		this(posX, posY, _size_x, _size_y, selected);
 	}
 
-    public RectangleAwt(double posX, double posY, double height, double width, Iobserver obs) {
-		this(posX, posY, height, width, false, obs);
+    public RectangleAwt(double posX, double posY, double height, double width) {
+		this(posX, posY, height, width, false);
 	}
 
-    public RectangleAwt(double posX, double posY, double height, double width, boolean selected, Iobserver obs) {
-		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected, obs);
+    public RectangleAwt(double posX, double posY, double height, double width, boolean selected) {
+		super(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected);
 	}
 
 	@Override

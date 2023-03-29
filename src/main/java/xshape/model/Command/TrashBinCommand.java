@@ -8,8 +8,8 @@ import xshape.model.visitor.IInputVisitor;
 
 public class TrashBinCommand extends Command{
 
-    public TrashBinCommand(XShape app) {
-        super(app);
+    public TrashBinCommand(XShape app, ArrayList<Object> editor) {
+        super(app, editor);
     }
 
     @Override

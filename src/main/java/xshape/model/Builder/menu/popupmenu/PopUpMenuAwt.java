@@ -1,16 +1,16 @@
-package xshape.model.Builder.popupmenu;
+package xshape.model.Builder.menu.popupmenu;
 
 import java.awt.Component;
 import java.awt.Menu;
 import java.awt.PopupMenu;
 import java.awt.geom.Point2D;
 
-import xshape.model.observer.Iobserver;
+import xshape.model.observer.IInputObserver;
 
 public class PopUpMenuAwt extends PopUpMenu{
     public Component _cp;
 
-    public PopUpMenuAwt(Iobserver app, Point2D pos, int selected, boolean grouped, Component cp) {
+    public PopUpMenuAwt(IInputObserver app, Point2D pos, int selected, boolean grouped, Component cp) {
         super(app, pos, selected, grouped);
         _cp = cp;
     }

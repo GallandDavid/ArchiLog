@@ -3,21 +3,25 @@ package xshape.model.shape;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import xshape.model.observer.Iobserver;
 
 public abstract class Group extends Shape{
 
     private ArrayList<Shape> _group = new ArrayList<>();
 
-    public Group(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, Iobserver obs){
-        super(pos, size, visible_pos, visible_size, selected, prev_mouse_pos_X, prev_mouse_pos_Y, ID, placed, deepth, obs, false);
+    public Group(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth){
+        super(pos, size, visible_pos, visible_size, selected, prev_mouse_pos_X, prev_mouse_pos_Y, ID, placed, deepth, false);
     }
 
-    public Group(Point2D pos, Point2D size, boolean selected, Iobserver obs, ArrayList<Shape> group) {
-        super(pos, size, selected, obs, true);
+    public Group(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> group) {
+        super(pos, size, selected, true);
         for (Shape shape : group)
             _group.add(shape);
         init();
+    }
+
+    public Group(Point2D pos, Point2D size, boolean selected, Shape shape) {
+        super(pos, size, selected, true);
+        _group.add(shape);
     }
 
     private void init() {
@@ -35,11 +39,6 @@ public abstract class Group extends Shape{
         size(new Point2D.Double(max_x - min_x, max_y - min_y));
         visiblePosition(position());
         visibleSize(size());
-    }
-
-    public Group(Point2D pos, Point2D size, boolean selected, Iobserver obs, Shape shape) {
-        super(pos, size, selected, obs, true);
-        _group.add(shape);
     }
 
     public void add(Shape shape){

@@ -3,18 +3,13 @@ package xshape.model.shape;
 import java.awt.geom.Point2D;
 import java.util.UUID;
 
-import xshape.model.Command.Command;
-import xshape.model.observer.Iobservable;
-import xshape.model.observer.Iobserver;
-
-public abstract class Shape implements IShape,Iobservable{
+public abstract class Shape implements IShape{
     private static int _max_deepth = -1;
     protected static double _pos_x = 200;
     protected static double _pos_y = 200;
     protected static double _size_x = 100;
     protected static double _size_y = 100;
 
-	Iobserver _app;
     protected final String ID;
     private Point2D _pos;
     private Point2D _size;
@@ -29,10 +24,9 @@ public abstract class Shape implements IShape,Iobservable{
     protected double _prev_mouse_pos_X;
     protected double _prev_mouse_pos_Y;
 
-	public Shape(Point2D pos, Point2D size, boolean movable, Iobserver obs, boolean grouped){
+	public Shape(Point2D pos, Point2D size, boolean movable, boolean grouped){
         _grouped = grouped;
         _max_deepth ++;
-        registerOberver(obs);
         ID = UUID.randomUUID().toString();
         _pos  = pos;
         _size = size;
@@ -43,7 +37,7 @@ public abstract class Shape implements IShape,Iobservable{
         _deepth = _max_deepth;
     }
 
-    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean movable, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, Iobserver obs, boolean grouped){
+    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean movable, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, boolean grouped){
         _grouped = grouped;
         _pos  = pos;
         _size = size;
@@ -55,7 +49,6 @@ public abstract class Shape implements IShape,Iobservable{
         this.ID = ID;
         _placed = placed;
         _deepth = deepth;
-        registerOberver(obs);
     }
 
     @Override public boolean grouped() { return _grouped; }
@@ -70,15 +63,17 @@ public abstract class Shape implements IShape,Iobservable{
 	@Override public Point2D visibleSize() { return (Point2D) _visible_size.clone(); }
 	@Override public Shape visibleSize(Point2D vec) { _visible_size = (Point2D) vec.clone(); return this; }
     @Override public String getId(){ return ID; }
-    @Override public void registerOberver(Iobserver obs) { _app = obs; }
-	@Override public void unRegisterObserver(Iobserver obs) { _app = null; }
-    @Override public void notifyObservers(Command command){ _app.update(command); }
     @Override public void setPrevMousePosX(double X){ _prev_mouse_pos_X = X; }
     @Override public void setPrevMousePosY(double Y){ _prev_mouse_pos_Y = Y; }
     @Override public void setPrevMouse(double x, double y){ _prev_mouse_pos_X = x; _prev_mouse_pos_Y = y; }
     @Override public double getPrevMousePosX(){ return _prev_mouse_pos_X; }
     @Override public double getPrevMousePosY(){ return _prev_mouse_pos_Y; }
     @Override public Point2D getMouseVec(double x, double y){ return new Point2D.Double(x - getPrevMousePosX(), y - getPrevMousePosY()); }
+
+    public void setSelected(Point2D mouse_pos){
+        selected(true);
+        setPrevMouse(mouse_pos.getX(), mouse_pos.getY());
+    }
 
     @Override
     public String toString(){
@@ -142,7 +137,6 @@ public abstract class Shape implements IShape,Iobservable{
         this.visibleSize(shape.visibleSize());
         this._movable = shape.isMovable();
         this._placed = shape.isPlaced();
-        this._app = shape._app;
         this._prev_mouse_pos_X = shape.getPrevMousePosX();
         this._prev_mouse_pos_Y = shape.getPrevMousePosY();
     }

@@ -1,4 +1,4 @@
-package xshape.model.Builder.popupmenu;
+package xshape.model.Builder.menu.popupmenu;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -11,11 +11,11 @@ import java.awt.geom.Point2D;
 
 import xshape.controleur.XShape;
 import xshape.model.Command.GroupCommand;
-import xshape.model.observer.Iobserver;
+import xshape.model.observer.IInputObserver;
 
 public class PopUpMenuFx extends PopUpMenu{
 
-    public PopUpMenuFx(Iobserver app, Point2D pos, int selected, boolean grouped) {
+    public PopUpMenuFx(IInputObserver app, Point2D pos, int selected, boolean grouped) {
         super(app, pos, selected, grouped);
     }
 

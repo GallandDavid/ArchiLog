@@ -19,11 +19,11 @@ public abstract class Command implements ICommand, IVisitable{
     private static int count = 0;
     private int num;
 
-    public Command(XShape app, Object editor){
+    public Command(XShape app, ArrayList<Object> editor){
         count ++;
         num = count;
         _app = app;
-        _editor.add(editor);
+        _editor = editor;
     }
 
     public Command(XShape app){

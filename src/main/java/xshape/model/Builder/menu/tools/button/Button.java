@@ -1,4 +1,4 @@
-package xshape.model.button;
+package xshape.model.Builder.menu.tools.button;
 
 import java.awt.geom.Point2D;
 

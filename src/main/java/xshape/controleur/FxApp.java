@@ -1,9 +1,8 @@
 package xshape.controleur;
 
-import xshape.model.Builder.popupmenu.PopUpMenuFx;
-import xshape.model.Builder.toolbar.ToolBarFx;
+import xshape.model.Builder.menu.popupmenu.PopUpMenuFx;
+import xshape.model.Builder.menu.toolbar.ToolBarFx;
 import xshape.model.abstractFactory.*;
-import xshape.model.shape.Shape;
 import xshape.vue.FxApplication;
 
 import java.awt.geom.Point2D;
@@ -70,4 +69,5 @@ public class FxApp extends XShape  {
         if(pos.getX() > _popup.getLayoutX() && pos.getX() < _popup.getLayoutX() + _popup.getWidth() && pos.getY() > _popup.getLayoutY() && pos.getY() < _popup.getLayoutY() + _popup.getHeight()) return true;
         return false;
     }
+
 }
