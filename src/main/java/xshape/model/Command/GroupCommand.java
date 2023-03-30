@@ -53,10 +53,5 @@ public class GroupCommand extends Command{
         for(Object s : _editor)
             _app.addShape((Shape) s);
     }
-
-    @Override
-    public void accept(IInputVisitor visitor) {
-        visitor.visit(this);
-    }
     
 }

@@ -8,7 +8,7 @@ import java.awt.*;
 public class RectangleAwt extends Rectangle {
 
 	public RectangleAwt(RectangleAwt shape){
-		super((Point2D) shape.position(), (Point2D) shape.size(), (Point2D) shape.visiblePosition(), (Point2D) shape.visibleSize(), shape.isMovable(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth());
+		super((Point2D) shape.position(), (Point2D) shape.size(), (Point2D) shape.visiblePosition(), (Point2D) shape.visibleSize(), shape.selected(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth());
 	}
 
 	public RectangleAwt() {

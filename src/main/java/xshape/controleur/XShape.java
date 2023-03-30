@@ -7,9 +7,6 @@ import java.util.LinkedList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import xshape.model.Builder.menu.popupmenu.PopUpMenu;
-import xshape.model.Builder.menu.popupmenu.PopUpMenuDirector;
-import xshape.model.Builder.menu.toolbar.ToolBarDirector;
 import xshape.model.Command.Command;
 import xshape.model.Command.CommandHistory;
 import xshape.model.Command.ICommand;
@@ -19,12 +16,15 @@ import xshape.model.Command.TrashBinCommand;
 import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.controlInput.InputControl;
 import xshape.model.observer.IInputObserver;
+import xshape.model.shape.PopUpMenu;
 import xshape.model.shape.Shape;
+import xshape.model.shape.ShapeToolBar;
 import xshape.model.shape.SystemToolBar;
 import xshape.model.visitor.InputCommandVisitor;
 
-public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, CommandHistory, IInputObserver{
-    private SystemToolBar _toolBar = null;
+public abstract class XShape implements CommandHistory, IInputObserver{
+    private SystemToolBar _systemToolBar = null;
+    private ShapeToolBar _shapesToolBar = null;
     private PopUpMenu _popUpMenu = null;
     public boolean _selection = false;
     public Shape _selected_item = null;
@@ -39,10 +39,11 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
     //Handler to start the GUI
     public abstract void run();
     public abstract void render();
-    public abstract void setPopUpMenu(Point2D pos, int selected, boolean grouped);
-    public abstract void removePopUpMenu();
 
     private void createScene() {
+        _systemToolBar.draw();
+        _shapesToolBar.draw();
+        if(_popUpMenu != null) _popUpMenu.draw();
         Command command1 = new RectPlaceCommand(this, 20,300, true);
         Command command2 = new RectPlaceCommand(this, 100, 200, true);
         Command[] tmp = {command1,command2};
@@ -62,33 +63,12 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
         return map;
     }
 
-    protected void toolBar(SystemToolBar toolBar){
-        _toolBar = toolBar;
-    }
-
-    @Override
-    public Object getToolBar() {
-        return _toolBar.getProduct();
-    }
-
-    @Override
-    public SystemToolBar toolBar() {
-        return _toolBar;
-    }
-
-    protected void popUpMenu(PopUpMenu popUpMenu){
-        _popUpMenu = popUpMenu;
-    }
-
-    @Override
-    public Object getPopUpMenu() {
-        return _popUpMenu.getProduct();
-    }
-
-    @Override
-    public PopUpMenu popUpMenu() {
-        return _popUpMenu;
-    }
+    public void systemToolBar(SystemToolBar toolBar){ _systemToolBar = toolBar; }
+    public SystemToolBar systemToolBar() { return _systemToolBar; }
+    public void shapesToolBar(ShapeToolBar toolBar){ _shapesToolBar = toolBar; }
+    public ShapeToolBar shapesToolBar() { return _shapesToolBar; }
+    public void popUpMenu(PopUpMenu popUpMenu){ _popUpMenu = popUpMenu; }
+    public PopUpMenu popUpMenu(){ return _popUpMenu; }
 
 
     public void draw(){
@@ -174,24 +154,11 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
     @Override
     public void clearRedo(){ _redos.clear(); }
 
-    @Override 
-    public void update(Command command){
-        command.accept(_ic_visitor);
-        
-        if(command.execute()){
-            push(command);
-            clearRedo();
-        }
-        draw();
-        
-    }
-
-
     @Override
     public void update(InputControl inputControleur) {
         Command cmd = null;
         if(inputControleur.leftPressed()){
-            if(!isInPopUpMenu(inputControleur.position())){
+            if(!_popUpMenu.isInside(inputControleur.position())){
                 Shape shape = topShape(inputControleur.position());
                 if(shape == null){
                     if(!inputControleur.ctrl().pressEvent()){
@@ -233,12 +200,11 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
                 }
             }
         }
-        
-        ////*/ */
+    //
         else if(inputControleur.left().releaseEvent()){
-            if(!isInPopUpMenu(inputControleur.position())){
-                removePopUpMenu();
-                if(inputControleur.position().getY() > toolBar().getHeight()){
+            if(!_popUpMenu.isInside(inputControleur.position())){
+                //removePopUpMenu();
+                if(inputControleur.position().getY() > systemToolBar().size().getY()){
                     ArrayList<Object> shapes = new ArrayList<>();
                     for (Shape shape : getShapes()){
                         if(shape.selected()){
@@ -250,7 +216,9 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
                     }
                 }
                 else{
-                    if(inputControleur.position().getX() > toolBar().getTrashBinPosX() && inputControleur.position().getX() - toolBar().getTrashBinSizeX() / 2 < toolBar().getTrashBinPosX() + toolBar().getTrashBinSizeX() && inputControleur.position().getY() / 2 > toolBar().getTrashBinPosY() - toolBar().getTrashBinSizeY() && inputControleur.position().getY() / 2 < toolBar().getTrashBinPosY() + toolBar().getTrashBinSizeY() / 2){
+                    Point2D pos = systemToolBar().trashbin().position();
+                    Point2D size = systemToolBar().trashbin().size();
+                    if(inputControleur.position().getX() > pos.getX() && inputControleur.position().getX() - size.getX() / 2 < pos.getX() + size.getX() && inputControleur.position().getY() / 2 > pos.getY() - size.getY() && inputControleur.position().getY() / 2 < pos.getY() + size.getY() / 2){
                         ArrayList<Object> shapes = new ArrayList<>();
                         for (Shape shape : getShapes()){
                             if(shape.selected()){
@@ -275,7 +243,7 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
                         grouped = false;
                     selected ++;
                 }
-            setPopUpMenu(inputControleur.position(), selected, grouped);
+            //setPopUpMenu(inputControleur.position(), selected, grouped);
         }
 
         if(cmd != null){
@@ -332,15 +300,7 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
         System.out.println("get shape");
         return _shapes;
     }
-
-    public void selection(boolean sel){
-        _selection = sel;
-    }
-
-    public boolean selection(){
-        return _selection;
-    }
-
-
+    public void selection(boolean sel){ _selection = sel; }
+    public boolean selection(){ return _selection; }
 }
 

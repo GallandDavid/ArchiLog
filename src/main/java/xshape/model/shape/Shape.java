@@ -17,14 +17,13 @@ public abstract class Shape implements IShape{
     private boolean _grouped;
     private boolean _selected;
     private int _deepth;
-    private boolean _movable;
     private boolean _placed;
     private Point2D _visible_pos;
     private Point2D _visible_size;
     protected double _prev_mouse_pos_X;
     protected double _prev_mouse_pos_Y;
 
-	public Shape(Point2D pos, Point2D size, boolean movable, boolean grouped){
+	public Shape(Point2D pos, Point2D size, boolean selected, boolean grouped){
         _grouped = grouped;
         _max_deepth ++;
         ID = UUID.randomUUID().toString();
@@ -32,18 +31,18 @@ public abstract class Shape implements IShape{
         _size = size;
         _visible_pos  = pos;
         _visible_size = size;
-        _movable = movable;
+        _selected = selected;
         _placed = true;
         _deepth = _max_deepth;
     }
 
-    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean movable, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, boolean grouped){
+    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth, boolean grouped){
         _grouped = grouped;
         _pos  = pos;
         _size = size;
         _visible_pos  = visible_pos;
         _visible_size = visible_size;
-        _movable = movable;
+        _selected = selected;
         _prev_mouse_pos_X = prev_mouse_pos_X;
         _prev_mouse_pos_Y = prev_mouse_pos_Y;
         this.ID = ID;
@@ -83,7 +82,7 @@ public abstract class Shape implements IShape{
         str += "Visble Pos : (" + _visible_pos.getX() + ", " + _visible_pos.getY() + ")   |   ";
         str += "Visble Size : (" + _visible_size.getX() + ", " + _visible_size.getY() + ")\n";
         str += "Ref : " + getId() + "   |   ";
-        str += "movable : " + _movable;
+        str += "selected : " + _selected;
         return str;
     }
 
@@ -112,10 +111,6 @@ public abstract class Shape implements IShape{
             System.out.println("Different visible size");
             ret = false;
         }
-        if(_movable != object._movable){
-            System.out.println("movable different");
-            ret = false;
-        }
 
         if(_prev_mouse_pos_X != object._prev_mouse_pos_X ){
             System.out.println("Different mouse X");
@@ -135,22 +130,11 @@ public abstract class Shape implements IShape{
         this.size(shape.size());
         this.visiblePosition(shape.visiblePosition());
         this.visibleSize(shape.visibleSize());
-        this._movable = shape.isMovable();
+        this.selected(shape.selected());
         this._placed = shape.isPlaced();
         this._prev_mouse_pos_X = shape.getPrevMousePosX();
         this._prev_mouse_pos_Y = shape.getPrevMousePosY();
     }
-
-    /**
-     * @return boolean return the _movable
-     */
-    @Override
-    public boolean isMovable() { return _movable; }
-
-    /**
-     * @param _movable the _movable to set
-     */
-    public void setMovable(boolean movable) { _movable = movable; }
 
     /**
      * @return boolean return the _placed

@@ -8,7 +8,7 @@ public class GroupFx extends Group{
     javafx.scene.Group _adapted;
 
     public GroupFx(GroupFx shape, ArrayList<Shape> shapes){
-		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.isMovable(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth());
+		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.selected(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth());
 		group(shapes);
         _adapted = new javafx.scene.Group();
         for (Shape s : group())

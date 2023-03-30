@@ -1,7 +1,6 @@
 package xshape.model.Command;
 
 import xshape.controleur.XShape;
-import xshape.model.visitor.IInputVisitor;
 
 public class UnGroupCommand extends Command{
 
@@ -20,11 +19,6 @@ public class UnGroupCommand extends Command{
 
     @Override
     public void undo() {
-    }
-
-    @Override
-    public void accept(IInputVisitor visitor) {
-        visitor.visit(this);
     }
     
 }

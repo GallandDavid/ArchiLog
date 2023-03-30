@@ -2,17 +2,11 @@ package xshape.model.Command;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
-
 import xshape.controleur.XShape;
 import xshape.model.shape.Shape;
-import xshape.model.visitor.IInputVisitor;
-import xshape.model.visitor.IVisitable;
 
-public abstract class Command implements ICommand, IVisitable{
+public abstract class Command implements ICommand{
     public XShape _app;
     protected ArrayList<Object> _editor = new ArrayList<>();
     protected ArrayList<Object> _backup = new ArrayList<>();

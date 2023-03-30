@@ -18,15 +18,7 @@ public class MenuAwt extends Menu{
         Graphics2D g = (Graphics2D) AwtContext.instance().graphics();
 		Point2D pos = visiblePosition();
 		Point2D size = visibleSize();
-        g.setColor(Color.BLUE);
-		if(selected()){
-			AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
-			g.setComposite(alphaComposite);
-		}
-		else{
-			AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
-			g.setComposite(alphaComposite);
-		}
+        g.setColor(Color.GRAY);
         g.fillRect((int)(pos.getX() - size.getX()/2),
         (int)(pos.getY() - size.getY()/2),        
         (int)(size.getX()),

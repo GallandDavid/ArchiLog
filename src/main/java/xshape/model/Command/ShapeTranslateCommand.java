@@ -2,11 +2,8 @@ package xshape.model.Command;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-
 import xshape.controleur.XShape;
-import xshape.model.Builder.menu.toolbar.ToolBarDirector;
 import xshape.model.shape.Shape;
-import xshape.model.visitor.IInputVisitor;
 
 public class ShapeTranslateCommand extends Command{
     private double _mouse_x;
@@ -22,12 +19,11 @@ public class ShapeTranslateCommand extends Command{
     public boolean execute() {
         System.out.println("----------------\nexecute :" + print());
         for (Object shape : _editor) {
-            ((Shape) shape).setMovable(false);
             Point2D tmp = (Point2D) ((Shape) shape).visiblePosition();
             ((Shape) shape).visiblePosition((Point2D) ((Shape) shape).position());
             saveBackup(null);
             System.out.println("editor = backup : " +((Shape) shape).equals(_backup));
-            if(_mouse_y < ((ToolBarDirector)_app).toolBar().getHeight()) return false;
+            if(_mouse_y < _app.systemToolBar().size().getY()) return false;
             ((Shape) shape).position((Point2D)tmp.clone());
             ((Shape) shape).visiblePosition((Point2D)tmp.clone());
         }
@@ -38,12 +34,7 @@ public class ShapeTranslateCommand extends Command{
 
     @Override
     public String print() { return "ShapeTranslateCommand" + super.print(); }
-
-
-    @Override
-    public void backup(){
-        undo();
-    }
+    @Override public void backup(){ undo(); }
 
     @Override
     public void undo(){
@@ -53,11 +44,4 @@ public class ShapeTranslateCommand extends Command{
             ((Shape)_editor.get(i)).duplicate(tmp);
         }
     }
-
-    @Override
-    public void accept(IInputVisitor visitor) {
-        visitor.visit(this);
-    }
-
-
 }

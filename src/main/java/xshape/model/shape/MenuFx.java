@@ -26,7 +26,7 @@ public class MenuFx extends Menu{
 		Point2D p = visiblePosition();
 		Point2D	s = visibleSize();
         _text.setX((p.getX()- s.getX()/2) + 5);
-		_text.setY((p.getY()- s.getY()/2) + 5);
+		_text.setY(s.getY() - 5);
 		_adapted.setWidth(s.getX() - 10);
 		_adapted.setHeight(s.getY() - 10);
 		_text.setText(title());
@@ -38,6 +38,7 @@ public class MenuFx extends Menu{
 		_adapted.setWidth(s.getX());
 		_adapted.setHeight(s.getY());
 		_adapted.setFill(Color.GRAY);
+        _adapted.setStroke(Color.BLACK);
 		_adapted.toBack();
 		if(selected()) _adapted.setOpacity(0.5); else _adapted.setOpacity(1.0);
     }

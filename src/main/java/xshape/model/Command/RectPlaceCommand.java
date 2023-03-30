@@ -1,8 +1,6 @@
 package xshape.model.Command;
 import xshape.controleur.XShape;
-import xshape.model.Builder.menu.toolbar.ToolBarDirector;
 import xshape.model.shape.Shape;
-import xshape.model.visitor.IInputVisitor;
 
 public class RectPlaceCommand extends Command{
     private double _mouse_x;
@@ -40,7 +38,7 @@ public class RectPlaceCommand extends Command{
         }
         _app._selected_item.remove();
         _app._selected_item = null;
-        if(_mouse_y > ((ToolBarDirector)_app).toolBar().getHeight()){
+        if(_mouse_y > _app.systemToolBar().size().getY()){
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y, false);
             shape.selected(true);
             _editor.add(shape);
@@ -68,10 +66,4 @@ public class RectPlaceCommand extends Command{
             for (Object shape : _editor)
                 _app.addShape((Shape) shape);
     }
-
-    @Override
-    public void accept(IInputVisitor visitor) {
-        visitor.visit(this);
-    }
-    
 }
