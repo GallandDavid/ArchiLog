@@ -1,8 +1,10 @@
-package xshape.model.shape;
+package xshape.model.shape.tools.menus;
 
-import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.geom.Point2D;
 
 import xshape.vue.AwtContext;
@@ -15,23 +17,29 @@ public class MenuAwt extends Menu{
 
     @Override
     public void draw() {
-        Graphics2D g = (Graphics2D) AwtContext.instance().graphics();
 		Point2D pos = visiblePosition();
 		Point2D size = visibleSize();
+
+        
+        Graphics2D g = (Graphics2D) AwtContext.instance().graphics();
         g.setColor(Color.GRAY);
         g.fillRect((int)(pos.getX() - size.getX()/2),
         (int)(pos.getY() - size.getY()/2),        
         (int)(size.getX()),
         (int)(size.getY()));
+        g.setColor(Color.BLACK);
+        g.drawRect((int)(pos.getX() - size.getX()/2),
+        (int)(pos.getY() - size.getY()/2 - 0.5),        
+        (int)(size.getX()),
+        (int)(size.getY()) - 1);
 
-        Graphics2D g2 = (Graphics2D) AwtContext.instance().graphics();
-        g2.setColor(Color.BLACK);
-		g2.drawString(title(), (int)(pos.getX() - size.getX()/2), (int)(pos.getY() - size.getY()/2));
-	}
+        g.setFont(new Font("Arial", Font.PLAIN, 13));
+		g.drawString(title(), (int)((pos.getX()- size.getX()/2) + 5), (int)(size.getY() - 5));
+        
+}
 
     @Override
     public void remove() {}
-	@Override public boolean isInside(Point2D pos){ return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() - 8 > position().getY() && pos.getY() - 8 <= position().getY() + size().getY();}
 	@Override public Object adapted() { return null;}
     
 }

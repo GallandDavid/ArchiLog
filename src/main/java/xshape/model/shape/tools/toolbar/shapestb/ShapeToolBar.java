@@ -1,9 +1,13 @@
-package xshape.model.shape;
+package xshape.model.shape.tools.toolbar.shapestb;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-public abstract class ShapeToolBar extends Rectangle {
+import xshape.model.shape.Rectangle;
+import xshape.model.shape.Shape;
+import xshape.model.shape.tools.toolbar.ToolBar;
+
+public abstract class ShapeToolBar extends ToolBar {
     private Rectangle _rect;
     private ArrayList<Shape> _addons = new ArrayList<>();
   
@@ -47,6 +51,15 @@ public abstract class ShapeToolBar extends Rectangle {
             if(shape.getId().equals(id))
                 return shape;
         return null;
+    }
+
+    @Override
+    public boolean isInItem(Point2D pos) {
+        if(rect().isInside(pos)) return true;
+        for(Shape s : addons())
+            if(s.isInside(pos))
+                return true;
+        return false;
     }
   
   }

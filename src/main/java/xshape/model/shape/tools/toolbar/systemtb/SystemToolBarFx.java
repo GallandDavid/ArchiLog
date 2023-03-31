@@ -1,10 +1,11 @@
-package xshape.model.shape;
+package xshape.model.shape.tools.toolbar.systemtb;
 
 import java.awt.geom.Point2D;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import xshape.model.shape.tools.menus.MenuFx;
 
 
 public class SystemToolBarFx extends SystemToolBar{
@@ -37,7 +38,7 @@ public class SystemToolBarFx extends SystemToolBar{
 		_adapted.setY(p.getY()- s.getY()/2);
 		_adapted.setWidth(s.getX());
 		_adapted.setHeight(s.getY());
-		_adapted.setFill(Color.GRAY);
+		_adapted.setFill(Color.LIGHTGRAY);
 		_adapted.toBack();  
     }
 
@@ -48,15 +49,5 @@ public class SystemToolBarFx extends SystemToolBar{
         trashbin().remove();
         _grp.getChildren().remove(_adapted);
     }
-
-    @Override
-	public boolean isInside(Point2D pos){
-        return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() > position().getY() - size().getY() / 2 && pos.getY() < position().getY() + size().getY() / 2;
-    }
-
-    @Override
-    public Object adapted() {
-        return _adapted;
-    }
-    
+    @Override public Object adapted() { return _adapted; }
 }

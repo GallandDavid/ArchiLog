@@ -16,11 +16,10 @@ import xshape.model.Command.TrashBinCommand;
 import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.controlInput.InputControl;
 import xshape.model.observer.IInputObserver;
-import xshape.model.shape.PopUpMenu;
 import xshape.model.shape.Shape;
-import xshape.model.shape.ShapeToolBar;
-import xshape.model.shape.SystemToolBar;
-import xshape.model.visitor.InputCommandVisitor;
+import xshape.model.shape.tools.popup.PopUpMenu;
+import xshape.model.shape.tools.toolbar.shapestb.ShapeToolBar;
+import xshape.model.shape.tools.toolbar.systemtb.SystemToolBar;
 
 public abstract class XShape implements CommandHistory, IInputObserver{
     private SystemToolBar _systemToolBar = null;
@@ -32,7 +31,6 @@ public abstract class XShape implements CommandHistory, IInputObserver{
     Shape[] _shapes = null;
     LinkedList<ICommand> _history = new LinkedList<>();
     LinkedList<ICommand> _redos = new LinkedList<>();
-    InputCommandVisitor _ic_visitor = new InputCommandVisitor();
 
     //method factory to delegate instanciation of Shapefactory to subclass
     protected abstract ShapeFactory createFactory();
@@ -41,8 +39,6 @@ public abstract class XShape implements CommandHistory, IInputObserver{
     public abstract void render();
 
     private void createScene() {
-        _systemToolBar.draw();
-        _shapesToolBar.draw();
         if(_popUpMenu != null) _popUpMenu.draw();
         Command command1 = new RectPlaceCommand(this, 20,300, true);
         Command command2 = new RectPlaceCommand(this, 100, 200, true);
@@ -74,6 +70,8 @@ public abstract class XShape implements CommandHistory, IInputObserver{
     public void draw(){
         if(_factory == null)    _factory = createFactory();
         if (_shapes == null)    createScene();
+        _systemToolBar.draw();
+        _shapesToolBar.draw();
 
         if(_shapes != null)
             for(Shape s : orderShapes().values())
@@ -102,7 +100,6 @@ public abstract class XShape implements CommandHistory, IInputObserver{
     public Shape getShape(String ref){ for (Shape s : _shapes) if(s.getId().equals(ref)) return s; return null; }
 
     public void removeShape(String ref){
-        System.out.println(_shapes.length);
         if(_shapes.length != 0){
             Shape[] shapes = new Shape[_shapes.length - 1];
             int j = 0;
@@ -157,42 +154,7 @@ public abstract class XShape implements CommandHistory, IInputObserver{
     @Override
     public void update(InputControl inputControleur) {
         Command cmd = null;
-        if(inputControleur.leftPressed()){
-            if(!_popUpMenu.isInside(inputControleur.position())){
-                Shape shape = topShape(inputControleur.position());
-                if(shape == null){
-                    if(!inputControleur.ctrl().pressEvent()){
-                        for (Shape s : getShapes()) {
-                            if(s.selected()){
-                                s.selected(false);
-                            }
-                        }
-                    }
-                }else{
-                    if(shape.selected()){
-                        if(inputControleur.ctrl().pressEvent()){
-                            shape.selected(false);
-                        }else{
-                            for (Shape s : getShapes()) {
-                                if(s.selected()){
-                                    s.selected(false);
-                                }
-                            }
-                            shape.setSelected(inputControleur.position());
-                        }
-                    }else{
-                        if((!inputControleur.ctrl().pressEvent()) && selection()){
-                            for(Shape s : getShapes()){
-                                if(s.selected()){
-                                    s.setSelected(inputControleur.position());
-                                }
-                            }
-                        }
-                        shape.setSelected(inputControleur.position());
-                    }
-                }
-            }
-        }else if(inputControleur.leftPressed() && inputControleur.mouseMoved()){
+        if(inputControleur.leftPressed() && inputControleur.mouseMoved()){
             for (Shape s : getShapes()) {
                 if(s.selected()){
                     s.visibleTranslate(s.getMouseVec(inputControleur.position().getX(), inputControleur.position().getY()));
@@ -202,9 +164,9 @@ public abstract class XShape implements CommandHistory, IInputObserver{
         }
     //
         else if(inputControleur.left().releaseEvent()){
-            if(!_popUpMenu.isInside(inputControleur.position())){
+            if(_popUpMenu == null || !_popUpMenu.isInside(inputControleur.position())){
                 //removePopUpMenu();
-                if(inputControleur.position().getY() > systemToolBar().size().getY()){
+                if(inputControleur.position().getY() > systemToolBar().position().getY() + systemToolBar().size().getY() / 2){
                     ArrayList<Object> shapes = new ArrayList<>();
                     for (Shape shape : getShapes()){
                         if(shape.selected()){
@@ -216,9 +178,7 @@ public abstract class XShape implements CommandHistory, IInputObserver{
                     }
                 }
                 else{
-                    Point2D pos = systemToolBar().trashbin().position();
-                    Point2D size = systemToolBar().trashbin().size();
-                    if(inputControleur.position().getX() > pos.getX() && inputControleur.position().getX() - size.getX() / 2 < pos.getX() + size.getX() && inputControleur.position().getY() / 2 > pos.getY() - size.getY() && inputControleur.position().getY() / 2 < pos.getY() + size.getY() / 2){
+                    if(_systemToolBar.trashbin().isInside(inputControleur.position())){
                         ArrayList<Object> shapes = new ArrayList<>();
                         for (Shape shape : getShapes()){
                             if(shape.selected()){
@@ -244,6 +204,69 @@ public abstract class XShape implements CommandHistory, IInputObserver{
                     selected ++;
                 }
             //setPopUpMenu(inputControleur.position(), selected, grouped);
+        }else if(inputControleur.leftPressed()){
+            if(_popUpMenu == null || !_popUpMenu.isInside(inputControleur.position())){
+                if(_systemToolBar.isInside(inputControleur.position())){
+                    if(_systemToolBar.isInItem(inputControleur.position())){
+                        if(_systemToolBar.files().isInside(inputControleur.position())){
+                            //
+                        }else if(_systemToolBar.edit().isInside(inputControleur.position())){
+                            //
+                        }else if(_systemToolBar.trashbin().isInside(inputControleur.position())){
+                            //
+                        }
+                    }
+
+                }else if(_shapesToolBar.isInside(inputControleur.position())){
+                    if(_shapesToolBar.isInItem(inputControleur.position())){
+                        //
+                    }
+                }else{
+                    Shape shape = topShape(inputControleur.position());
+                    if(shape == null){
+                        if(!inputControleur.ctrl().pressEvent()){
+                            for (Shape s : getShapes()) {
+                                if(s.selected()){
+                                    s.selected(false);
+                                }
+                            }
+                            selection(false);
+                        }
+                    }else{
+                        if(shape.selected()){
+                            if(inputControleur.ctrl().pressEvent()){
+                                shape.selected(false);
+                                if(!asSelected()){
+                                    selection(false);
+                                }
+                            }else{
+                                for (Shape s : getShapes()) {
+                                    if(s.selected()){
+                                        shape.setSelected(inputControleur.position());
+                                    }
+                                }
+                                shape.setSelected(inputControleur.position());
+                            }
+                        }else{
+                            if(inputControleur.ctrl().pressEvent() && selection()){
+                                for(Shape s : getShapes()){
+                                    if(s.selected()){
+                                        s.setSelected(inputControleur.position());
+                                    }
+                                }
+                            }else{
+                                for(Shape s : getShapes()){
+                                    if(s.selected()){
+                                        s.selected(false);
+                                    }
+                                }
+                            }
+                            shape.setSelected(inputControleur.position());
+                            selection(true);
+                        }
+                    }
+                }
+            }
         }
 
         if(cmd != null){
@@ -256,7 +279,13 @@ public abstract class XShape implements CommandHistory, IInputObserver{
         draw();
     }
 
+    private boolean asSelected() {
+        for (Shape s : getShapes()) 
+            if(s.selected()) return true;
+        return false;
+    }
     private Shape topShape(Point2D pos){
+        System.out.println(pos.toString());
         for (Shape s : orderShapes().values()) {
             if(s.isInside(pos)){
                 return s;
@@ -293,11 +322,6 @@ public abstract class XShape implements CommandHistory, IInputObserver{
     public void printArray(Shape[] array){ for(Shape s : array) System.out.println(s); }
 
     public Shape[] getShapes() {
-        System.out.println("get shape");
-        for (Shape s : _shapes) {
-            System.out.println(s);
-        }
-        System.out.println("get shape");
         return _shapes;
     }
     public void selection(boolean sel){ _selection = sel; }

@@ -1,8 +1,11 @@
-package xshape.model.shape;
+package xshape.model.shape.tools.toolbar.systemtb;
 
 import java.awt.geom.Point2D;
 
-public abstract class SystemToolBar extends Rectangle {
+import xshape.model.shape.tools.menus.Menu;
+import xshape.model.shape.tools.toolbar.ToolBar;
+
+public abstract class SystemToolBar extends ToolBar {
   private Menu _files;
   private Menu _edit;
   private Menu _trashbin;
@@ -27,4 +30,9 @@ public abstract class SystemToolBar extends Rectangle {
    */
   public Menu trashbin() { return _trashbin; }
 
+  @Override
+  public boolean isInItem(Point2D pos) {
+    if(files().isInside(pos) || edit().isInside(pos) || trashbin().isInside(pos)) return true;
+    return false;
+  }
 }

@@ -1,6 +1,9 @@
-package xshape.model.shape;
+package xshape.model.shape.tools.popup;
 
 import java.awt.geom.Point2D;
+
+import xshape.model.shape.Rectangle;
+import xshape.model.shape.tools.menus.Menu;
 
 public abstract class PopUpMenu extends Rectangle{
     public static Point2D _size = new Point2D.Double(40,30);

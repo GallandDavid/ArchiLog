@@ -2,9 +2,10 @@ package xshape.model.abstractFactory;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import xshape.model.shape.Group;
+
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
+import xshape.model.shape.group.Group;
 
 public interface ShapeFactory {
     Rectangle createRectangle();

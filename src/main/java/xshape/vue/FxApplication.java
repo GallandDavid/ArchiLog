@@ -7,18 +7,17 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ToolBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import xshape.controleur.FxApp;
-import xshape.model.Command.Command;
 import xshape.model.controlInput.InputControl;
 import xshape.model.observer.IInputObservable;
 import xshape.model.observer.IInputObserver;
-import xshape.model.shape.ShapeToolBarFx;
-import xshape.model.shape.SystemToolBarFx;
+import xshape.model.shape.tools.toolbar.shapestb.ShapeToolBarFx;
+import xshape.model.shape.tools.toolbar.systemtb.SystemToolBarFx;
 
 
 
@@ -51,8 +50,8 @@ public class FxApplication extends Application implements IInputObservable{
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
                 @Override
-                public void handle(KeyEvent event) {
-                    if(event.getCode() == KeyCode.CONTROL) {
+                public void handle(KeyEvent e) {
+                    if(e.getCode() == KeyCode.CONTROL) {
                         _inputControleur.ctrlPressed(true);
                         _inputControleur.ctrlReleased(false);
                     }
@@ -60,8 +59,8 @@ public class FxApplication extends Application implements IInputObservable{
             });
             scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
                 @Override
-                public void handle(KeyEvent event) {
-                    if(event.getCode() == KeyCode.CONTROL){
+                public void handle(KeyEvent e) {
+                    if(e.getCode() == KeyCode.CONTROL){
                         _inputControleur.ctrlPressed(false);
                         _inputControleur.ctrlReleased(true);
                     } 
@@ -70,24 +69,43 @@ public class FxApplication extends Application implements IInputObservable{
             scene.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
+                    _inputControleur.position(e.getX(), e.getY());
                     _inputControleur.moved(false);
-                    if(e.isPrimaryButtonDown()) _inputControleur.leftPressed(true);
-                    if(e.isSecondaryButtonDown()) _inputControleur.rightPressed(true);
+                    if(e.getButton() == MouseButton.PRIMARY) _inputControleur.leftPressed(true);
+                    if(e.getButton() == MouseButton.SECONDARY) _inputControleur.rightPressed(true);
                     notifyObservers(_inputControleur);
                 }
             });
             scene.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    if(e.isPrimaryButtonDown()) _inputControleur.leftReleased(true);
-                    if(e.isSecondaryButtonDown()) _inputControleur.rightReleased(true);
+                    _inputControleur.position(e.getX(), e.getY());
+                    if(e.getButton() == MouseButton.PRIMARY) {
+                        _inputControleur.leftReleased(true);
+                        _inputControleur.leftPressed(false);
+                    }
+                    if(e.getButton() == MouseButton.SECONDARY) {
+                        _inputControleur.rightReleased(true);
+                        _inputControleur.rightPressed(false);
+                    }
                     notifyObservers(_inputControleur);
+                    _inputControleur.leftReleased(false);
+                    _inputControleur.rightReleased(false);
                     _inputControleur.moved(false);
                 }
-            });
+            });/*
             scene.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
+                    _inputControleur.position(e.getX(), e.getY());
+                    _inputControleur.moved(true);
+                    notifyObservers(_inputControleur);
+                    }
+            });*/
+            scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    _inputControleur.position(e.getX(), e.getY());
                     _inputControleur.moved(true);
                     notifyObservers(_inputControleur);
                     }

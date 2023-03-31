@@ -1,4 +1,4 @@
-package xshape.model.shape;
+package xshape.model.shape.tools.menus;
 
 import java.awt.geom.Point2D;
 
@@ -49,14 +49,6 @@ public class MenuFx extends Menu{
 		System.gc();
 	}
 
-    @Override
-	public boolean isInside(Point2D pos){
-        return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() > position().getY() - size().getY() / 2 && pos.getY() < position().getY() + size().getY() / 2;
-    }
-
-	@Override
-	public Object adapted() {
-		return _adapted;
-	}
+	@Override public Object adapted() { return _adapted; }
     
 }

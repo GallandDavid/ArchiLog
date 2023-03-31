@@ -1,7 +1,9 @@
-package xshape.model.shape;
+package xshape.model.shape.group;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+
+import xshape.model.shape.Shape;
 
 public class GroupAwt extends Group{
     public GroupAwt(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> group) {

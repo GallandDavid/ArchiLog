@@ -1,10 +1,12 @@
-package xshape.model.shape;
+package xshape.model.shape.tools.toolbar.shapestb;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import xshape.model.shape.RectangleAwt;
+import xshape.model.shape.Shape;
 import xshape.vue.AwtContext;
 
 public class ShapeToolBarAwt extends ShapeToolBar{
@@ -31,7 +33,7 @@ public class ShapeToolBarAwt extends ShapeToolBar{
         Graphics2D g = (Graphics2D) AwtContext.instance().graphics();
 		Point2D pos = visiblePosition();
 		Point2D size = visibleSize();
-        g.setColor(Color.GRAY);
+        g.setColor(Color.LIGHT_GRAY);
         g.fillRect((int)(pos.getX() - size.getX()/2),
         (int)(pos.getY() - size.getY()/2),        
         (int)(size.getX()),
@@ -39,7 +41,6 @@ public class ShapeToolBarAwt extends ShapeToolBar{
     }
 
     @Override public void remove() {}
-    @Override public boolean isInside(Point2D pos){ return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() - 8 > position().getY() && pos.getY() - 8 <= position().getY() + size().getY();}
 	@Override public Object adapted() { return null;}
 
 }

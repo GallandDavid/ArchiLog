@@ -17,17 +17,14 @@ public class ShapeTranslateCommand extends Command{
 
     @Override
     public boolean execute() {
-        System.out.println("----------------\nexecute :" + print());
         for (Object shape : _editor) {
             Point2D tmp = (Point2D) ((Shape) shape).visiblePosition();
             ((Shape) shape).visiblePosition((Point2D) ((Shape) shape).position());
             saveBackup(null);
-            System.out.println("editor = backup : " +((Shape) shape).equals(_backup));
             if(_mouse_y < _app.systemToolBar().size().getY()) return false;
             ((Shape) shape).position((Point2D)tmp.clone());
             ((Shape) shape).visiblePosition((Point2D)tmp.clone());
         }
-        System.out.println("execute\n-----------------");
         return  true;
     }
 

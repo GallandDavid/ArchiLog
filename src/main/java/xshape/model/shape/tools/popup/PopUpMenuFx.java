@@ -1,4 +1,4 @@
-package xshape.model.shape;
+package xshape.model.shape.tools.popup;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import xshape.model.shape.tools.menus.Menu;
+import xshape.model.shape.tools.menus.MenuFx;
 
 public class PopUpMenuFx extends PopUpMenu {
     Rectangle _adapted;
@@ -47,11 +49,6 @@ public class PopUpMenuFx extends PopUpMenu {
         edit().remove();
         group().remove();
         ungroup().remove();
-    }
-
-    @Override
-	public boolean isInside(Point2D pos){
-        return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() > position().getY() - size().getY() / 2 && pos.getY() < position().getY() + size().getY() / 2;
     }
 
     @Override

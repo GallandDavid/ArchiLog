@@ -1,9 +1,9 @@
 package xshape.model.abstractFactory;
 
-import xshape.model.shape.GroupFx;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.RectangleFx;
 import xshape.model.shape.Shape;
+import xshape.model.shape.group.GroupFx;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class ShapeFactoryFx implements ShapeFactory {
     }
 
     @Override
-    public xshape.model.shape.Group createGroup(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> group ) {
+    public xshape.model.shape.group.Group createGroup(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> group ) {
         return new GroupFx(pos, size, selected, group, _grp);
     }
 }

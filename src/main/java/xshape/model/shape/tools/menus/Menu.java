@@ -1,6 +1,8 @@
-package xshape.model.shape;
+package xshape.model.shape.tools.menus;
 
 import java.awt.geom.Point2D;
+
+import xshape.model.shape.Rectangle;
 
 public abstract class Menu extends Rectangle{
     private String _title;

@@ -1,4 +1,4 @@
-package xshape.model.shape;
+package xshape.model.shape.tools.toolbar.shapestb;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -6,14 +6,21 @@ import java.util.ArrayList;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import xshape.model.shape.RectangleFx;
+import xshape.model.shape.Shape;
 
 public class ShapeToolBarFx extends ShapeToolBar{
+    private static double _marge_in_vertical = 7.0;
+    private static double _marge_in_horizontal = 7.0;
+    private static double _height = 30;
     private javafx.scene.shape.Rectangle _adapted;
     private ArrayList<Rectangle> _addonsBox = new ArrayList<>();
     Group _grp;
 
     public ShapeToolBarFx(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> addons, Group grp) {
-        super(pos, size, selected, new RectangleFx(pos.getX(), pos.getY(), size.getX(), size.getY(), selected, grp), addons);
+        super(pos, size, selected, 
+                new RectangleFx(pos.getX(), (pos.getY() - (size.getY()/2)) + _marge_in_vertical + (_height/2), _height, size.getX() - _marge_in_horizontal * 2, selected, grp),
+                addons);
         _grp = grp;
         _adapted = new Rectangle();
         for(int i = 0; i < addons().size(); i ++){
@@ -36,30 +43,26 @@ public class ShapeToolBarFx extends ShapeToolBar{
             _addonsBox.get(i).setFill(Color.GRAY);
             _addonsBox.get(i).toBack();
         }
-        
+        rect().draw();
         if(!_grp.getChildren().contains(_adapted)) _grp.getChildren().add(_adapted);
-		Point2D p = visiblePosition();
-		Point2D	s = visibleSize();
-		_adapted.setX(p.getX()- s.getX()/2);
-		_adapted.setY(p.getY()- s.getY()/2);
-		_adapted.setWidth(s.getX());
-		_adapted.setHeight(s.getY());
-		_adapted.setFill(Color.GRAY);
+		Point2D pos = visiblePosition();
+		Point2D	size = visibleSize();
+		_adapted.setX(pos.getX()- size.getX()/2);
+		_adapted.setY(pos.getY()- size.getY()/2);
+		_adapted.setWidth(size.getX());
+		_adapted.setHeight(size.getY());
+		_adapted.setFill(Color.LIGHTGRAY);
 		_adapted.toBack();
     }
 
     @Override
     public void remove() {
         _grp.getChildren().remove(_adapted);
+        rect().remove();
 		System.gc();
     }
 
-    @Override public boolean isInside(Point2D pos){ return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() > position().getY() - size().getY() / 2 && pos.getY() < position().getY() + size().getY() / 2; }
-
-    @Override
-    public Object adapted() {
-        return _adapted;
-    }
+    @Override public Object adapted() { return _adapted; }
 
     @Override public void addAddons(Shape shape){ 
         addons().add(shape); 

@@ -62,5 +62,16 @@ public class InputControl {
     public void position(double x, double y) { 
         _x = x;
         _y = y;
-     }
+    }
+
+    public void print(){
+        System.out.println("------------\nInput Control :\n" + 
+        "Left : \n" +
+        "Pressed : " + leftPressed() + " || Released : " + leftReleased() + "\n" +
+        "Right : \n" +
+        "Pressed : " + rightPressed() + " || Released : " + rightReleased() + "\n" +
+        "Control : \n" +
+        "Pressed : " + ctrlPressed() + " || Released : " + ctrlReleased() + "\n" +
+        "Moved : " + mouseMoved() + "\n");
+    }
 }
