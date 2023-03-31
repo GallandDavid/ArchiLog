@@ -16,7 +16,11 @@ public class SystemToolBarFx extends SystemToolBar{
     public SystemToolBarFx(Point2D pos, Point2D size, boolean selected, Group grp) {
         super(pos, size, selected,
                 new MenuFx("Files", new Point2D.Double(_width / 2, size.getY() / 2), new Point2D.Double(_width, size.getY()), false, grp),
+                new MenuFx("Save", new Point2D.Double(_width / 2, (size.getY() / 2) + size.getY()), new Point2D.Double(_width, size.getY()), false, grp),
+                new MenuFx("Load", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY() * 2)), new Point2D.Double(_width, size.getY()), false, grp),
                 new MenuFx("Edit", new Point2D.Double(_width + (_width / 2), size.getY() / 2), new Point2D.Double(_width, size.getY()), false, grp),
+                new MenuFx("Undo", new Point2D.Double(_width + (_width / 2), (size.getY() / 2) + size.getY()), new Point2D.Double(_width, size.getY()), false, grp),
+                new MenuFx("Redo", new Point2D.Double(_width + (_width / 2), (size.getY() / 2) + (size.getY() * 2)), new Point2D.Double(_width, size.getY()), false, grp),
                 new MenuFx("Bin", new Point2D.Double(2 * _width + (_width / 2), size.getY() / 2), new Point2D.Double(_width, size.getY()), false, grp));
         _grp = grp;
         _adapted = new Rectangle();
@@ -26,9 +30,6 @@ public class SystemToolBarFx extends SystemToolBar{
     @Override
     public void draw() {
           
-        files().draw();
-        edit().draw();
-        trashbin().draw();
         if(!_grp.getChildren().contains(_adapted)) _grp.getChildren().add(_adapted);
 		Point2D p = visiblePosition();
 		Point2D	s = visibleSize();
@@ -39,7 +40,18 @@ public class SystemToolBarFx extends SystemToolBar{
 		_adapted.setWidth(s.getX());
 		_adapted.setHeight(s.getY());
 		_adapted.setFill(Color.LIGHTGRAY);
-		_adapted.toBack();  
+        _adapted.toFront();
+        files().draw();
+        edit().draw();
+        trashbin().draw();
+        if(filesSelected()){
+            load().draw();
+            save().draw();
+        }
+        if(editSelected()){
+            undo().draw();
+            redo().draw();
+        }
     }
 
     @Override

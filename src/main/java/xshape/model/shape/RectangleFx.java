@@ -2,6 +2,8 @@ package xshape.model.shape;
 
 import java.awt.geom.Point2D;
 import javafx.scene.Group;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
 import javafx.scene.paint.Color;
 
 public class RectangleFx extends Rectangle{
@@ -37,9 +39,23 @@ public class RectangleFx extends Rectangle{
 		_adapted.setWidth(s.getX());
 		_adapted.setHeight(s.getY());
 		_adapted.setFill(Color.BLUE);
-		_adapted.toBack();
-		if(selected()) _adapted.setOpacity(0.5); else _adapted.setOpacity(1.0);
-	}
+		
+		if(selected()) {
+			Light.Distant light = new Light.Distant();
+			light.setAzimuth(0.0);
+			light.setElevation(90.0);
+	
+			Lighting lighting = new Lighting();
+			lighting.setLight(light);
+			lighting.setSurfaceScale(1.0);
+	
+			_adapted.setEffect(lighting);
+		}
+		else{
+			_adapted.setEffect(null);
+		}
+        _adapted.toFront();
+		}
 
 	@Override public void remove() {
 		_grp.getChildren().remove(_adapted);

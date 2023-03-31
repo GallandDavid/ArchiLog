@@ -26,9 +26,6 @@ public class PopUpMenuFx extends PopUpMenu {
 
     @Override
     public void draw() {
-        edit().draw();
-        group().draw();
-        ungroup().draw();
         if(!_grp.getChildren().contains(_adapted)) _grp.getChildren().add(_adapted);
 		Point2D p = visiblePosition();
 		Point2D	s = visibleSize();
@@ -39,7 +36,10 @@ public class PopUpMenuFx extends PopUpMenu {
 		_adapted.setWidth(s.getX());
 		_adapted.setHeight(s.getY());
 		_adapted.setFill(Color.GRAY);
-		_adapted.toBack();
+        _adapted.toFront();
+        edit().draw();
+        group().draw();
+        ungroup().draw();
         
     }
 

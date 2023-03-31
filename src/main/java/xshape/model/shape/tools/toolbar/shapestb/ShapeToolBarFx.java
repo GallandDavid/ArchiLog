@@ -31,6 +31,17 @@ public class ShapeToolBarFx extends ShapeToolBar{
 
     @Override
     public void draw() {
+        
+        if(!_grp.getChildren().contains(_adapted)) _grp.getChildren().add(_adapted);
+		Point2D pos = visiblePosition();
+		Point2D	size = visibleSize();
+		_adapted.setX(pos.getX()- size.getX()/2);
+		_adapted.setY(pos.getY()- size.getY()/2);
+		_adapted.setWidth(size.getX());
+		_adapted.setHeight(size.getY());
+		_adapted.setFill(Color.LIGHTGRAY);
+        _adapted.toFront();
+        
         for (int i = 0; i < addons().size(); i ++) {
             addons().get(i).draw();
             if(!_grp.getChildren().contains(_addonsBox.get(i))) _grp.getChildren().add(_addonsBox.get(i));
@@ -41,18 +52,9 @@ public class ShapeToolBarFx extends ShapeToolBar{
             _addonsBox.get(i).setWidth(s.getX() + 6);
             _addonsBox.get(i).setHeight(s.getY() + 6);
             _addonsBox.get(i).setFill(Color.GRAY);
-            _addonsBox.get(i).toBack();
+            _addonsBox.get(i).toFront();
         }
         rect().draw();
-        if(!_grp.getChildren().contains(_adapted)) _grp.getChildren().add(_adapted);
-		Point2D pos = visiblePosition();
-		Point2D	size = visibleSize();
-		_adapted.setX(pos.getX()- size.getX()/2);
-		_adapted.setY(pos.getY()- size.getY()/2);
-		_adapted.setWidth(size.getX());
-		_adapted.setHeight(size.getY());
-		_adapted.setFill(Color.LIGHTGRAY);
-		_adapted.toBack();
     }
 
     @Override

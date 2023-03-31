@@ -2,9 +2,12 @@ package xshape.model.shape.tools.menus;
 
 import java.awt.geom.Point2D;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class MenuFx extends Menu{
@@ -23,24 +26,25 @@ public class MenuFx extends Menu{
     @Override
     public void draw() {
         if(!_grp.getChildren().contains(_adapted)) _grp.getChildren().add(_adapted);
-		Point2D p = visiblePosition();
-		Point2D	s = visibleSize();
-        _text.setX((p.getX()- s.getX()/2) + 5);
-		_text.setY(s.getY() - 5);
+		if(!_grp.getChildren().contains(_text)) _grp.getChildren().add(_text);
+        Point2D p = position();
+		Point2D	s = size();
+        
 		_adapted.setWidth(s.getX() - 10);
 		_adapted.setHeight(s.getY() - 10);
-		_text.setText(title());
-        _text.setFont(Font.font(13));
-        _text.setFill(Color.BLACK);
-		_text.toBack();
         _adapted.setX(p.getX()- s.getX()/2);
 		_adapted.setY(p.getY()- s.getY()/2);
 		_adapted.setWidth(s.getX());
 		_adapted.setHeight(s.getY());
 		_adapted.setFill(Color.GRAY);
         _adapted.setStroke(Color.BLACK);
-		_adapted.toBack();
-		if(selected()) _adapted.setOpacity(0.5); else _adapted.setOpacity(1.0);
+        _adapted.toFront();
+        _text.setX((p.getX()- s.getX()/2) + 5);
+		_text.setY(p.getY() + 6);
+		_text.setText(title());
+        _text.setFont(Font.font("Arial", FontWeight.EXTRA_LIGHT, FontPosture.REGULAR, 13));
+        _text.setFill(Color.BLACK);
+        _text.toFront();
     }
 
     @Override

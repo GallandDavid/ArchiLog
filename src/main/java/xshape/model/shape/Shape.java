@@ -82,7 +82,8 @@ public abstract class Shape implements IShape{
         str += "Visble Pos : (" + _visible_pos.getX() + ", " + _visible_pos.getY() + ")   |   ";
         str += "Visble Size : (" + _visible_size.getX() + ", " + _visible_size.getY() + ")\n";
         str += "Ref : " + getId() + "   |   ";
-        str += "selected : " + _selected;
+        str += "Selected : " + _selected;
+        str += "Deepth : " + _deepth;
         return str;
     }
 
@@ -125,7 +126,7 @@ public abstract class Shape implements IShape{
 
     @Override
     public void duplicate(Shape shape){
-        this.deepth(shape.deepth());
+        this._deepth = shape.deepth();
         this.position(shape.position());
         this.size(shape.size());
         this.visiblePosition(shape.visiblePosition());
@@ -146,7 +147,6 @@ public abstract class Shape implements IShape{
      */
     public void setPlaced(boolean placed) { _placed = placed; }
     public int deepth(){ return _deepth; }
-    public void deepth(int deepth){ _deepth = deepth; }
 
     public boolean selected() {
         return _selected;

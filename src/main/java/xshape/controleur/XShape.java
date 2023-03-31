@@ -51,11 +51,11 @@ public abstract class XShape implements CommandHistory, IInputObserver{
         SortedMap<Integer, Shape> map = new TreeMap<Integer, Shape>(
                                             new Comparator<Integer>() {
                                                 public int compare(Integer a, Integer b){
-                                                    return b.compareTo(a);
+                                                    return a.compareTo(b);
                                                     }
                                             });
-        for (Shape s : _shapes)
-            map.put(s.deepth(), s);
+        for (int i = 0; i < _shapes.length; i ++)
+            map.put(_shapes[i].deepth(), _shapes[i]);
         return map;
     }
 
@@ -70,14 +70,14 @@ public abstract class XShape implements CommandHistory, IInputObserver{
     public void draw(){
         if(_factory == null)    _factory = createFactory();
         if (_shapes == null)    createScene();
-        _systemToolBar.draw();
-        _shapesToolBar.draw();
-
         if(_shapes != null)
-            for(Shape s : orderShapes().values())
+            for(Shape s : orderShapes().values()){
                 s.draw();
+            }
+        _shapesToolBar.draw();
         if(_selected_item != null)
             _selected_item.draw();
+        _systemToolBar.draw();
         render();
     }
 
@@ -178,19 +178,38 @@ public abstract class XShape implements CommandHistory, IInputObserver{
                     }
                 }
                 else{
-                    if(_systemToolBar.trashbin().isInside(inputControleur.position())){
-                        ArrayList<Object> shapes = new ArrayList<>();
-                        for (Shape shape : getShapes()){
-                            if(shape.selected()){
-                                shapes.add(shape);
-                            }
+                    if(_systemToolBar.isInItem(inputControleur.position())){
+                        if(_systemToolBar.files().isInside(inputControleur.position())){
+                            _systemToolBar.selectFiles();
                         }
-                        cmd = new TrashBinCommand(this,shapes);
-                    }else{
-                        for (Shape s : getShapes())
-                            if(s.selected()){
-                                s.visiblePosition(s.position());
+                        if(_systemToolBar.save().isInside(inputControleur.position())){
+                        }
+                        if(_systemToolBar.load().isInside(inputControleur.position())){
+                        }
+                        if(_systemToolBar.edit().isInside(inputControleur.position())){
+                            _systemToolBar.selectEdit();
+                        }
+                        if(_systemToolBar.undo().isInside(inputControleur.position())){
+                            System.out.print("undo");
+                            undo();
+                        }
+                        if(_systemToolBar.redo().isInside(inputControleur.position())){
+                            redo();
+                        }
+                        if(_systemToolBar.trashbin().isInside(inputControleur.position())){
+                            ArrayList<Object> shapes = new ArrayList<>();
+                            for (Shape shape : getShapes()){
+                                if(shape.selected()){
+                                    shapes.add(shape);
+                                }
                             }
+                            cmd = new TrashBinCommand(this,shapes);
+                        }else{
+                            for (Shape s : getShapes())
+                                if(s.selected()){
+                                    s.visiblePosition(s.position());
+                                }
+                        }
                     }
                 }
             }

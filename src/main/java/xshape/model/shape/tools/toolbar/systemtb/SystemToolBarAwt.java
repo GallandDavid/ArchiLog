@@ -13,7 +13,11 @@ public class SystemToolBarAwt extends SystemToolBar{
     public SystemToolBarAwt(Point2D pos, Point2D size, boolean selected) {
         super(pos, size, selected,
         new MenuAwt("Files", new Point2D.Double(_width / 2, size.getY() / 2), new Point2D.Double(_width, size.getY()), false),
+        new MenuAwt("Save", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY())), new Point2D.Double(_width, size.getY()), false),
+        new MenuAwt("Load", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY() * 2)), new Point2D.Double(_width, size.getY()), false),
         new MenuAwt("Edit", new Point2D.Double(_width + (_width / 2), size.getY() / 2), new Point2D.Double(_width, size.getY()), false),
+        new MenuAwt("Undo", new Point2D.Double(_width / 2, (size.getY() / 2) + size.getY()), new Point2D.Double(_width, size.getY()), false),
+        new MenuAwt("Redo", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY() * 2)), new Point2D.Double(_width, size.getY()), false),
         new MenuAwt("Bin", new Point2D.Double(2 * _width + (_width / 2), size.getY() / 2), new Point2D.Double(_width, size.getY()), false));
 }
 
@@ -30,6 +34,14 @@ public class SystemToolBarAwt extends SystemToolBar{
         files().draw();
         edit().draw();
         trashbin().draw();
+        if(filesSelected()){
+            load().draw();
+            save().draw();
+        }
+        if(editSelected()){
+            undo().draw();
+            redo().draw();
+        }
     }
 
     @Override public void remove() { }
