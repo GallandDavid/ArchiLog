@@ -12,7 +12,7 @@ public class RectangleFx extends Rectangle{
     Group _grp;
     
 	public RectangleFx(RectangleFx shape){
-		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.selected(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth());
+		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.selected(), shape.getId(), shape.isPlaced(), shape.deepth());
 		_adapted = new javafx.scene.shape.Rectangle();
 		_grp = shape._grp;
 		_grp.getChildren().add(_adapted);
@@ -29,8 +29,7 @@ public class RectangleFx extends Rectangle{
 		_grp.getChildren().add(_adapted);
 	}
 
-	@Override
-	public void draw() {
+	@Override public void draw() {
 		if(!_grp.getChildren().contains(_adapted)) _grp.getChildren().add(_adapted);
 		Point2D p = visiblePosition();
 		Point2D	s = visibleSize();
@@ -61,7 +60,5 @@ public class RectangleFx extends Rectangle{
 		_grp.getChildren().remove(_adapted);
 		System.gc();
 	}
-    @Override public boolean equals(Object obj){ return super.equals(obj); }
-	@Override public Object adapted() { return _adapted; }
-    @Override public boolean isInside(Point2D pos){ return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() > position().getY() - size().getY() / 2 && pos.getY() < position().getY() + size().getY() / 2; }
+    @Override public Object adapted() { return _adapted; }
 }

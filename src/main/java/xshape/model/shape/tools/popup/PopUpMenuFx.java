@@ -1,19 +1,17 @@
 package xshape.model.shape.tools.popup;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import xshape.model.shape.tools.menus.Menu;
 import xshape.model.shape.tools.menus.MenuFx;
 
 public class PopUpMenuFx extends PopUpMenu {
     Rectangle _adapted;
     Group _grp;
 
-    public PopUpMenuFx(Point2D pos, int selected, boolean grouped, ArrayList<Menu> menus, Group grp) {
+    public PopUpMenuFx(Point2D pos, int selected, boolean grouped, Group grp) {
         super(pos, selected, grouped, 
                 new MenuFx("Edit", new Point2D.Double(pos.getX(), pos.getY() - (_size.getY() / 3)), new Point2D.Double(_size.getX(), _size.getY() / 3), grouped, grp),
                 new MenuFx("Group", pos, new Point2D.Double(_size.getX(), _size.getY() / 3), grouped, grp),
@@ -50,10 +48,8 @@ public class PopUpMenuFx extends PopUpMenu {
         group().remove();
         ungroup().remove();
     }
-
     @Override
     public Object adapted() {
         return _adapted;
     }
-    
 }

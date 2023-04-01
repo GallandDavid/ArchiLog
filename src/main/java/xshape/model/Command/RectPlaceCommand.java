@@ -36,8 +36,8 @@ public class RectPlaceCommand extends Command{
             _app.addShape(shape);
             return false;
         }
-        _app._selected_item.remove();
-        _app._selected_item = null;
+        _app.placedShape().remove();
+        _app.addShapeToPlaced(null);
         if(_mouse_y > _app.systemToolBar().size().getY()){
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y, false);
             shape.selected(true);

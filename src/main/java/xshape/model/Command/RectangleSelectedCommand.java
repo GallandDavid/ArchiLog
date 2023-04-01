@@ -19,7 +19,7 @@ public class RectangleSelectedCommand extends Command{
     public boolean execute() {
         Shape s = (Shape) _app.factory().createRectangle(_mouse_x, _mouse_y, true);
         s.selected(true);
-        _app.addSelectedShape(s);
+        _app.addShapeToPlaced(s);
         return false;
     }
 

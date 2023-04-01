@@ -10,7 +10,7 @@ public class GroupFx extends Group{
     javafx.scene.Group _adapted;
 
     public GroupFx(GroupFx shape, ArrayList<Shape> shapes){
-		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.selected(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth());
+		super((Point2D) shape.position().clone(), (Point2D) shape.size().clone(), (Point2D) shape.visiblePosition().clone(), (Point2D) shape.visibleSize().clone(), shape.selected(), shape.getId(), shape.isPlaced(), shape.deepth());
 		group(shapes);
         _adapted = new javafx.scene.Group();
         for (Shape s : group())
@@ -27,20 +27,8 @@ public class GroupFx extends Group{
             _adapted.getChildren().add((javafx.scene.shape.Shape) shape.adapted());
     }
 
-    @Override
-    public void draw() {
-        for (Shape shape : group())
-            shape.draw();
-    }
-
-    @Override
-    public void remove() {
-        _grp.getChildren().remove(_adapted);
-    }
-
-    @Override
-    public Object adapted() {
-        return adapted();
-    }
+    @Override public void draw() { for (Shape shape : group()) shape.draw(); }
+    @Override public void remove() { _grp.getChildren().remove(_adapted); }
+    @Override public Object adapted() { return _adapted; }
     
 }

@@ -41,6 +41,6 @@ public class ShapeToolBarAwt extends ShapeToolBar{
     }
 
     @Override public void remove() {}
-	@Override public Object adapted() { return null;}
+    @Override public Object adapted() { return null; }
 
 }

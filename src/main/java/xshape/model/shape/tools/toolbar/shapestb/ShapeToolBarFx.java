@@ -64,8 +64,6 @@ public class ShapeToolBarFx extends ShapeToolBar{
 		System.gc();
     }
 
-    @Override public Object adapted() { return _adapted; }
-
     @Override public void addAddons(Shape shape){ 
         addons().add(shape); 
         Rectangle rect = new Rectangle();
@@ -84,5 +82,6 @@ public class ShapeToolBarFx extends ShapeToolBar{
                 _addonsBox.remove(_addonsBox.get(i));
             }
     }
+    @Override public Object adapted() { return _adapted; }
     
 }

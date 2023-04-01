@@ -3,14 +3,12 @@ package xshape.model.shape.tools.popup;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
-
-import xshape.model.shape.tools.menus.Menu;
 import xshape.model.shape.tools.menus.MenuAwt;
 import xshape.vue.AwtContext;
 
 public class PopUpMenuAwt extends PopUpMenu{
 
-    public PopUpMenuAwt(Point2D pos, int selected, boolean grouped, Menu edit, Menu group, Menu ungroup) {
+    public PopUpMenuAwt(Point2D pos, int selected, boolean grouped) {
         super(pos, selected, grouped, 
                 new MenuAwt("Edit", new Point2D.Double(pos.getX(), pos.getY() - (_size.getY() / 3)), new Point2D.Double(_size.getX(), _size.getY() / 3), grouped),
                 new MenuAwt("Group", pos, new Point2D.Double(_size.getX(), _size.getY() / 3), grouped),
@@ -32,9 +30,8 @@ public class PopUpMenuAwt extends PopUpMenu{
         (int)(size.getX()),
         (int)(size.getY()));
     }
-
-    @Override public void remove() {}
-	@Override public Object adapted() { return null;}
-
-    
+    @Override
+    public Object adapted() {
+        return null;
+    }
 }

@@ -43,8 +43,5 @@ public class SystemToolBarAwt extends SystemToolBar{
             redo().draw();
         }
     }
-
-    @Override public void remove() { }
     @Override public Object adapted() { return null; }
-    
 }

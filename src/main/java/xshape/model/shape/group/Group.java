@@ -10,8 +10,8 @@ public abstract class Group extends Shape{
 
     private ArrayList<Shape> _group = new ArrayList<>();
 
-    public Group(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, double prev_mouse_pos_X, double prev_mouse_pos_Y, String ID, boolean placed, int deepth){
-        super(pos, size, visible_pos, visible_size, selected, prev_mouse_pos_X, prev_mouse_pos_Y, ID, placed, deepth, false);
+    public Group(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, String ID, boolean placed, int deepth){
+        super(pos, size, visible_pos, visible_size, selected, ID, placed, deepth, false);
     }
 
     public Group(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> group) {

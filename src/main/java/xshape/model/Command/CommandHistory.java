@@ -10,4 +10,6 @@ public interface CommandHistory {
     void clearRedo();
     void undo();
     void redo();
+    boolean haveUndo();
+    boolean haveRedo();
 }

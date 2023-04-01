@@ -8,7 +8,7 @@ import java.awt.*;
 public class RectangleAwt extends Rectangle {
 
 	public RectangleAwt(RectangleAwt shape){
-		super((Point2D) shape.position(), (Point2D) shape.size(), (Point2D) shape.visiblePosition(), (Point2D) shape.visibleSize(), shape.selected(), shape.getPrevMousePosX(), shape.getPrevMousePosY(), shape.getId(), shape.isPlaced(), shape.deepth());
+		super((Point2D) shape.position(), (Point2D) shape.size(), (Point2D) shape.visiblePosition(), (Point2D) shape.visibleSize(), shape.selected(), shape.getId(), shape.isPlaced(), shape.deepth());
 	}
 
 	public RectangleAwt() {
@@ -54,9 +54,5 @@ public class RectangleAwt extends Rectangle {
         (int)(size.getX()),
         (int)(size.getY()));
 	}
-
-	@Override public void remove() { }
-	@Override public boolean isInside(Point2D pos){ return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() - 8 > position().getY() && pos.getY() - 8 <= position().getY() + size().getY();}
-	@Override public Object adapted() { return null;}
-
+    @Override public Object adapted() { return null; }
 }

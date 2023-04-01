@@ -22,7 +22,7 @@ public class GroupAwt extends Group{
 
     @Override
     public Object adapted() {
-        return adapted();
+        return null;
     }
     
 }

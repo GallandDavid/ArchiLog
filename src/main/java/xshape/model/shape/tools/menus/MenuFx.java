@@ -1,8 +1,6 @@
 package xshape.model.shape.tools.menus;
 
 import java.awt.geom.Point2D;
-
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -53,6 +51,8 @@ public class MenuFx extends Menu{
 		System.gc();
 	}
 
-	@Override public Object adapted() { return _adapted; }
-    
+    @Override
+    public Object adapted() {
+        return _adapted;
+    }
 }
