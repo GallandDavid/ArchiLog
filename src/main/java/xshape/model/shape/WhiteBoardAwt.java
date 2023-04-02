@@ -15,8 +15,8 @@ public class WhiteBoardAwt extends Rectangle{
     @Override
 	public void draw() {
         Graphics g = AwtContext.instance().graphics();
-		Point2D pos = visiblePosition();
-		Point2D size = visibleSize();
+		Point2D pos = position();
+		Point2D size = size();
         g.setColor(Color.WHITE);
         g.fillRect((int)(pos.getX() - size.getX()/2),
         (int)(pos.getY() - size.getY()/2),        

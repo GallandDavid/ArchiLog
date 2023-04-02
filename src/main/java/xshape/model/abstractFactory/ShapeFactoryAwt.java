@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.RectangleAwt;
 import xshape.model.shape.Shape;
+import xshape.model.shape.WhiteBoardAwt;
 import xshape.model.shape.group.Group;
 import xshape.model.shape.group.GroupAwt;
 import xshape.model.shape.tools.popup.PopUpMenu;
@@ -51,7 +52,7 @@ public class ShapeFactoryAwt implements ShapeFactory {
 
     @Override
     public Rectangle createWhiteBoard(double posX, double posY, double height, double width, boolean selected) {
-        return new RectangleAwt(posX, posY, height, width, selected);
+        return new WhiteBoardAwt(posX, posY, height, width, selected);
     }
 
     @Override

@@ -11,6 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import xshape.controleur.FxApp;
 import xshape.model.controlInput.InputControl;
@@ -41,6 +42,7 @@ public class FxApplication extends Application implements IInputObservable{
         Platform.runLater(() -> {
             primaryStage.setTitle("XShape JavaFx Rendering");
             Scene scene = new Scene(_root, 500, 500);
+            scene.setFill(Color.GRAY);
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
                 @Override

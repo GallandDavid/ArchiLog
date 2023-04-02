@@ -40,7 +40,6 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
     LinkedList<ICommand> _redos = new LinkedList<>();
 
     private void createScene() {
-        if(whiteBoard() != null) whiteBoard().draw();
         Command command1 = new RectPlaceCommand(this, 20,300, true);
         Command command2 = new RectPlaceCommand(this, 100, 200, true);
         Command[] tmp = {command1,command2};
@@ -96,6 +95,8 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
     @Override public void draw(){
         if(_factory == null)    createFactory();
         if (_shapes == null)    createScene();
+
+        if(whiteBoard() != null) whiteBoard().draw();
         if(_shapes != null)
             for(Shape s : orderShapes().values()){
                 s.draw();
@@ -174,10 +175,14 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
     }
 
     private void translateWhiteBoard(Point2D pos){
+        System.out.println(whiteBoard().toString());
         whiteBoard().translate(mousVec(pos));
                 for (Shape shape : getShapes()) {
+                    shape.visibleTranslate(mousVec(pos));
                     shape.translate(mousVec(pos));
                 }
+
+        System.out.println(whiteBoard().toString());
     }
 
     @Override
@@ -212,6 +217,7 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                     for (Shape s : getSelected())
                             s.selected(false);
                     shape.selected(true);
+                    selection(true);
                 }else{
                     System.out.println("on void");
                     whiteBoard().selected(true);
@@ -226,6 +232,8 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                 Shape shape = topShape(inputControleur.position());
                 if(shape != null)
                     shape.selected(!shape.selected());
+                if(getSelected().size() < 1) selection(false);
+                else selection(true);
                 mousePos(inputControleur.position());
             }
         }
@@ -235,10 +243,13 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         }
         //left mouse dragged
         if(inputControleur.mouseMoved() && inputControleur.leftPressed() && !inputControleur.rightPressed()){
+            System.out.println("left dragg");
             if(whiteBoard().selected()){
+                System.out.println("white board selected");
                 translateWhiteBoard(inputControleur.position());
             } 
             else if(selection()){
+                System.out.println("white board not selected && selection()");
                 for (Shape shape : getSelected()) {
                     shape.visibleTranslate(mousVec(inputControleur.position()));                
                 }

@@ -120,7 +120,7 @@ public class AwtApp extends XShape{
         createFactory();
         JCanvas jc = new JCanvas(this);
         _jc = jc;
-        jc.setBackground(Color.WHITE);
+        jc.setBackground(Color.GRAY);
         jc.setPreferredSize(new Dimension(500, 500));
         GUIHelper.showOnFrame(jc, "XShape Swing/AWT Rendering");
     }
