@@ -45,10 +45,9 @@ public abstract class Group extends Shape{
 
     public void add(Shape shape){
         _group.add(shape);
-        resize(shape);
+        init();
     }
 
-    private void resize(Shape shape) {  }
     @Override public boolean equals(Object obj){ return false; }
     @Override public void duplicate(Shape shape){ }
     @Override public Shape translate(Point2D vec) { return null; }

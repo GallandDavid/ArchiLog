@@ -67,11 +67,11 @@ public class InputControl {
     public void print(){
         System.out.println("------------\nInput Control :\n" + 
         "Left : \n" +
-        "Pressed : " + leftPressed() + " || Released : " + leftReleased() + "\n" +
+        "Pressed : " + leftPressed() + " || Released : " + leftReleased() + " || Now : " + left().now() + "\n" +
         "Right : \n" +
-        "Pressed : " + rightPressed() + " || Released : " + rightReleased() + "\n" +
+        "Pressed : " + rightPressed() + " || Released : " + rightReleased() + " || Now : " + right().now() + "\n" +
         "Control : \n" +
-        "Pressed : " + ctrlPressed() + " || Released : " + ctrlReleased() + "\n" +
+        "Pressed : " + ctrlPressed() + " || Released : " + ctrlReleased() + " || Now : " + ctrl().now() + "\n" +
         "Moved : " + mouseMoved() + "\n");
     }
 }

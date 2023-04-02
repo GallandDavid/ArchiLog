@@ -15,7 +15,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.abstractFactory.ShapeFactoryAwt;
 import xshape.model.controlInput.InputControl;
 import xshape.model.observer.IInputObservable;
@@ -74,7 +73,7 @@ public class AwtApp extends XShape{
         @Override public void mouseExited(MouseEvent e) { }
         @Override public void mouseMoved(MouseEvent e) { }
         @Override public void mousePressed(MouseEvent e) { 
-            _inputControleur.position(e.getX(), e.getY() + 20);
+            _inputControleur.position(e.getX(), e.getY() - 38);
             _inputControleur.moved(false);
             if(e.getButton() == MouseEvent.BUTTON1) {
                 _inputControleur.leftPressed(true);
@@ -90,7 +89,7 @@ public class AwtApp extends XShape{
             _inputControleur.right().now(false);
         }
         @Override public void mouseReleased(MouseEvent e) {
-            _inputControleur.position(e.getX(), e.getY() + 20);
+            _inputControleur.position(e.getX(), e.getY() - 38);
             if(e.getButton() == MouseEvent.BUTTON1) {
                 _inputControleur.leftReleased(true);
                 _inputControleur.leftPressed(false);
@@ -110,7 +109,7 @@ public class AwtApp extends XShape{
             _inputControleur.right().now(false);
         }
         @Override public void mouseDragged(MouseEvent e) {
-            _inputControleur.position(e.getX(), e.getY() + 20);
+            _inputControleur.position(e.getX(), e.getY() - 38);
             _inputControleur.moved(true);
             notifyObservers(_inputControleur);
             if(_inputControleur.ctrl().now()) _inputControleur.ctrl().now(false);  

@@ -183,6 +183,7 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
     @Override
     public void update(InputControl inputControleur) {
         Command cmd = null;
+        inputControleur.print();
         //left pressed alone
         if(inputControleur.left().now() && inputControleur.leftPressed() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && !inputControleur.ctrlPressed()){
             mousePos(inputControleur.position());
@@ -204,12 +205,15 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                 }
             }else if(isPopUping() && popUpMenu().isInside(inputControleur.position())){
             }else{
+                System.out.println("on white board");
                 Shape shape = topShape(inputControleur.position());
                 if(shape != null){
+                    System.out.println("on shape");
                     for (Shape s : getSelected())
                             s.selected(false);
-                    shape.selected();
+                    shape.selected(true);
                 }else{
+                    System.out.println("on void");
                     whiteBoard().selected(true);
                 }
                 mousePos(inputControleur.position());
@@ -256,6 +260,7 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                 shapes.addAll(getSelected());
                 cmd = new ShapeTranslateCommand(this, shapes, inputControleur.position().getX(),inputControleur.position().getY());
             }
+            whiteBoard().selected(false);
         }
         //right click
         if(inputControleur.right().now() && inputControleur.rightReleased() && !inputControleur.leftPressed()){
@@ -270,6 +275,7 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                     //popup whiteboard
                 }
             }
+            whiteBoard().selected(false);
         }
         if(cmd != null){
             if(cmd.execute()){
