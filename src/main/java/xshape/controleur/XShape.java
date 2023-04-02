@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 import xshape.model.Command.Command;
 import xshape.model.Command.CommandHistory;
+import xshape.model.Command.GroupCommand;
 import xshape.model.Command.ICommand;
 import xshape.model.Command.RectPlaceCommand;
 import xshape.model.Command.ShapeTranslateCommand;
@@ -188,38 +189,37 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
     @Override
     public void update(InputControl inputControleur) {
         Command cmd = null;
-        inputControleur.print();
         //left pressed alone
         if(inputControleur.left().now() && inputControleur.leftPressed() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && !inputControleur.ctrlPressed()){
             mousePos(inputControleur.position());
             if(systemToolBar().isInside(inputControleur.position())){
-                if(systemToolBar().isInItem(inputControleur.position())){
-                    if(systemToolBar().files().isInside(inputControleur.position())){
-                        systemToolBar().filesSelected();
-                    }else if(systemToolBar().edit().isInside(inputControleur.position())){
-                        systemToolBar().editSelected();
-                    }else if(systemToolBar().trashbin().isInside(inputControleur.position())){
-                        // trashbin (released ?)
-                    }
-                }
-
             }else if(shapesToolBar().isInside(inputControleur.position())){
                 if(shapesToolBar().isInItem(inputControleur.position())){
-                    // instance shape
+                    if(shapesToolBar().rect().isInside(inputControleur.position())){
+                        addShapeToPlaced(instanceShape(shapesToolBar().rect()));
+                    }
                     mousePos(inputControleur.position());
                 }
             }else if(isPopUping() && popUpMenu().isInside(inputControleur.position())){
+                if(popUpMenu().nbSelected() > 1 && popUpMenu().group().isInside(inputControleur.position())){
+                    ArrayList<Object> shapes = new ArrayList<>();
+                    for (Shape shape : getSelected()) { shapes.add(shape); }
+                    cmd = new GroupCommand(this, shapes);
+                }
+                //pop up press action
+            }else if(isPopUping() && !popUpMenu().isInside(inputControleur.position())){
+                popUpMenu().remove();
+                popUpMenu(null);
             }else{
-                System.out.println("on white board");
                 Shape shape = topShape(inputControleur.position());
                 if(shape != null){
-                    System.out.println("on shape");
+                    if(!shape.selected()){
                     for (Shape s : getSelected())
-                            s.selected(false);
+                        s.selected(false);
+                    }
                     shape.selected(true);
                     selection(true);
                 }else{
-                    System.out.println("on void");
                     whiteBoard().selected(true);
                 }
                 mousePos(inputControleur.position());
@@ -229,6 +229,12 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         if(inputControleur.left().now() && inputControleur.leftPressed() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && inputControleur.ctrlPressed()){
             if(whiteBoard().isInside(inputControleur.position())){
                 whiteBoard().selected(true);
+                mousePos(inputControleur.position());
+            }
+        }
+        //left clicked ctrl
+        if(inputControleur.left().now() && inputControleur.leftReleased() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && inputControleur.ctrlPressed()){
+            if(whiteBoard().isInside(inputControleur.position())){
                 Shape shape = topShape(inputControleur.position());
                 if(shape != null)
                     shape.selected(!shape.selected());
@@ -236,6 +242,8 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                 else selection(true);
                 mousePos(inputControleur.position());
             }
+            whiteBoard().selected(false);
+            systemToolBar().unSelect();
         }
         //right pressed alone
         if(inputControleur.right().now() && inputControleur.rightPressed() && !inputControleur.leftPressed() && !inputControleur.mouseMoved()){
@@ -243,13 +251,10 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         }
         //left mouse dragged
         if(inputControleur.mouseMoved() && inputControleur.leftPressed() && !inputControleur.rightPressed()){
-            System.out.println("left dragg");
             if(whiteBoard().selected()){
-                System.out.println("white board selected");
                 translateWhiteBoard(inputControleur.position());
             } 
             else if(selection()){
-                System.out.println("white board not selected && selection()");
                 for (Shape shape : getSelected()) {
                     shape.visibleTranslate(mousVec(inputControleur.position()));                
                 }
@@ -258,10 +263,37 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         }
         //left clicked (released)
         if(inputControleur.left().now() && inputControleur.leftReleased() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && !inputControleur.ctrlPressed()){
-            if(whiteBoard().selected())
+            
+            if(whiteBoard().selected()){
                 if(topShape(inputControleur.position()) == null)
                     for (Shape s : getSelected())
                         s.selected(false);
+            }
+            if(systemToolBar().isInside(inputControleur.position())){
+                if(systemToolBar().isInItem(inputControleur.position())){
+                    if(systemToolBar().files().isInside(inputControleur.position())){
+                        System.out.println("on files");
+                        systemToolBar().selectFiles();;
+                    }else if(systemToolBar().edit().isInside(inputControleur.position())){
+                        systemToolBar().selectEdit();
+                    }else if(systemToolBar().trashbin().isInside(inputControleur.position())){
+                        // trashbin (released ?)
+                    }else if(systemToolBar().filesSelected()){
+                        if(systemToolBar().save().isInside(inputControleur.position())){
+                            //save
+                        }else if(systemToolBar().load().isInside(inputControleur.position())){
+                            //load
+                        }
+                    }else if(systemToolBar().editSelected()){
+                        if(systemToolBar().undo().isInside(inputControleur.position())){
+                            System.out.println("undo");
+                            undo();
+                        }else if(systemToolBar().redo().isInside(inputControleur.position())){
+                            redo();
+                        }
+                    }
+                }
+            }
             whiteBoard().selected(false);
         }
         //left dragg released (released)
@@ -269,9 +301,10 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
             if(!whiteBoard().selected() && selection()){
                 ArrayList<Object> shapes = new ArrayList<>();
                 shapes.addAll(getSelected());
-                cmd = new ShapeTranslateCommand(this, shapes, inputControleur.position().getX(),inputControleur.position().getY());
+                cmd = new ShapeTranslateCommand(this, shapes);
             }
             whiteBoard().selected(false);
+            systemToolBar().unSelect();
         }
         //right click
         if(inputControleur.right().now() && inputControleur.rightReleased() && !inputControleur.leftPressed()){
@@ -287,6 +320,7 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                 }
             }
             whiteBoard().selected(false);
+            systemToolBar().unSelect();
         }
         if(cmd != null){
             if(cmd.execute()){
@@ -296,7 +330,11 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         }
         draw();
     }  
-/*
+private Shape instanceShape(Shape rect) {
+        return null;
+    }
+
+    /*
     private void printRedosHistory() {
         if(!_redos.isEmpty()){
             System.out.println("--------------------\nprintRedosHistory :");

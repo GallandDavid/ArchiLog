@@ -58,6 +58,15 @@ public abstract class SystemToolBar extends ToolBar {
   public Menu trashbin() { return _trashbin; }
 
   @Override
+  public boolean isInside(Point2D pos){
+    if(filesSelected)
+      return super.isInside(pos) || save().isInside(pos) || load().isInside(pos);
+    if(editSelected)
+      return super.isInside(pos) || undo().isInside(pos) || redo().isInside(pos);
+    return super.isInside(pos);
+  }
+
+  @Override
   public boolean isInItem(Point2D pos) {
     if(files().isInside(pos) || edit().isInside(pos) || trashbin().isInside(pos) ) return true;
     if(filesSelected){
@@ -83,12 +92,12 @@ public abstract class SystemToolBar extends ToolBar {
   }
 
   public void selectFiles(){
-    unSelect();
+    editSelected = false;
     filesSelected = true;
   }
 
   public void selectEdit(){
-    unSelect();
+    filesSelected = false;
     editSelected = true;
   }
 

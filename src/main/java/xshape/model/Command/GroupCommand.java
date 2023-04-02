@@ -9,8 +9,8 @@ import xshape.model.shape.group.Group;
 
 public class GroupCommand extends Command{
 
-    public GroupCommand(XShape app) {
-        super(app);
+    public GroupCommand(XShape app, ArrayList<Object> editor) {
+        super(app, editor);
     }
 
     @Override

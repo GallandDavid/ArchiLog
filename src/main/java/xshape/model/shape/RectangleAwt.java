@@ -42,12 +42,7 @@ public class RectangleAwt extends Rectangle {
 		Point2D size = visibleSize();
         g.setColor(Color.BLUE);
 		if(selected()){
-			AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
-			g.setComposite(alphaComposite);
-		}
-		else{
-			AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
-			g.setComposite(alphaComposite);
+			g.setColor(new Color(100, 100, 255));
 		}
         g.fillRect((int)(pos.getX() - size.getX()/2),
         (int)(pos.getY() - size.getY()/2),        

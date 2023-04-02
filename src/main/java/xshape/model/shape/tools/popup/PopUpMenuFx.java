@@ -12,10 +12,10 @@ public class PopUpMenuFx extends PopUpMenu {
     Group _grp;
 
     public PopUpMenuFx(Point2D pos, int selected, boolean grouped, Group grp) {
-        super(pos, selected, grouped, 
-                new MenuFx("Edit", new Point2D.Double(pos.getX(), pos.getY() - (_size.getY() / 3)), new Point2D.Double(_size.getX(), _size.getY() / 3), grouped, grp),
-                new MenuFx("Group", pos, new Point2D.Double(_size.getX(), _size.getY() / 3), grouped, grp),
-                new MenuFx("Un-Group", new Point2D.Double(pos.getX(), pos.getY() + (_size.getY() / 3)), new Point2D.Double(_size.getX(), _size.getY() / 3), grouped, grp)
+        super(new Point2D.Double(pos.getX() + _size.getX() / 2, pos.getY() + _size.getY() / 2), selected, grouped, 
+                new MenuFx("Edit", new Point2D.Double(pos.getX() + _size.getX() / 2, pos.getY() + _size.getY() / 2 - (_size.getY() / 3)), new Point2D.Double(_size.getX(), _size.getY() / 3), grouped, grp),
+                new MenuFx("Group", new Point2D.Double(pos.getX() + _size.getX() / 2, pos.getY() + _size.getY() / 2), new Point2D.Double(_size.getX(), _size.getY() / 3), grouped, grp),
+                new MenuFx("Un-Group", new Point2D.Double(pos.getX() + _size.getX() / 2, pos.getY() + _size.getY() / 2 + (_size.getY() / 3)), new Point2D.Double(_size.getX(), _size.getY() / 3), grouped, grp)
                 );
         _adapted = new Rectangle();
         _grp = grp;
@@ -36,8 +36,8 @@ public class PopUpMenuFx extends PopUpMenu {
 		_adapted.setFill(Color.GRAY);
         _adapted.toFront();
         edit().draw();
-        group().draw();
-        ungroup().draw();
+        if(nbSelected() > 1) group().draw();
+        if(grouped()) ungroup().draw();
         
     }
 

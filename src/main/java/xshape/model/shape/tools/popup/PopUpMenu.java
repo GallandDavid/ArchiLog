@@ -6,7 +6,7 @@ import xshape.model.shape.Rectangle;
 import xshape.model.shape.tools.menus.Menu;
 
 public abstract class PopUpMenu extends Rectangle{
-    public static Point2D _size = new Point2D.Double(40,30);
+    public static Point2D _size = new Point2D.Double(70,120);
     private final Menu _edit;
     private final Menu _group;
     private final Menu _ungroup;

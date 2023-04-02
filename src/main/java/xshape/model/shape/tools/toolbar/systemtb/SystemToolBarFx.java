@@ -45,6 +45,7 @@ public class SystemToolBarFx extends SystemToolBar{
         edit().draw();
         trashbin().draw();
         if(filesSelected()){
+            System.out.println("files selected draw");
             load().draw();
             save().draw();
         }
@@ -56,6 +57,10 @@ public class SystemToolBarFx extends SystemToolBar{
 
     @Override
     public void remove() {
+        load().remove();
+        save().remove();
+        undo().remove();
+        redo().remove();
         files().remove();
         edit().remove();
         trashbin().remove();
