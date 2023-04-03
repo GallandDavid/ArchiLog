@@ -19,6 +19,8 @@ public interface ShapeFactory {
     Rectangle createRectangle(double posX, double posY, double height, double width, boolean selected);
     Rectangle createWhiteBoard(double posX, double posY, double height, double width, boolean selected);
     Group createGroup(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> group);
+    Group createGroup(ArrayList<Shape> group);
+    Group createGroup(Group grp);
     SystemToolBar createSystemToolBar(Point2D pos, Point2D size, boolean selected);
     ShapeToolBar createShapeToolBar(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> addons);
     PopUpMenu createPopUpMenu(Point2D pos, int selected, boolean grouped);

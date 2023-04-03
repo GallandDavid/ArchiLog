@@ -64,4 +64,10 @@ public class ShapeFactoryAwt implements ShapeFactory {
     @Override public ShapeToolBar createShapeToolBar(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> addons) { return new ShapeToolBarAwt(pos, size, selected, addons);    }
     @Override public PopUpMenu createPopUpMenu(Point2D pos, int selected, boolean grouped) { return new PopUpMenuAwt(pos, selected, grouped); }
 
+    @Override
+    public Group createGroup(ArrayList<Shape> group) { return new GroupAwt(group); }
+
+    @Override
+    public Group createGroup(Group grp) { return new GroupAwt(grp); }
+
 }

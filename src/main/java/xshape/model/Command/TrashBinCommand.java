@@ -22,12 +22,11 @@ public class TrashBinCommand extends Command{
         saveBackup(null);
         ArrayList<String> tmp = new ArrayList<>();
         for(Object shape : _editor){
-            System.out.println((Shape) shape);
             tmp.add(((Shape) shape).getId());
         }
         for(String id : tmp)
             _app.removeShape(id);
-        return false;
+        return true;
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import xshape.controleur.XShape;
 import xshape.model.shape.Shape;
+import xshape.model.shape.group.Group;
 
 public abstract class Command implements ICommand{
     public XShape _app;
@@ -31,17 +32,17 @@ public abstract class Command implements ICommand{
         _editor.add(obj);
     }
 
-    public Object instanceShape(Object editor, ArrayList<Shape> shapes){
+    public Object instanceShape(Object editor,ArrayList<Shape> shapes){
         Class<?> classe = null;
         Object shape = null;
         try {
             Constructor<?> constructeur;
             classe = Class.forName (editor.getClass().getName());
-            if(shapes != null){
-                System.out.println(shapes.getClass());
-
-                constructeur = classe.getConstructor (editor.getClass(), ArrayList.class );
-                shape = constructeur.newInstance (new Object [] {editor}, shapes);
+            if(editor instanceof Group){
+                constructeur = classe.getConstructor ();
+                shape = constructeur.newInstance ();
+                ((Group) shape).add(shapes);
+                System.out.println(shape.toString());
             }
             else{
                 constructeur = classe.getConstructor (editor.getClass());
@@ -59,7 +60,7 @@ public abstract class Command implements ICommand{
     @Override
     public void saveBackup(ArrayList<Shape> shapes) {
         for (Object editor : _editor) {
-            _backup.add(instanceShape(editor,shapes));
+            _backup.add(instanceShape(editor, shapes));
         }
         
     }

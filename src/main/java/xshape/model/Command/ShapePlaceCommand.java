@@ -1,31 +1,30 @@
 package xshape.model.Command;
+import java.util.ArrayList;
+
 import xshape.controleur.XShape;
 import xshape.model.shape.Shape;
 
-public class RectPlaceCommand extends Command{
+public class ShapePlaceCommand extends Command{
     private double _mouse_x;
     private double _mouse_y;
     private boolean _god_place;
 
-    public RectPlaceCommand(XShape app, double x, double y) {
+    public ShapePlaceCommand(XShape app, double x, double y) {
         super(app);
         _mouse_x = x;
         _mouse_y = y;
         _god_place = false;
     }
 
-    public RectPlaceCommand(XShape app, boolean god_place) {
-        super(app);
-        _mouse_x = -5000;
-        _mouse_y = -5000;
-        _god_place = god_place;
-    }
-
-    public RectPlaceCommand(XShape app, double x, double y, boolean god_place) {
+    public ShapePlaceCommand(XShape app, double x, double y, boolean god_place) {
         super(app);
         _mouse_x = x;
         _mouse_y = y;
         _god_place = god_place;
+    }
+
+    public ShapePlaceCommand(XShape app, ArrayList<Object> shape) {
+        super(app, shape);
     }
 
     @Override
@@ -36,8 +35,15 @@ public class RectPlaceCommand extends Command{
             _app.addShape(shape);
             return false;
         }
-        _app.placedShape().remove();
-        _app.addShapeToPlaced(null);
+        if(_editor.size() != 0){
+            Shape shape = (Shape) instanceShape(_editor.get(0), null);
+            shape.position(shape.visiblePosition());
+            if(_app.whiteBoard().isInside(shape.position())){
+                _app.addShape(shape);
+                return true;
+            }
+            return false;
+        }
         if(_mouse_y > _app.systemToolBar().size().getY()){
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y, false);
             shape.selected(true);

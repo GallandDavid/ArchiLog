@@ -4,6 +4,8 @@ package xshape.controleur;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -31,10 +33,12 @@ class GUIHelper {
             }
         };
         JCanvas jc = (JCanvas) component;
+
         frame.addMouseListener(jc);
         frame.addMouseMotionListener(jc);
         frame.addWindowListener(wa);
         frame.getContentPane().add(component);
+        component.requestFocusInWindow();
         frame.pack();
         frame.setVisible(true);
     }
@@ -43,7 +47,7 @@ class GUIHelper {
 public class AwtApp extends XShape{
     JCanvas _jc = null;
 
-    class JCanvas extends JPanel implements MouseListener, MouseMotionListener, IInputObservable  {
+    class JCanvas extends JPanel implements MouseListener, MouseMotionListener, KeyListener, IInputObservable  {
         XShape _xshape = null;
         final InputControl  _inputControleur = new InputControl();
         public final Point2D _scene_size = new Point2D.Double(500, 500);
@@ -53,6 +57,8 @@ public class AwtApp extends XShape{
         public final Point2D _shape_tool_size = new Point2D.Double(60,478);
 
         public JCanvas(XShape xs) {
+            setFocusable(true);
+            addKeyListener(this);
             registerOberver(xs);
             _xshape.systemToolBar(_xshape.factory().createSystemToolBar(_syst_tool_pos, _syst_tool_size, false));
             _xshape.shapesToolBar(_xshape.factory().createShapeToolBar(_shape_tool_pos, _shape_tool_size, false, null));
@@ -114,6 +120,34 @@ public class AwtApp extends XShape{
             notifyObservers(_inputControleur);
             if(_inputControleur.ctrl().now()) _inputControleur.ctrl().now(false);  
         }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            System.out.print("ok1");
+            if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                System.out.print("ok2");
+                _inputControleur.ctrl().now(true);
+                _inputControleur.ctrlPressed(true);
+                _inputControleur.ctrlReleased(false);
+            }
+            
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            System.out.print("ok1");
+            if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                System.out.print("ok2");
+                _inputControleur.ctrl().now(true);
+                _inputControleur.ctrlPressed(false);
+                _inputControleur.ctrlReleased(true);
+            } 
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            
+        }
     }
 
     @Override public void run() {
@@ -123,6 +157,7 @@ public class AwtApp extends XShape{
         jc.setBackground(Color.GRAY);
         jc.setPreferredSize(new Dimension(500, 500));
         GUIHelper.showOnFrame(jc, "XShape Swing/AWT Rendering");
+
     }
 
     @Override public void createFactory() {_factory = new ShapeFactoryAwt(); }

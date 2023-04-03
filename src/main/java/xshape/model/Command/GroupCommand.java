@@ -22,25 +22,14 @@ public class GroupCommand extends Command{
 
     @Override
     public boolean execute() {
-        System.out.println("execute group cmd");
-        saveBackup(null);
         ArrayList<Shape> array_backup = new ArrayList<>();
-        for (Object s : _backup) {
+        for (Object s : _editor) {
             Shape shape = (Shape) s;
             array_backup.add(shape);
             _app.removeShape(shape.getId());
         }
-        Group grp = _app.factory().createGroup(new Point2D.Double(0,0), new Point2D.Double(0,0), false, array_backup);
-        saveBackup(null);
-        _backup = new ArrayList<>();
-        ArrayList<Shape> groupe_array_backup = new ArrayList<>();
-        for (Object s : _backup) {
-            Shape shape = (Shape) s;
-            groupe_array_backup.add(shape);
-        }
+        Group grp = _app.factory().createGroup(array_backup);
         grp.selected(true);
-        System.out.println(grp.toString());
-        instanceShape(grp, groupe_array_backup);
         _backup.add((Object) grp);
         _app.addShape(grp);
         return true;

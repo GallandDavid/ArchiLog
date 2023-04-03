@@ -92,12 +92,12 @@ public abstract class SystemToolBar extends ToolBar {
   }
 
   public void selectFiles(){
-    editSelected = false;
+    unSelect();
     filesSelected = true;
   }
 
   public void selectEdit(){
-    filesSelected = false;
+    unSelect();
     editSelected = true;
   }
 

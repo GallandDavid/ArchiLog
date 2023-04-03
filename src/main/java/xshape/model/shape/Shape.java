@@ -17,7 +17,7 @@ public abstract class Shape implements IShape{
     private Point2D _size;
 
     private boolean _grouped;
-    private boolean _selected;
+    protected boolean _selected;
     private int _deepth;
     private boolean _placed;
     private Point2D _visible_pos;

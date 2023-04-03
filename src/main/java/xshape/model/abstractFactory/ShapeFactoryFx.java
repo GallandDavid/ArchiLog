@@ -34,4 +34,13 @@ public class ShapeFactoryFx implements ShapeFactory {
     @Override public SystemToolBar createSystemToolBar(Point2D pos, Point2D size, boolean selected) { return new SystemToolBarFx(pos, size, selected, _grp); }
     @Override public ShapeToolBar createShapeToolBar(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> addons) { return new ShapeToolBarFx(pos, size, selected, addons, _grp);    }
     @Override public PopUpMenu createPopUpMenu(Point2D pos, int selected, boolean grouped) { return new PopUpMenuFx(pos, selected, grouped, _grp); }
+
+    @Override
+    public xshape.model.shape.group.Group createGroup(ArrayList<Shape> group) {
+        return new GroupFx(group, _grp);
+    }
+
+    @Override
+    public xshape.model.shape.group.Group createGroup(xshape.model.shape.group.Group grp) {
+        return new GroupFx(grp, _grp); }
 }

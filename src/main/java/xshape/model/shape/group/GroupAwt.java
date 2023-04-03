@@ -10,6 +10,18 @@ public class GroupAwt extends Group{
         super(pos, size, selected, group);
     }
 
+    public GroupAwt(ArrayList<Shape> group) {
+        super(group);
+    }
+
+    public GroupAwt(Group grp) {
+        super(grp);
+    }
+
+    public GroupAwt(){
+        super();
+    }
+
     @Override
     public void draw() {
         for (Shape shape : group())

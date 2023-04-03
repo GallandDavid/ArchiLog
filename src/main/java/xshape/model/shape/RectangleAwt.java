@@ -40,10 +40,9 @@ public class RectangleAwt extends Rectangle {
         Graphics2D g = (Graphics2D) AwtContext.instance().graphics();
 		Point2D pos = visiblePosition();
 		Point2D size = visibleSize();
-        g.setColor(Color.BLUE);
-		if(selected()){
-			g.setColor(new Color(100, 100, 255));
-		}
+        
+		if(selected()) g.setColor(new Color(100, 100, 255));
+		else g.setColor(Color.BLUE);
         g.fillRect((int)(pos.getX() - size.getX()/2),
         (int)(pos.getY() - size.getY()/2),        
         (int)(size.getX()),
