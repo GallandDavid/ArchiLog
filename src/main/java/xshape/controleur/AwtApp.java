@@ -4,7 +4,8 @@ package xshape.controleur;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.PopupMenu;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -14,29 +15,13 @@ import java.awt.geom.Point2D;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
-import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.abstractFactory.ShapeFactoryAwt;
-import xshape.model.observer.Iobservable;
-import xshape.model.observer.Iobserver;
-import xshape.model.shape.Shape;
+import xshape.model.controlInput.InputControl;
+import xshape.model.observer.IInputObservable;
+import xshape.model.observer.IInputObserver;
 import xshape.vue.AwtContext;
-import xshape.model.Builder.popupmenu.PopUpMenuAwt;
-import xshape.model.Builder.toolbar.ToolBar;
-import xshape.model.Builder.toolbar.ToolBarAwt;
-import xshape.model.Builder.toolbar.ToolBarDirector;
-import xshape.model.Command.Command;
-import xshape.model.Command.MouseClickedCommand;
-import xshape.model.Command.MouseDraggedCommand;
-import xshape.model.Command.MouseEnteredCommand;
-import xshape.model.Command.MouseExitedCommand;
-import xshape.model.Command.MouseMovedCommand;
-import xshape.model.Command.MouseLeftClickPressedCommand;
-import xshape.model.Command.MouseReleasedCommand;
-import xshape.model.Command.MouseRightClickClickedCommand;
-import xshape.model.Command.MouseShiftLeftClickClickedCommand;
 import xshape.controleur.AwtApp.JCanvas;
 
 class GUIHelper {
@@ -48,39 +33,37 @@ class GUIHelper {
             }
         };
         JCanvas jc = (JCanvas) component;
+
         frame.addMouseListener(jc);
-
         frame.addMouseMotionListener(jc);
-        JMenuBar jb = (JMenuBar) ((ToolBarDirector) jc._xshape).getToolBar();
-            System.out.println("Size : (" + jc.getPreferredSize().getWidth() + ", " + component.getHeight()/100*ToolBar.getVh() + ")   |   ");
-        jb.setSize(new Dimension((int)(jc.getPreferredSize().getWidth()/100*ToolBar.getVw()), (int) component.getPreferredSize().getWidth()/100*ToolBar.getVh()));
-        frame.setJMenuBar(jb);
-        jc._xshape.toolBar().setWidth(jb.getPreferredSize().getWidth());
-        jc._xshape.toolBar().setHeight(jb.getPreferredSize().getHeight() + 40);
-        
-
         frame.addWindowListener(wa);
         frame.getContentPane().add(component);
+        component.requestFocusInWindow();
         frame.pack();
         frame.setVisible(true);
-        ((AwtApp) jc._xshape).setFrame(frame);
     }
 }
 
 public class AwtApp extends XShape{
     JCanvas _jc = null;
-    PopupMenu _popup = null;
-    private boolean _right_click_press = false;
-    private boolean _left_click_press = false;
-    private JFrame _frame = null;
 
-    class JCanvas extends JPanel implements MouseListener, MouseMotionListener, Iobservable  {
+    class JCanvas extends JPanel implements MouseListener, MouseMotionListener, KeyListener, IInputObservable  {
         XShape _xshape = null;
+        final InputControl  _inputControleur = new InputControl();
+        public final Point2D _scene_size = new Point2D.Double(500, 500);
+        public final Point2D _syst_tool_pos = new Point2D.Double(250,11);
+        public final Point2D _syst_tool_size = new Point2D.Double(500,22);
+        public final Point2D _shape_tool_pos = new Point2D.Double(30,261);
+        public final Point2D _shape_tool_size = new Point2D.Double(60,478);
 
         public JCanvas(XShape xs) {
+            setFocusable(true);
+            addKeyListener(this);
             registerOberver(xs);
-            ToolBarDirector tb = (ToolBarDirector) _xshape;
-            tb.createToolBar();
+            _xshape.systemToolBar(_xshape.factory().createSystemToolBar(_syst_tool_pos, _syst_tool_size, false));
+            _xshape.shapesToolBar(_xshape.factory().createShapeToolBar(_shape_tool_pos, _shape_tool_size, false, null));
+            _xshape.whiteBoard(_xshape.factory().createWhiteBoard(_scene_size.getX()/2 + _shape_tool_size.getX()/2, _scene_size.getY()/2 + _syst_tool_size.getY()/2, _scene_size.getY() - _syst_tool_size.getY(), _scene_size.getX() - _shape_tool_size.getX(), false));
+
         }
 
         public void paint(Graphics g) {
@@ -88,85 +71,95 @@ public class AwtApp extends XShape{
             AwtContext.instance().graphics(g);
             _xshape.draw();
         }
-
-        @Override public void mouseClicked(MouseEvent e) {
-            if ((e.getButton() == MouseEvent.BUTTON1) && _left_click_press) {
-                _left_click_press = false;
-                notifyObservers(new MouseClickedCommand(_xshape, e.getX(), e.getY()));
-            }
-            if ((e.getButton() == MouseEvent.BUTTON3) && _right_click_press) {
-                _right_click_press = false;
-                notifyObservers(new MouseRightClickClickedCommand(_xshape, e.getX(), e.getY()));
-            }
-        }
-        @Override public void mouseEntered(MouseEvent e) { if((e.getButton() == MouseEvent.BUTTON1)) notifyObservers(new MouseEnteredCommand(_xshape, e.getX(), e.getY())); }
-        @Override public void mouseExited(MouseEvent e) { if((e.getButton() == MouseEvent.BUTTON1)) notifyObservers(new MouseExitedCommand(_xshape, e.getX(), e.getY())); }
+        @Override public void registerOberver(IInputObserver obs) { _xshape = (XShape) obs; }
+        @Override public void unRegisterObserver(IInputObserver obs) { _xshape = null; }
+        @Override public void notifyObservers(InputControl mouse) { _xshape.update(mouse); }
+        @Override public void mouseClicked(MouseEvent e) { }
+        @Override public void mouseEntered(MouseEvent e) { }
+        @Override public void mouseExited(MouseEvent e) { }
+        @Override public void mouseMoved(MouseEvent e) { }
         @Override public void mousePressed(MouseEvent e) { 
-            if(e.getButton() == MouseEvent.BUTTON1){
-                _left_click_press = true;
+            _inputControleur.position(e.getX(), e.getY() - 38);
+            _inputControleur.moved(false);
+            if(e.getButton() == MouseEvent.BUTTON1) {
+                _inputControleur.leftPressed(true);
+                _inputControleur.left().now(true);
             }
-            if(e.getButton() == MouseEvent.BUTTON1 && e.isControlDown()) {}
-            else if (e.getButton() == MouseEvent.BUTTON1){ 
-                notifyObservers(new MouseLeftClickPressedCommand(_xshape, e.getX(), e.getY())); 
+            if(e.getButton() == MouseEvent.BUTTON3) {
+                _inputControleur.rightPressed(true);
+                _inputControleur.right().now(true);
             }
-            if(e.getButton() == MouseEvent.BUTTON3){
-                _right_click_press = true;
-            }
+            notifyObservers(_inputControleur);
+            if(_inputControleur.ctrl().now()) _inputControleur.ctrl().now(false);
+            _inputControleur.left().now(false);
+            _inputControleur.right().now(false);
         }
-        @Override public void mouseReleased(MouseEvent e) { 
-            if((e.getButton() == MouseEvent.BUTTON1) && e.isControlDown() && _left_click_press){
-                notifyObservers(new MouseShiftLeftClickClickedCommand(_xshape, e.getX(), e.getY()));
-            }else if ((e.getButton() == MouseEvent.BUTTON1) && _left_click_press){
-                notifyObservers(new MouseReleasedCommand(_xshape, e.getX(), e.getY()));
+        @Override public void mouseReleased(MouseEvent e) {
+            _inputControleur.position(e.getX(), e.getY() - 38);
+            if(e.getButton() == MouseEvent.BUTTON1) {
+                _inputControleur.leftReleased(true);
+                _inputControleur.leftPressed(false);
+                _inputControleur.left().now(true);
             }
+            if(e.getButton() == MouseEvent.BUTTON3) {
+                _inputControleur.rightReleased(true);
+                _inputControleur.rightPressed(false);
+                _inputControleur.right().now(true);
+            }
+            notifyObservers(_inputControleur);
+            _inputControleur.leftReleased(false);
+            _inputControleur.rightReleased(false);
+            _inputControleur.moved(false);
+            if(_inputControleur.ctrl().now()) _inputControleur.ctrl().now(false);
+            _inputControleur.left().now(false);
+            _inputControleur.right().now(false);
         }
-        @Override public void mouseDragged(MouseEvent e) { 
-            notifyObservers(new MouseDraggedCommand(_xshape, e.getX(), e.getY())); 
+        @Override public void mouseDragged(MouseEvent e) {
+            _inputControleur.position(e.getX(), e.getY() - 38);
+            _inputControleur.moved(true);
+            notifyObservers(_inputControleur);
+            if(_inputControleur.ctrl().now()) _inputControleur.ctrl().now(false);  
         }
-        @Override public void mouseMoved(MouseEvent e) { if((e.getButton() == MouseEvent.BUTTON1)) notifyObservers(new MouseMovedCommand(_xshape, e.getX(), e.getY())); }
-        @Override public void registerOberver(Iobserver obs) { _xshape = (XShape) obs; }
-        @Override public void unRegisterObserver(Iobserver obs) { _xshape = null; }
-        @Override public void notifyObservers(Command command) { _xshape.update(command); }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            System.out.print("ok1");
+            if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                System.out.print("ok2");
+                _inputControleur.ctrl().now(true);
+                _inputControleur.ctrlPressed(true);
+                _inputControleur.ctrlReleased(false);
+            }
+            
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            System.out.print("ok1");
+            if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                System.out.print("ok2");
+                _inputControleur.ctrl().now(true);
+                _inputControleur.ctrlPressed(false);
+                _inputControleur.ctrlReleased(true);
+            } 
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            
+        }
     }
 
-    @Override
-    public void run() {
+    @Override public void run() {
+        createFactory();
         JCanvas jc = new JCanvas(this);
         _jc = jc;
-        jc.setBackground(Color.WHITE);
+        jc.setBackground(Color.GRAY);
         jc.setPreferredSize(new Dimension(500, 500));
         GUIHelper.showOnFrame(jc, "XShape Swing/AWT Rendering");
+
     }
 
-    @Override
-    public void createToolBar() { 
-        toolBar(new ToolBarAwt(this));
-        toolBar().makeProduct(); 
-    }
-
-    @Override
-    public void setPopUpMenu(Point2D pos, int selected, boolean grouped) {
-        createPopUpMenu();
-        popUpMenu().init(pos, selected, grouped);
-        popUpMenu().makeProduct();
-
-        ((PopupMenu) popUpMenu().getProduct()).show(_frame, (int) popUpMenu().getPosX(), (int) popUpMenu().getPosY());
-        _jc.add((PopupMenu) popUpMenu().getProduct());
-    }
-
-    @Override
-    public void removePopUpMenu() {
-        if(_popup != null)
-            _jc.remove(_popup);
-        _popup = null;
-    }
-    public void setFrame(JFrame frame){ _frame = frame; }
-    @Override protected ShapeFactory createFactory() { return new ShapeFactoryAwt(); }
+    @Override public void createFactory() {_factory = new ShapeFactoryAwt(); }
     @Override public void render() { _jc.repaint(); }
-    @Override public void createPopUpMenu() { popUpMenu(new PopUpMenuAwt(this, new Point2D.Double(0,0), 0, false, _frame)); }
-
-    @Override
-    public boolean isInPopUpMenu(Point2D pos) {
-        return false;
-    }
 }

@@ -1,139 +1,122 @@
 package xshape.vue;
 
+import java.awt.geom.Point2D;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ToolBar;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import xshape.controleur.FxApp;
-import xshape.model.Builder.toolbar.ToolBarFx;
-import xshape.model.Command.Command;
-import xshape.model.Command.MouseClickedCommand;
-import xshape.model.Command.MouseDraggedCommand;
-import xshape.model.Command.MouseEnteredCommand;
-import xshape.model.Command.MouseExitedCommand;
-import xshape.model.Command.MouseMovedCommand;
-import xshape.model.Command.MouseLeftClickPressedCommand;
-import xshape.model.Command.MouseReleasedCommand;
-import xshape.model.Command.MouseRightClickClickedCommand;
-import xshape.model.Command.MouseShiftLeftClickClickedCommand;
-import xshape.model.Command.TrashBinCommand;
-import xshape.model.observer.Iobservable;
-import xshape.model.observer.Iobserver;
+import xshape.model.controlInput.InputControl;
+import xshape.model.observer.IInputObservable;
+import xshape.model.observer.IInputObserver;
 
-public class FxApplication extends Application implements Iobservable{
+
+
+public class FxApplication extends Application implements IInputObservable{
+    
     public static Group _root = new Group();
     private FxApp _fxapp;
-    private boolean _right_click_press = false;
-    private boolean _left_click_press = false;
+    private InputControl _inputControleur = new InputControl();
 
-     
+    @Override public void registerOberver(IInputObserver obs) { _fxapp = (FxApp) obs; }
+    @Override public void unRegisterObserver(IInputObserver obs) { _fxapp = null; }
+    @Override public void notifyObservers(InputControl mouse) { _fxapp.update(mouse); }
+
     @Override
     public void init(){
         _fxapp = new FxApp(_root, this);
         _fxapp.run();
     }
-
+    
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Platform.runLater(() -> {
             primaryStage.setTitle("XShape JavaFx Rendering");
-            ToolBar tb = (ToolBar) _fxapp.getToolBar();
-            _root.getChildren().add(tb);
             Scene scene = new Scene(_root, 500, 500);
-            scene.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+            scene.setFill(Color.GRAY);
+            scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
                 @Override
-                public void handle(MouseEvent e) {
-                    if(e.isPrimaryButtonDown()){
-                        _left_click_press = true;
-                    }
-                    if(e.isPrimaryButtonDown() && e.isControlDown()) {}
-                    else if (e.isPrimaryButtonDown()){
-                       notifyObservers(new MouseLeftClickPressedCommand(_fxapp, e.getX(), e.getY())); 
-                    }
-                    else if(e.isSecondaryButtonDown()) {
-                        _right_click_press = true;
+                public void handle(KeyEvent e) {
+                    if(e.getCode() == KeyCode.CONTROL) {
+                        _inputControleur.ctrl().now(true);
+                        _inputControleur.ctrlPressed(true);
+                        _inputControleur.ctrlReleased(false);
                     }
                 }
             });
-            scene.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent e) {
+                    if(e.getCode() == KeyCode.CONTROL){
+                        _inputControleur.ctrl().now(true);
+                        _inputControleur.ctrlPressed(false);
+                        _inputControleur.ctrlReleased(true);
+                    } 
+                }
+            });
+            scene.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    if (!e.isPrimaryButtonDown() && _left_click_press){
-                        _left_click_press = false;
-                        notifyObservers(new MouseClickedCommand(_fxapp, e.getX(), e.getY()));
+                    _inputControleur.position(e.getX(), e.getY());
+                    _inputControleur.moved(false);
+                    if(e.getButton() == MouseButton.PRIMARY) {
+                        _inputControleur.leftPressed(true);
+                        _inputControleur.left().now(true);
                     }
-                    if (!e.isSecondaryButtonDown() && _right_click_press){
-                        _right_click_press = false;
-                         notifyObservers(new MouseRightClickClickedCommand(_fxapp, e.getX(), e.getY()));
+                    if(e.getButton() == MouseButton.SECONDARY) {
+                        _inputControleur.rightPressed(true);
+                        _inputControleur.right().now(true);
                     }
+                    notifyObservers(_inputControleur);
+                    if(_inputControleur.ctrl().now()) _inputControleur.ctrl().now(false);
+                    _inputControleur.left().now(false);
+                    _inputControleur.right().now(false);
                 }
             });
             scene.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    if(!e.isPrimaryButtonDown() && e.isControlDown() && _left_click_press) {
-                        _left_click_press = false;
-                        notifyObservers(new MouseShiftLeftClickClickedCommand(_fxapp, e.getX(), e.getY()));
+                    _inputControleur.position(e.getX(), e.getY());
+                    if(e.getButton() == MouseButton.PRIMARY) {
+                        _inputControleur.leftReleased(true);
+                        _inputControleur.leftPressed(false);
+                        _inputControleur.left().now(true);
                     }
-                    else if (!e.isPrimaryButtonDown() && _left_click_press){
-                        notifyObservers(new MouseReleasedCommand(_fxapp, e.getX(), e.getY()));
-                        _left_click_press = false;
+                    if(e.getButton() == MouseButton.SECONDARY) {
+                        _inputControleur.rightReleased(true);
+                        _inputControleur.rightPressed(false);
+                        _inputControleur.right().now(true);
                     }
-                }
-            });
-            scene.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                    if (e.isPrimaryButtonDown()) notifyObservers(new MouseMovedCommand(_fxapp, e.getX(), e.getY()));
+                    notifyObservers(_inputControleur);
+                    _inputControleur.leftReleased(false);
+                    _inputControleur.rightReleased(false);
+                    _inputControleur.moved(false);
+                    if(_inputControleur.ctrl().now()) _inputControleur.ctrl().now(false);
+                    _inputControleur.left().now(false);
+                    _inputControleur.right().now(false);
                 }
             });
             scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    if (e.isPrimaryButtonDown()) notifyObservers(new MouseDraggedCommand(_fxapp, e.getX(), e.getY()));
+                    _inputControleur.position(e.getX(), e.getY());
+                    _inputControleur.moved(true);
+                    notifyObservers(_inputControleur);
+                    if(_inputControleur.ctrl().now()) _inputControleur.ctrl().now(false);  
                 }
             });
-            scene.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                    if (e.isPrimaryButtonDown()) notifyObservers(new MouseEnteredCommand(_fxapp, e.getX(), e.getY()));
-                }
-            });
-            scene.addEventFilter(MouseEvent.MOUSE_ENTERED_TARGET, new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                }
-            });
-
-            scene.addEventFilter(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                    if (e.isPrimaryButtonDown()) notifyObservers(new MouseExitedCommand(_fxapp, e.getX(), e.getY()));
-                }
-            });
-
-            scene.addEventFilter(MouseEvent.MOUSE_EXITED_TARGET, new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                }
-            });
-
-            tb.prefWidthProperty().bind(scene.widthProperty().divide(100).multiply(xshape.model.Builder.toolbar.ToolBar.getVw()));
-            tb.prefHeightProperty().bind(scene.heightProperty().divide(100).multiply(xshape.model.Builder.toolbar.ToolBar.getVh()));
-            _fxapp.toolBar().setWidth(tb.getPrefWidth());
-            _fxapp.toolBar().setHeight(tb.getPrefHeight());
             primaryStage.setScene(scene);
             primaryStage.show();
         });
     }
-
-    @Override public void registerOberver(Iobserver obs) { _fxapp = (FxApp) obs; }
-    @Override public void unRegisterObserver(Iobserver obs) { _fxapp = null; }
-    @Override public void notifyObservers(Command command) { _fxapp.update(command); }
-
 }

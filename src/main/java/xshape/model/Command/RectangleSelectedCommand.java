@@ -1,14 +1,15 @@
 package xshape.model.Command;
 
+import java.util.ArrayList;
+
 import xshape.controleur.XShape;
 import xshape.model.shape.Shape;
-import xshape.model.visitor.IInputVisitor;
 
 public class RectangleSelectedCommand extends Command{
     private double _mouse_x;
     private double _mouse_y;
 
-    public RectangleSelectedCommand(XShape app, Object editor, double x, double y) {
+    public RectangleSelectedCommand(XShape app, ArrayList<Object> editor, double x, double y) {
         super(app, editor);
         _mouse_x = x;
         _mouse_y = y;
@@ -16,9 +17,9 @@ public class RectangleSelectedCommand extends Command{
 
     @Override
     public boolean execute() {
-        Shape s = (Shape) _app.factory().createRectangle(_mouse_x, _mouse_y, true, _app);
+        Shape s = (Shape) _app.factory().createRectangle(_mouse_x, _mouse_y, true);
         s.selected(true);
-        _app.addSelectedShape(s);
+        _app.addShapeToPlaced(s);
         return false;
     }
 
@@ -31,10 +32,5 @@ public class RectangleSelectedCommand extends Command{
 
     @Override
     public void undo() {
-    }
-
-    @Override
-    public void accept(IInputVisitor visitor) {
-        visitor.visit(this);
     }
 }

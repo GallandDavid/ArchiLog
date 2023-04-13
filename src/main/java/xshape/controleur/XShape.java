@@ -1,107 +1,124 @@
 package xshape.controleur;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import xshape.model.Builder.popupmenu.PopUpMenu;
-import xshape.model.Builder.popupmenu.PopUpMenuDirector;
-import xshape.model.Builder.toolbar.ToolBar;
-import xshape.model.Builder.toolbar.ToolBarDirector;
 import xshape.model.Command.Command;
 import xshape.model.Command.CommandHistory;
+import xshape.model.Command.GroupCommand;
 import xshape.model.Command.ICommand;
-import xshape.model.Command.RectPlaceCommand;
+import xshape.model.Command.ShapePlaceCommand;
+import xshape.model.Command.ShapeTranslateCommand;
+import xshape.model.Command.TrashBinCommand;
+import xshape.model.Command.UnGroupCommand;
+import xshape.model.Interface.IClickable;
+import xshape.model.Interface.IMenuable;
+import xshape.model.Interface.IPrintable;
+import xshape.model.Interface.IRunnable;
+import xshape.model.Interface.IShapeContenable;
 import xshape.model.abstractFactory.ShapeFactory;
-import xshape.model.observer.Iobserver;
+import xshape.model.controlInput.InputControl;
+import xshape.model.observer.IInputObserver;
+import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
-import xshape.model.visitor.InputCommandVisitor;
+import xshape.model.shape.tools.popup.PopUpMenu;
+import xshape.model.shape.tools.toolbar.shapestb.ShapeToolBar;
+import xshape.model.shape.tools.toolbar.systemtb.SystemToolBar;
 
-public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, CommandHistory, Iobserver{
-    private ToolBar _toolBar = null;
+public abstract class XShape implements CommandHistory, IInputObserver, IMenuable, IShapeContenable, IPrintable, IRunnable, IClickable{
+    private Rectangle _whiteBoard = null;
+    private SystemToolBar _systemToolBar = null;
+    private ShapeToolBar _shapesToolBar = null;
     private PopUpMenu _popUpMenu = null;
-    public boolean _selection = false;
-    public Shape _selected_item = null;
-    private ShapeFactory _factory = null;
+    private boolean _selection = false;
+    private Shape _placed_shape = null;
+    protected ShapeFactory _factory = null;
+    private Point2D _mouse_pos = null;
     Shape[] _shapes = null;
     LinkedList<ICommand> _history = new LinkedList<>();
     LinkedList<ICommand> _redos = new LinkedList<>();
-    InputCommandVisitor _ic_visitor = new InputCommandVisitor();
-
-    //method factory to delegate instanciation of Shapefactory to subclass
-    protected abstract ShapeFactory createFactory();
-    //Handler to start the GUI
-    public abstract void run();
-    public abstract void render();
-    public abstract void setPopUpMenu(Point2D pos, int selected, boolean grouped);
-    public abstract void removePopUpMenu();
 
     private void createScene() {
-        Command command1 = new RectPlaceCommand(this, 20,300, true);
-        Command command2 = new RectPlaceCommand(this, 100, 200, true);
+        Command command1 = new ShapePlaceCommand(this, 20,300, true);
+        Command command2 = new ShapePlaceCommand(this, 100, 200, true);
         Command[] tmp = {command1,command2};
         for(Command cmd : tmp)
             cmd.execute();
     }
 
-    public SortedMap<Integer, Shape> orderShapes() {
-        SortedMap<Integer, Shape> map = new TreeMap<Integer, Shape>(
-                                            new Comparator<Integer>() {
-                                                public int compare(Integer a, Integer b){
-                                                    return b.compareTo(a);
-                                                    }
-                                            });
-        for (Shape s : _shapes)
-            map.put(s.deepth(), s);
+    @Override public SortedMap<Integer, Shape> orderShapes() {
+        SortedMap<Integer, Shape> map = new TreeMap<Integer, Shape>( new Comparator<Integer>() {
+            public int compare(Integer a, Integer b){ return -(b.compareTo(a)); } });
+        for (int i = 0; i < _shapes.length; i ++)
+            map.put(_shapes[i].deepth(), _shapes[i]);
         return map;
     }
 
-    protected void toolBar(ToolBar toolBar){
-        _toolBar = toolBar;
+    @Override public void whiteBoard(Rectangle rect){ _whiteBoard = rect; }
+    @Override public Rectangle whiteBoard(){ return _whiteBoard; }
+    @Override public Point2D mousePos(){ return _mouse_pos;}
+    @Override public void mousePos(Point2D pos){ _mouse_pos = (Point2D) pos.clone(); }
+    @Override public Point2D mousVec(Point2D pos){ return new Point2D.Double(pos.getX() - mousePos().getX(), pos.getY() - mousePos().getY()); }
+    @Override public void systemToolBar(SystemToolBar toolBar){ _systemToolBar = toolBar; }
+    @Override public SystemToolBar systemToolBar() { return _systemToolBar; }
+    @Override public void shapesToolBar(ShapeToolBar toolBar){ _shapesToolBar = toolBar; }
+    @Override public ShapeToolBar shapesToolBar() { return _shapesToolBar; }
+    @Override public void popUpMenu(PopUpMenu popUpMenu){ _popUpMenu = popUpMenu; }
+    @Override public PopUpMenu popUpMenu(){ return _popUpMenu; }
+    @Override public ShapeFactory factory(){ return _factory; }
+    @Override public void addShapeToPlaced(Shape shape){ _placed_shape = shape; }
+    @Override public Shape placedShape(){ return _placed_shape;}
+    @Override public Shape getShape(String ref){ for (Shape s : _shapes) if(s.getId().equals(ref)) return s; return null; }
+    @Override public Shape[] getShapes() { return _shapes; }
+    @Override public void selection(boolean sel){ _selection = sel; }
+    @Override public boolean selection(){ return _selection; }
+    @Override public void clearRedo(){ _redos.clear(); }
+    @Override public void undo(){ if(!haveUndo()) pushRedo(pop()); }
+    @Override public boolean haveUndo(){ return _history.isEmpty(); }
+    @Override public void redo(){ if(!haveRedo()) push(popRedo()); }
+    @Override public boolean haveRedo(){ return _redos.isEmpty(); }
+    @Override public void push(ICommand command){ _history.addLast(command); }
+    @Override public void pushRedo(ICommand command){ _redos.addLast(command); }
+    @Override public ICommand pop(){
+        ICommand cmd = _history.removeLast();
+        cmd.undo();
+        return cmd;
     }
 
-    @Override
-    public Object getToolBar() {
-        return _toolBar.getProduct();
+    @Override public ICommand popRedo(){
+        ICommand cmd = _redos.removeLast();
+        cmd.backup();
+        return cmd;
     }
 
-    @Override
-    public ToolBar toolBar() {
-        return _toolBar;
-    }
-
-    protected void popUpMenu(PopUpMenu popUpMenu){
-        _popUpMenu = popUpMenu;
-    }
-
-    @Override
-    public Object getPopUpMenu() {
-        return _popUpMenu.getProduct();
-    }
-
-    @Override
-    public PopUpMenu popUpMenu() {
-        return _popUpMenu;
-    }
-
-
-    public void draw(){
-        if(_factory == null)    _factory = createFactory();
+    @Override public void draw(){
+        if(_factory == null)    createFactory();
         if (_shapes == null)    createScene();
 
-        if(_shapes != null)
-            for(Shape s : orderShapes().values())
-                s.draw();
-        if(_selected_item != null)
-            _selected_item.draw();
+        if(whiteBoard() != null) whiteBoard().draw();
+        if(_shapes != null){
+            ArrayList<Shape> shapes = new ArrayList<>();
+            for(Shape s : orderShapes().values()){
+                shapes.add(s);
+            }
+            for(int i = shapes.size() - 1; i >= 0; i --){
+                shapes.get(i).draw();
+            }
+        }
+        _shapesToolBar.draw();
+        if(placedShape() != null)
+            placedShape().draw();
+        _systemToolBar.draw();
+        if(_popUpMenu != null) _popUpMenu.draw();
         render();
     }
 
-    public ShapeFactory factory(){ return _factory; }
 
-    public void addShape(Shape shape){
+    @Override public void addShape(Shape shape){
         Shape[] tmp;
         if(_shapes == null)
             tmp = new Shape[1];
@@ -113,12 +130,7 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
         _shapes = tmp;
     }
 
-    public void addSelectedShape(Shape shape){ this._selected_item = shape; }
-
-    public Shape getShape(String ref){ for (Shape s : _shapes) if(s.getId().equals(ref)) return s; return null; }
-
-    public void removeShape(String ref){
-        System.out.println(_shapes.length);
+    @Override public void removeShape(String ref){
         if(_shapes.length != 0){
             Shape[] shapes = new Shape[_shapes.length - 1];
             int j = 0;
@@ -134,54 +146,254 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
         }
     }
 
-    public void printShapes(){ if(_shapes != null) for(Shape s : _shapes) System.out.println(s.toString()); }
-
-    @Override
-    public void undo(){ if(!asUndo()) pushRedo(pop()); }
-
-    public boolean asUndo(){ return _history.isEmpty(); }
-
-    @Override
-    public void redo(){ if(!asRedo()) push(popRedo()); }
-
-    public boolean asRedo(){ return _redos.isEmpty(); }
-
-    @Override
-    public void push(ICommand command){ _history.addLast(command); }
-
-    @Override
-    public void pushRedo(ICommand command){ _redos.addLast(command); }
+    @Override public boolean asSelected() {
+        for (Shape s : getShapes()) 
+            if(s.selected()) return true;
+        return false;
+    }
 
 
-    @Override
-    public ICommand pop(){
-        ICommand cmd = _history.removeLast();
-        cmd.undo();
-        return cmd;
+    @Override public ArrayList<Shape> getSelected(){
+        ArrayList<Shape> selected = new ArrayList<>();
+        for (Shape shape : getShapes())
+            if(shape.selected())
+                selected.add(shape);
+        return selected;
+    }
+    @Override public int nbSelected(){
+        int nb = 0;
+        for (Shape shape : getShapes())
+            if(shape.selected())
+                nb ++;
+        return nb;
+    }
+
+    @Override public Shape topShape(Point2D pos){
+        for (Shape s : orderShapes().values()) {
+            if(s.isInside(pos)){
+                return s;
+            }
+        }
+        return null;
+    }
+    
+    @Override public boolean isPopUping(){
+        return popUpMenu() != null;
+    }
+
+    private void translateWhiteBoard(Point2D pos){
+        whiteBoard().translate(mousVec(pos));
+        for (Shape shape : getShapes()) {
+            shape.visibleTranslate(mousVec(pos));
+            shape.translate(mousVec(pos));
+        }
     }
 
     @Override
-    public ICommand popRedo(){
-        ICommand cmd = _redos.removeLast();
-        cmd.backup();
-        return cmd;
-    }
-
-    @Override
-    public void clearRedo(){ _redos.clear(); }
-
-    @Override 
-    public void update(Command command){
-        command.accept(_ic_visitor);
-        
-        if(command.execute()){
-            push(command);
-            clearRedo();
+    public void update(InputControl inputControleur) {
+        Command cmd = null;
+        //left pressed alone
+        if(inputControleur.left().now() && inputControleur.leftPressed() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && !inputControleur.ctrlPressed()){
+            mousePos(inputControleur.position());
+            if(systemToolBar().isInside(inputControleur.position())){
+            }else if(shapesToolBar().isInside(inputControleur.position())){
+                if(shapesToolBar().isInItem(inputControleur.position())){
+                    if(shapesToolBar().rect().isInside(inputControleur.position())){
+                        Shape rect = shapesToolBar().rect();
+                        mousePos(inputControleur.position());
+                        addShapeToPlaced(factory().createRectangle(rect.position().getX() - mousVec(rect.position()).getX(), rect.position().getY() - mousVec(rect.position()).getY(), rect.size().getY(), rect.size().getX(),true));
+                    }
+                    for (Shape shape : getSelected()) {
+                        shape.selected(false);
+                    }
+                }
+            }else if(isPopUping() && popUpMenu().isInside(inputControleur.position())){
+                if(popUpMenu().edit().isInside(inputControleur.position())){
+                }
+                if(popUpMenu().nbSelected() > 1 && popUpMenu().group().isInside(inputControleur.position())){
+                    ArrayList<Object> shapes = new ArrayList<>();
+                    for (Shape shape : getSelected()) { shapes.add(shape); }
+                    cmd = new GroupCommand(this, shapes);
+                }else if(popUpMenu().grouped() && popUpMenu().ungroup().isInside(inputControleur.position())){
+                    ArrayList<Object> shapes = new ArrayList<>();
+                    shapes.add(getSelected().get(0));
+                    cmd = new UnGroupCommand(this,shapes);
+                }
+                //pop up press action
+            }else if(isPopUping() && !popUpMenu().isInside(inputControleur.position())){
+                popUpMenu().remove();
+                popUpMenu(null);
+            }else{
+                Shape shape = topShape(inputControleur.position());
+                if(shape != null){
+                    if(!shape.selected()){
+                    for (Shape s : getSelected())
+                        s.selected(false);
+                    }
+                    shape.selected(true);
+                    selection(true);
+                }else{
+                    whiteBoard().selected(true);
+                }
+                mousePos(inputControleur.position());
+            }
+        }
+        //left pressed ctrl
+        if(inputControleur.left().now() && inputControleur.leftPressed() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && inputControleur.ctrlPressed()){
+            if(whiteBoard().isInside(inputControleur.position())){
+                whiteBoard().selected(true);
+                mousePos(inputControleur.position());
+            }
+        }
+        //left clicked ctrl
+        if(inputControleur.left().now() && inputControleur.leftReleased() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && inputControleur.ctrlPressed()){
+            if(whiteBoard().isInside(inputControleur.position())){
+                Shape shape = topShape(inputControleur.position());
+                if(shape != null)
+                    shape.selected(!shape.selected());
+                if(getSelected().size() < 1) selection(false);
+                else selection(true);
+                mousePos(inputControleur.position());
+            }
+            whiteBoard().selected(false);
+            systemToolBar().unSelect();
+        }
+        //right pressed alone
+        if(inputControleur.right().now() && inputControleur.rightPressed() && !inputControleur.leftPressed() && !inputControleur.mouseMoved()){
+            // nothing at this time 
+        }
+        //left mouse dragged
+        if(inputControleur.mouseMoved() && inputControleur.leftPressed() && !inputControleur.rightPressed()){
+            if(placedShape() != null){
+                placedShape().visibleTranslate(mousVec(inputControleur.position()));
+            }else if(whiteBoard().selected()){
+                translateWhiteBoard(inputControleur.position());
+            }else if(selection()){
+                for (Shape shape : getSelected()) {
+                    shape.visibleTranslate(mousVec(inputControleur.position()));                
+                }
+            }
+            mousePos(inputControleur.position());
+        }
+        //left clicked (released)
+        if(inputControleur.left().now() && inputControleur.leftReleased() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && !inputControleur.ctrlPressed()){
+            if(placedShape() != null){
+                placedShape().remove();
+                addShapeToPlaced(null);
+            }else if(whiteBoard().selected()){
+                if(topShape(inputControleur.position()) == null)
+                    for (Shape s : getSelected())
+                        s.selected(false);
+                whiteBoard().selected(false);
+            }else if(systemToolBar().isInside(inputControleur.position())){
+                if(systemToolBar().isInItem(inputControleur.position())){
+                    if(systemToolBar().files().isInside(inputControleur.position())){
+                        systemToolBar().selectFiles();
+                    }else if(systemToolBar().edit().isInside(inputControleur.position())){
+                        systemToolBar().selectEdit();
+                    }else if(systemToolBar().trashbin().isInside(inputControleur.position())){
+                        ArrayList<Object> shapes = new ArrayList<>();
+                        for (Shape s : getSelected()){
+                            System.out.println(s.toString());
+                            s.visiblePosition(s.position());
+                                shapes.add(s);
+                        }
+                        cmd = new TrashBinCommand(this, shapes);
+                    }else if(systemToolBar().filesSelected()){
+                        if(systemToolBar().save().isInside(inputControleur.position())){
+                            //save
+                        }else if(systemToolBar().load().isInside(inputControleur.position())){
+                            //load
+                        }
+                    }else if(systemToolBar().editSelected()){
+                        if(systemToolBar().undo().isInside(inputControleur.position())){
+                            undo();
+                        }else if(systemToolBar().redo().isInside(inputControleur.position())){
+                            redo();
+                        }
+                    }
+                }
+            }
+            if(!systemToolBar().isInItem(inputControleur.position())){
+                systemToolBar().unSelect();
+            }
+            whiteBoard().selected(false);
+        }
+        //left dragg released (released)
+        if(inputControleur.left().now() && inputControleur.leftReleased() && !inputControleur.rightPressed() && inputControleur.mouseMoved()){
+            if(placedShape() != null && whiteBoard().isInside(inputControleur.position())){ 
+                ArrayList<Object> shapes = new ArrayList<>();
+                shapes.add(placedShape());
+                cmd = new ShapePlaceCommand(this,shapes);
+                placedShape().remove();
+                addShapeToPlaced(null);
+            }else if(!whiteBoard().selected() && selection()){
+                if(whiteBoard().isInside(inputControleur.position())){
+                    ArrayList<Object> shapes = new ArrayList<>();
+                    shapes.addAll(getSelected());
+                    cmd = new ShapeTranslateCommand(this, shapes);
+                }else
+                    for (Shape shape : getSelected()) {
+                        shape.visiblePosition(shape.position());
+                    }   
+            }else if(systemToolBar().isInside(inputControleur.position())){
+                if(systemToolBar().isInItem(inputControleur.position())){
+                    if(systemToolBar().files().isInside(inputControleur.position())){
+                        systemToolBar().selectFiles();
+                    }else if(systemToolBar().edit().isInside(inputControleur.position())){
+                        systemToolBar().selectEdit();
+                    }else if(systemToolBar().trashbin().isInside(inputControleur.position())){
+                        ArrayList<Object> shapes = new ArrayList<>();
+                        for (Shape s : getSelected()){
+                            s.visiblePosition(s.position());
+                                shapes.add(s);
+                        }
+                        cmd = new TrashBinCommand(this, shapes);
+                    }else if(systemToolBar().filesSelected()){
+                        if(systemToolBar().save().isInside(inputControleur.position())){
+                            //save
+                        }else if(systemToolBar().load().isInside(inputControleur.position())){
+                            //load
+                        }
+                    }else if(systemToolBar().editSelected()){
+                        if(systemToolBar().undo().isInside(inputControleur.position())){
+                            undo();
+                        }else if(systemToolBar().redo().isInside(inputControleur.position())){
+                            redo();
+                        }
+                    }
+                }
+            }
+            whiteBoard().selected(false);
+            systemToolBar().unSelect();
+        }
+        //right click
+        if(inputControleur.right().now() && inputControleur.rightReleased() && !inputControleur.leftPressed()){
+            if(whiteBoard().isInside(inputControleur.position())){
+                if(topShape(inputControleur.position()) != null){
+                    if(getSelected().size() == 1 && getSelected().get(0).grouped()){
+                        popUpMenu(factory().createPopUpMenu(inputControleur.position(), nbSelected(), true));
+                    }else{
+                        popUpMenu(factory().createPopUpMenu(inputControleur.position(), nbSelected(), false));
+                    }
+                }else{
+                    //popup whiteboard
+                }
+            }
+            whiteBoard().selected(false);
+            systemToolBar().unSelect();
+        }
+        if(cmd != null){
+            if(cmd.execute()){
+                push(cmd);
+                clearRedo();
+            }
+            printSelectShape();
         }
         draw();
-        
-    }
+    }  
 
+    /*
     private void printRedosHistory() {
         if(!_redos.isEmpty()){
             System.out.println("--------------------\nprintRedosHistory :");
@@ -197,35 +409,17 @@ public abstract class XShape implements ToolBarDirector, PopUpMenuDirector, Comm
             System.out.println("printCommandHistory\n --------------------");
         }
     }
-
+*/
     public void printSelectShape() {
         System.out.println("Start select shape :\n----------");
-        if(_selected_item == null)
+        if(placedShape() == null)
             System.out.println("null");
         else
-            System.out.println(_selected_item.toString());
+            System.out.println(placedShape().toString());
         System.out.println("End select shape :\n----------");
     }
-
+    public void printShapes(){ if(_shapes != null) for(Shape s : _shapes) System.out.println(s.toString()); }
     public void printArray(Shape[] array){ for(Shape s : array) System.out.println(s); }
-
-    public Shape[] getShapes() {
-        System.out.println("get shape");
-        for (Shape s : _shapes) {
-            System.out.println(s);
-        }
-        System.out.println("get shape");
-        return _shapes;
-    }
-
-    public void selection(boolean sel){
-        _selection = sel;
-    }
-
-    public boolean selection(){
-        return _selection;
-    }
-
 
 }
 
