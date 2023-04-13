@@ -68,6 +68,6 @@ public class ShapeFactoryAwt implements ShapeFactory {
     public Group createGroup(ArrayList<Shape> group) { return new GroupAwt(group); }
 
     @Override
-    public Group createGroup(Group grp) { return new GroupAwt(grp); }
+    public Group createGroup(Group grp) { return new GroupAwt((GroupAwt)grp); }
 
 }

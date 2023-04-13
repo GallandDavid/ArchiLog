@@ -1,6 +1,5 @@
 package xshape.model.Command;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import xshape.controleur.XShape;
@@ -32,6 +31,7 @@ public class GroupCommand extends Command{
         grp.selected(true);
         _backup.add((Object) grp);
         _app.addShape(grp);
+        _app.printShapes();
         return true;
     }
 

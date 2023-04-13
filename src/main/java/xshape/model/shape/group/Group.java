@@ -40,6 +40,28 @@ public abstract class Group extends Shape{
 
     public Group(Group grp) {
         super(grp.position(),grp.size(),grp.visiblePosition(),grp.visibleSize(),grp.selected(),grp.getId(),grp.isPlaced(),grp.deepth(),true);
+        for (Shape s : grp.group()) {
+            Class<?> classe = null;
+            Shape shp = null;
+            try {
+                Constructor<?> constructeur;
+                classe = Class.forName (s.getClass().getName());
+                if(s instanceof Group){
+                    constructeur = classe.getConstructor (Group.class);
+                    shp = (Shape) constructeur.newInstance(new Object [] {s});
+                }
+                else{
+                    constructeur = classe.getConstructor (s.getClass());
+                    shp = (Shape) constructeur.newInstance (new Object [] {s});
+                }
+            }
+            catch (ClassNotFoundException e) {  e.printStackTrace();    }
+            catch (InstantiationException e) {  e.printStackTrace();    } 
+            catch (IllegalAccessException e) {  e.printStackTrace();    } 
+            catch (InvocationTargetException e) { e.printStackTrace();    } 
+            catch (NoSuchMethodException e) { e.printStackTrace();    }
+            add(shp);
+        }
     }
 
     private void init() {
@@ -65,7 +87,7 @@ public abstract class Group extends Shape{
         for(Shape s : group()){
             s.selected(sel);
         }
-        _selected = true;
+        _selected = sel;
     }
 
     public void add(Shape shape){
@@ -78,9 +100,11 @@ public abstract class Group extends Shape{
         init();
     }
 
-    @Override public boolean equals(Object obj){ return false; }
     @Override public void duplicate(Shape shape){
         super.duplicate(shape);
+        for (Shape s : group()) {
+            s.remove();
+        }
         _group = new ArrayList<>();
         for (Shape s : ((Group) shape).group()) {
             Class<?> classe = null;
@@ -89,9 +113,8 @@ public abstract class Group extends Shape{
                 Constructor<?> constructeur;
                 classe = Class.forName (s.getClass().getName());
                 if(s instanceof Group){
-                    constructeur = classe.getConstructor ();
-                    shp = (Shape) constructeur.newInstance();
-                    ((Group) shape).add(((Group) s).group());
+                    constructeur = classe.getConstructor (Group.class);
+                    shp = (Shape) constructeur.newInstance(new Object [] {s});
                 }
                 else{
                     constructeur = classe.getConstructor (s.getClass());
@@ -107,13 +130,34 @@ public abstract class Group extends Shape{
         }
     }
     @Override public Shape translate(Point2D vec) { 
-        for (Shape s : group()) s.translate(vec);
+        for (Shape s : group()) {
+            s.translate(vec);
+        }
         super.translate(vec);
         return this;
     }
     @Override public Shape visibleTranslate(Point2D vec) { 
         for (Shape s : group()) s.visibleTranslate(vec);
         super.visibleTranslate(vec);
+        return this;
+    }
+
+    @Override public Shape position(Point2D pos) { 
+        if(_pos == null) _pos = pos;
+        else{
+            Point2D vec = new Point2D.Double(pos.getX() - position().getX(), pos.getY() - position().getY());
+            for (Shape s : group()) s.translate(vec);
+            super.translate(vec);
+        }
+        return this;
+    }
+    @Override public Shape visiblePosition(Point2D pos) { 
+        if(_visible_pos == null) _visible_pos = pos;
+        else{
+            Point2D vec = new Point2D.Double(pos.getX() - visiblePosition().getX(), pos.getY() - visiblePosition().getY());
+            for (Shape s : group()) s.visibleTranslate(vec);
+            super.visibleTranslate(vec);
+        }
         return this;
     }
 
@@ -129,6 +173,13 @@ public abstract class Group extends Shape{
             str += s.toString() + "\n";
         }
         return str;
+    }
+
+    @Override
+    public void remove(){
+        for (Shape shape : group()) {
+            shape.remove();
+        }
     }
     
 

@@ -13,15 +13,15 @@ public abstract class Shape implements IShape{
     protected static double _size_y = 100;
 
     protected final String ID;
-    private Point2D _pos;
-    private Point2D _size;
+    public Point2D _pos = null;
+    protected Point2D _size = null;
 
-    private boolean _grouped;
+    protected boolean _grouped;
     protected boolean _selected;
-    private int _deepth;
-    private boolean _placed;
-    private Point2D _visible_pos;
-    private Point2D _visible_size;
+    protected int _deepth;
+    protected boolean _placed;
+    protected Point2D _visible_pos = null;
+    protected Point2D _visible_size = null;
 
 	public Shape(Point2D pos, Point2D size, boolean selected, boolean grouped){
         _grouped = grouped;
@@ -93,11 +93,11 @@ public abstract class Shape implements IShape{
 
     @Override public void duplicate(Shape shape){
         this._deepth = shape.deepth();
-        this.position(shape.position());
-        this.size(shape.size());
-        this.visiblePosition(shape.visiblePosition());
-        this.visibleSize(shape.visibleSize());
-        this.selected(shape.selected());
+        this._pos = (shape.position());
+        this._size =(shape.size());
+        this._visible_pos =(shape.visiblePosition());
+        this._visible_size =(shape.visibleSize());
+        this._selected = (shape.selected());
         this._placed = shape.isPlaced();
         _grouped = shape.grouped();
     }

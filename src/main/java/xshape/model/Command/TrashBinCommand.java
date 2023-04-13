@@ -19,7 +19,7 @@ public class TrashBinCommand extends Command{
 
     @Override
     public boolean execute() {
-        saveBackup(null);
+        saveBackup();
         ArrayList<String> tmp = new ArrayList<>();
         for(Object shape : _editor){
             tmp.add(((Shape) shape).getId());

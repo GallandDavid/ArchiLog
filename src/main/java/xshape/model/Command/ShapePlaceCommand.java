@@ -36,7 +36,7 @@ public class ShapePlaceCommand extends Command{
             return false;
         }
         if(_editor.size() != 0){
-            Shape shape = (Shape) instanceShape(_editor.get(0), null);
+            Shape shape = (Shape) instanceShape(_editor.get(0));
             shape.position(shape.visiblePosition());
             if(_app.whiteBoard().isInside(shape.position())){
                 _app.addShape(shape);
@@ -48,7 +48,7 @@ public class ShapePlaceCommand extends Command{
             Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y, false);
             shape.selected(true);
             _editor.add(shape);
-            saveBackup(null);
+            saveBackup();
             _app.addShape(shape);
             return true;
         }

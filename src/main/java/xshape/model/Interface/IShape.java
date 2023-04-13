@@ -5,7 +5,6 @@ import java.awt.geom.Point2D;
 import xshape.model.shape.Shape;
 
 public interface IShape extends IVisible, IManipulable, ISelectable, IPlaceable{
-	void draw();
 	String getId();
 	Point2D size();
 	boolean grouped();

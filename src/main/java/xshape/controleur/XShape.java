@@ -313,6 +313,11 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                         }
                     }
                 }
+            }else if(topShape(inputControleur.position()) != null){
+                for (Shape shape : getSelected()) {
+                    shape.selected(false);
+                }
+                topShape(inputControleur.position()).selected(true);
             }
             if(!systemToolBar().isInItem(inputControleur.position())){
                 systemToolBar().unSelect();

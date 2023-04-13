@@ -27,7 +27,7 @@ public class UnGroupCommand extends Command{
         _app.removeShape(grp.getId());
         _editor = new ArrayList<>();
         for (Shape shape : grp.group()) {
-            Shape s = (Shape) instanceShape(shape, null);
+            Shape s = (Shape) instanceShape(shape);
             _editor.add(s);
             _app.addShape(s);
         }

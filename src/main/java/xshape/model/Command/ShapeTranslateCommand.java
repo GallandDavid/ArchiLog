@@ -4,7 +4,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import xshape.controleur.XShape;
 import xshape.model.shape.Shape;
-import xshape.model.shape.group.Group;
 
 public class ShapeTranslateCommand extends Command{
 
@@ -17,10 +16,7 @@ public class ShapeTranslateCommand extends Command{
         for (Object shape : _editor) {
             Point2D tmp = (Point2D) ((Shape) shape).visiblePosition();
             ((Shape) shape).visiblePosition((Point2D) ((Shape) shape).position());
-            if(shape instanceof Group){
-                saveBackup(((Group) shape).group());
-            }
-            else saveBackup(null);
+            saveBackup();
             ((Shape) shape).position((Point2D)tmp.clone());
             ((Shape) shape).visiblePosition((Point2D)tmp.clone());
         }
@@ -34,8 +30,7 @@ public class ShapeTranslateCommand extends Command{
     public void undo(){
         for (int i = 0; i < _editor.size(); i ++) {
             Shape tmp;
-            if(_editor.get(i) instanceof Group) tmp = (Shape) instanceShape((Shape)_editor.get(i), ((Group) _editor.get(i)).group());
-            else tmp = (Shape) instanceShape((Shape)_editor.get(i), null);
+            tmp = (Shape) instanceShape((Shape)_editor.get(i));
             ((Shape)_editor.get(i)).duplicate((Shape)_backup.get(i));
             ((Shape)_backup.get(i)).duplicate(tmp);
         }

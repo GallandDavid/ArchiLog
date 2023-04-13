@@ -33,9 +33,9 @@ public class GroupFx extends Group{
             _grp.getChildren().add((javafx.scene.shape.Shape) s.adapted());
 	}
 
-    public GroupFx(Group group, javafx.scene.Group grp) {
+    public GroupFx(GroupFx group) {
         super(group);
-        _grp = grp;
+        _grp = group._grp;
     }
 
     @Override public void draw() { 
@@ -46,9 +46,10 @@ public class GroupFx extends Group{
 		_adapted.setY(p.getY()- s.getY()/2);
 		_adapted.setWidth(s.getX());
 		_adapted.setHeight(s.getY());
-		_adapted.setFill(Color.LIGHTBLUE);
+		
 		
 		if(selected()) {
+            _adapted.setFill(Color.LIGHTBLUE);
 			Light.Distant light = new Light.Distant();
 			light.setAzimuth(0.0);
 			light.setElevation(90.0);
@@ -60,6 +61,7 @@ public class GroupFx extends Group{
 			_adapted.setEffect(lighting);
 		}
 		else{
+            _adapted.setFill(Color.TRANSPARENT);
 			_adapted.setEffect(null);
 		}
         _adapted.toFront();
@@ -67,8 +69,7 @@ public class GroupFx extends Group{
         for (Shape shape : group()) shape.draw(); 
     }
     @Override public void remove() {
-        for (Shape s : group())
-            s.remove();
+        super.remove();
         _grp.getChildren().remove(_adapted); 
     }
     @Override public Object adapted() { return _adapted; }

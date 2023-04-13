@@ -4,8 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import xshape.controleur.XShape;
-import xshape.model.shape.Shape;
-import xshape.model.shape.group.Group;
 
 public abstract class Command implements ICommand{
     public XShape _app;
@@ -32,22 +30,14 @@ public abstract class Command implements ICommand{
         _editor.add(obj);
     }
 
-    public Object instanceShape(Object editor,ArrayList<Shape> shapes){
+    public Object instanceShape(Object editor){
         Class<?> classe = null;
         Object shape = null;
         try {
             Constructor<?> constructeur;
             classe = Class.forName (editor.getClass().getName());
-            if(editor instanceof Group){
-                constructeur = classe.getConstructor ();
-                shape = constructeur.newInstance ();
-                ((Group) shape).add(shapes);
-                System.out.println(shape.toString());
-            }
-            else{
-                constructeur = classe.getConstructor (editor.getClass());
-                shape = constructeur.newInstance (new Object [] {editor});
-            }
+            constructeur = classe.getConstructor (editor.getClass());
+            shape = constructeur.newInstance (new Object [] {editor});
         } 
         catch (ClassNotFoundException e) {  e.printStackTrace();    }
         catch (InstantiationException e) {  e.printStackTrace();    } 
@@ -58,9 +48,9 @@ public abstract class Command implements ICommand{
     }
 
     @Override
-    public void saveBackup(ArrayList<Shape> shapes) {
+    public void saveBackup() {
         for (Object editor : _editor) {
-            _backup.add(instanceShape(editor, shapes));
+            _backup.add(instanceShape(editor));
         }
         
     }

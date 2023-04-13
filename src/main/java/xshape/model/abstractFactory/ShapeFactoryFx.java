@@ -42,5 +42,5 @@ public class ShapeFactoryFx implements ShapeFactory {
 
     @Override
     public xshape.model.shape.group.Group createGroup(xshape.model.shape.group.Group grp) {
-        return new GroupFx(grp, _grp); }
+        return new GroupFx((GroupFx) grp); }
 }

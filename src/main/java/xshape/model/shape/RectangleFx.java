@@ -29,33 +29,6 @@ public class RectangleFx extends Rectangle{
 		_grp.getChildren().add(_adapted);
 	}
 
-	@Override public void draw() {
-		if(!_grp.getChildren().contains(_adapted)) _grp.getChildren().add(_adapted);
-		Point2D p = visiblePosition();
-		Point2D	s = visibleSize();
-		_adapted.setX(p.getX()- s.getX()/2);
-		_adapted.setY(p.getY()- s.getY()/2);
-		_adapted.setWidth(s.getX());
-		_adapted.setHeight(s.getY());
-		_adapted.setFill(Color.BLUE);
-		
-		if(selected()) {
-			Light.Distant light = new Light.Distant();
-			light.setAzimuth(0.0);
-			light.setElevation(90.0);
-	
-			Lighting lighting = new Lighting();
-			lighting.setLight(light);
-			lighting.setSurfaceScale(1.0);
-	
-			_adapted.setEffect(lighting);
-		}
-		else{
-			_adapted.setEffect(null);
-		}
-        _adapted.toFront();
-		}
-
 	@Override public void remove() {
 		_grp.getChildren().remove(_adapted);
 		System.gc();

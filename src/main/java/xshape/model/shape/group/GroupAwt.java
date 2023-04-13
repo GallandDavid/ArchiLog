@@ -14,7 +14,7 @@ public class GroupAwt extends Group{
         super(group);
     }
 
-    public GroupAwt(Group grp) {
+    public GroupAwt(GroupAwt grp) {
         super(grp);
     }
 

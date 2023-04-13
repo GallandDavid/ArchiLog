@@ -21,7 +21,6 @@ import xshape.model.observer.IInputObserver;
 
 
 public class FxApplication extends Application implements IInputObservable{
-    
     public static Group _root = new Group();
     private FxApp _fxapp;
     private InputControl _inputControleur = new InputControl();
