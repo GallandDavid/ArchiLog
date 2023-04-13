@@ -3,9 +3,14 @@ package xshape.model.shape;
 import java.awt.geom.Point2D;
 import java.util.UUID;
 
+import xshape.model.Interface.IManipulable;
+import xshape.model.Interface.IMovable;
+import xshape.model.Interface.IPlaceable;
+import xshape.model.Interface.IResizeable;
 import xshape.model.Interface.IShape;
+import xshape.model.Interface.IVisible;
 
-public abstract class Shape implements IShape{
+public abstract class Shape implements IShape, IVisible, IManipulable, IPlaceable, IMovable, IResizeable{
     private static int _max_deepth = -1;
     protected static double _pos_x = 200;
     protected static double _pos_y = 200;
@@ -31,6 +36,19 @@ public abstract class Shape implements IShape{
         _size = size;
         _visible_pos  = pos;
         _visible_size = size;
+        _selected = selected;
+        _placed = true;
+        _deepth = _max_deepth;
+    }
+
+    public Shape(Point2D pos, boolean selected, boolean grouped){
+        _grouped = grouped;
+        _max_deepth ++;
+        ID = UUID.randomUUID().toString();
+        _pos  = pos;
+        _size = new Point2D.Double(_size_x,_size_y);
+        _visible_pos  = pos;
+        _visible_size = _size;
         _selected = selected;
         _placed = true;
         _deepth = _max_deepth;
@@ -65,7 +83,6 @@ public abstract class Shape implements IShape{
     @Override public boolean isPlaced() { return _placed; }
     @Override public void setPlaced(boolean placed) { _placed = placed; }
     @Override public int deepth(){ return _deepth; }
-    @Override public void remove() { }
 
     @Override public String toString(){
         String str = "Rectangle :\n";

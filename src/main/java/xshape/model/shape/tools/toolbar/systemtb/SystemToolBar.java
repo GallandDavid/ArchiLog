@@ -2,10 +2,11 @@ package xshape.model.shape.tools.toolbar.systemtb;
 
 import java.awt.geom.Point2D;
 
-import xshape.model.shape.tools.menus.Menu;
+import xshape.model.shape.tools.Menu;
 import xshape.model.shape.tools.toolbar.ToolBar;
+import xshape.model.visitor.DrawVisitor;
 
-public abstract class SystemToolBar extends ToolBar {
+public class SystemToolBar extends ToolBar {
   private Menu _files;
   private Menu _save;
   private Menu _load;
@@ -14,19 +15,22 @@ public abstract class SystemToolBar extends ToolBar {
   private Menu _redo;
   private Menu _trashbin;
 
+  private static double _width = 60;
+
   private boolean filesSelected = false;
   private boolean editSelected = false;
 
 
-  public SystemToolBar(Point2D pos, Point2D size, boolean selected, Menu files, Menu save, Menu load, Menu edit, Menu undo, Menu redo, Menu trash){
+  public SystemToolBar(Point2D pos, Point2D size, boolean selected){
     super(pos, size, selected);
-    _files = files;
-    _save = save;
-    _load = load;
-    _edit = edit;
-    _undo = undo;
-    _redo = redo;
-    _trashbin = trash;
+    _files = new Menu("Files", new Point2D.Double(_width / 2, size.getY() / 2), new Point2D.Double(_width, size.getY()), false);
+    _save = new Menu("Save", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY())), new Point2D.Double(_width, size.getY()), false);
+    _load = new Menu("Load", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY() * 2)), new Point2D.Double(_width, size.getY()), false);
+    _edit = new Menu("Edit", new Point2D.Double(_width + (_width / 2), size.getY() / 2), new Point2D.Double(_width, size.getY()), false);
+    _undo = new Menu("Undo", new Point2D.Double(_width / 2, (size.getY() / 2) + size.getY()), new Point2D.Double(_width, size.getY()), false);
+    _redo = new Menu("Redo", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY() * 2)), new Point2D.Double(_width, size.getY()), false);
+    _trashbin = new Menu("Bin", new Point2D.Double(2 * _width + (_width / 2), size.getY() / 2), new Point2D.Double(_width, size.getY()), false);
+
   }
   /**
    * @return Menu return the _files
@@ -81,13 +85,9 @@ public abstract class SystemToolBar extends ToolBar {
   public void unSelect(){
     if(filesSelected){
       filesSelected = false;
-      save().remove();
-      load().remove();
     }
     if(editSelected){
       editSelected = false;
-      undo().remove();
-      redo().remove();
     }
   }
 
@@ -103,4 +103,6 @@ public abstract class SystemToolBar extends ToolBar {
 
   public boolean filesSelected(){ return filesSelected; }
   public boolean editSelected(){ return editSelected; }
+
+  @Override public void accept(DrawVisitor dv) { dv.drawSystemToolBar(this); }
 }

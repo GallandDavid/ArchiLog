@@ -17,10 +17,10 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import xshape.model.abstractFactory.ShapeFactoryAwt;
 import xshape.model.controlInput.InputControl;
 import xshape.model.observer.IInputObservable;
 import xshape.model.observer.IInputObserver;
+import xshape.model.visitor.DrawVisitorAwt;
 import xshape.vue.AwtContext;
 import xshape.controleur.AwtApp.JCanvas;
 
@@ -151,7 +151,7 @@ public class AwtApp extends XShape{
     }
 
     @Override public void run() {
-        createFactory();
+        createDrawer();
         JCanvas jc = new JCanvas(this);
         _jc = jc;
         jc.setBackground(Color.GRAY);
@@ -160,6 +160,9 @@ public class AwtApp extends XShape{
 
     }
 
-    @Override public void createFactory() {_factory = new ShapeFactoryAwt(); }
     @Override public void render() { _jc.repaint(); }
+    @Override public void clear() { }
+
+    @Override
+    public void createDrawer() { _drawer = new DrawVisitorAwt(); }
 }

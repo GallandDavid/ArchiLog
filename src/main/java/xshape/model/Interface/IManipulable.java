@@ -3,8 +3,8 @@ package xshape.model.Interface;
 import xshape.model.shape.Shape;
 
 public interface IManipulable {
-	void remove();
+	String getId();
 	boolean equals(Object obj);
 	void duplicate(Shape shape);
-	Object adapted();
+	boolean grouped();
 }

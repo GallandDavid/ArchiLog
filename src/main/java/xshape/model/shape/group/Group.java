@@ -6,9 +6,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import xshape.model.shape.Shape;
+import xshape.model.visitor.DrawVisitor;
 
 
-public abstract class Group extends Shape{
+public class Group extends Shape{
 
     private ArrayList<Shape> _group = new ArrayList<>();
 
@@ -141,6 +142,11 @@ public abstract class Group extends Shape{
      * @param _group the _group to set
      */
     public void group(ArrayList<Shape> _group) { this._group = _group;}
+
+    @Override
+    public void accept(DrawVisitor dv) {
+        dv.drawGroup(this);
+    }
 
 }
 

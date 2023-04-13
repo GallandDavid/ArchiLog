@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -23,6 +24,9 @@ import xshape.model.observer.IInputObserver;
 public class FxApplication extends Application implements IInputObservable{
     
     public static Group _root = new Group();
+    public double scene_width = 500;
+    public double scene_height = 500;
+    Canvas _canvas;
     private FxApp _fxapp;
     private InputControl _inputControleur = new InputControl();
 
@@ -36,12 +40,26 @@ public class FxApplication extends Application implements IInputObservable{
         _fxapp.run();
     }
     
+    public Canvas canvas(){
+        return _canvas;
+    }
+
+    public Canvas clearCanvas(){
+        _root.getChildren().remove(canvas());
+        _canvas = new Canvas(scene_width, scene_height);
+        _root.getChildren().add(canvas());
+        return canvas();
+    }
+
+    
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Platform.runLater(() -> {
             primaryStage.setTitle("XShape JavaFx Rendering");
-            Scene scene = new Scene(_root, 500, 500);
+            Scene scene = new Scene(_root, scene_width, scene_height);
+            _canvas = new Canvas(scene_width, scene_height);
+            _root.getChildren().add(_canvas);
             scene.setFill(Color.GRAY);
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 

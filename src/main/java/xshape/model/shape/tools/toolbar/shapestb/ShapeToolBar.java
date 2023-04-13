@@ -6,15 +6,19 @@ import java.util.ArrayList;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
 import xshape.model.shape.tools.toolbar.ToolBar;
+import xshape.model.visitor.DrawVisitor;
 
-public abstract class ShapeToolBar extends ToolBar {
+public class ShapeToolBar extends ToolBar {
     private Rectangle _rect;
     private ArrayList<Shape> _addons = new ArrayList<>();
+    private static double _marge_in_vertical = 7.0;
+    private static double _marge_in_horizontal = 7.0;
+    private static double _height = 30;
   
   
-    public ShapeToolBar(Point2D pos, Point2D size, boolean selected, Rectangle rect, ArrayList<Shape> addons){
+    public ShapeToolBar(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> addons){
       super(pos, size, selected);
-      _rect = rect;
+      _rect = new Rectangle(new Point2D.Double(pos.getX(), (pos.getY() - (size.getY()/2)) + _marge_in_vertical + (_height/2)), new Point2D.Double(size.getX() - _marge_in_horizontal * 2, _height), selected);
       if(addons != null)
         _addons.addAll(addons);
     }
@@ -61,5 +65,7 @@ public abstract class ShapeToolBar extends ToolBar {
                 return true;
         return false;
     }
+
+    @Override public void accept(DrawVisitor dv) { dv.drawShapeToolBar(this); }
   
   }
