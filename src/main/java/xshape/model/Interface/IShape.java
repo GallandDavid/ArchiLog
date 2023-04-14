@@ -2,16 +2,11 @@ package xshape.model.Interface;
 
 import java.awt.geom.Point2D;
 
-import xshape.model.shape.Shape;
+import xshape.model.visitor.DrawVisitable;
 
-public interface IShape extends IVisible, IManipulable, ISelectable, IPlaceable{
-	void draw();
-	String getId();
+public interface IShape extends ISelectable, DrawVisitable{
 	Point2D size();
-	boolean grouped();
 	Point2D position();
-	Shape size(Point2D vec);
-	Shape position(Point2D position);
-	Shape translate(Point2D vec);
 	String toString();
+	boolean isInside(Point2D pos);
 }

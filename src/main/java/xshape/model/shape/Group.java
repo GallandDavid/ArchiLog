@@ -1,23 +1,19 @@
-package xshape.model.shape.group;
+package xshape.model.shape;
 
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-import xshape.model.shape.Shape;
+import xshape.model.visitor.DrawVisitor;
 
 
-public abstract class Group extends Shape{
+public class Group extends Shape{
 
     private ArrayList<Shape> _group = new ArrayList<>();
 
     public Group(){
         super(null,null,false,true);
-    }
-    
-    public Group(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, String ID, boolean placed, int deepth){
-        super(pos, size, visible_pos, visible_size, selected, ID, placed, deepth, false);
     }
 
     public Group(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> group) {
@@ -39,7 +35,7 @@ public abstract class Group extends Shape{
     }
 
     public Group(Group grp) {
-        super(grp.position(),grp.size(),grp.visiblePosition(),grp.visibleSize(),grp.selected(),grp.getId(),grp.isPlaced(),grp.deepth(),true);
+        super(grp.position(),grp.size(),grp.visiblePosition(),grp.visibleSize(),grp.selected(),grp.getId(),grp.isPlaced(),grp.deepth(),true, grp.rotation());
     }
 
     private void init() {
@@ -141,6 +137,11 @@ public abstract class Group extends Shape{
      * @param _group the _group to set
      */
     public void group(ArrayList<Shape> _group) { this._group = _group;}
+
+    @Override
+    public void accept(DrawVisitor dv) {
+        dv.drawGroup(this);
+    }
 
 }
 

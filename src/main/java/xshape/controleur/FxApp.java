@@ -1,6 +1,6 @@
 package xshape.controleur;
 
-import xshape.model.abstractFactory.*;
+import xshape.model.visitor.DrawVisitorFx;
 import xshape.vue.FxApplication;
 
 import java.awt.geom.Point2D;
@@ -19,15 +19,21 @@ public class FxApp extends XShape  {
     FxApplication _fx = null;
 
     public FxApp(Group root, FxApplication fx){
+        _fx = fx;
         _root = root;
-        createFactory();
+        createDrawer();
     }
     
-    @Override public void createFactory() { _factory = new ShapeFactoryFx(_root); }
+    @Override public void render() { }
+    @Override public void clear() { ((DrawVisitorFx)_drawer).canvas(_fx.clearCanvas());}
     @Override public void run() { 
         systemToolBar(factory().createSystemToolBar(_syst_tool_pos, _syst_tool_size, false));
         shapesToolBar(factory().createShapeToolBar(_shape_tool_pos, _shape_tool_size, false, null));
         whiteBoard(factory().createWhiteBoard(_scene_size.getX()/2 + _shape_tool_size.getX()/2, _scene_size.getY()/2 + _syst_tool_size.getY()/2, _scene_size.getY() - _syst_tool_size.getY(), _scene_size.getX() - _shape_tool_size.getX(), false));
         draw(); }
-    @Override public void render() { }
+
+    @Override
+    public void createDrawer() {
+        _drawer = new DrawVisitorFx();
+    }
 }

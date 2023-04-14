@@ -1,20 +1,35 @@
 package xshape.model.shape;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.UUID;
 
+import xshape.model.Interface.IBoundsRoundable;
+import xshape.model.Interface.IColorable;
+import xshape.model.Interface.IManipulable;
+import xshape.model.Interface.IMovable;
+import xshape.model.Interface.IPlaceable;
+import xshape.model.Interface.IResizeable;
+import xshape.model.Interface.IRotatable;
 import xshape.model.Interface.IShape;
+import xshape.model.Interface.IVisible;
 
-public abstract class Shape implements IShape{
+public abstract class Shape implements IShape, IColorable, IBoundsRoundable, IRotatable, IVisible, IManipulable, IPlaceable, IMovable, IResizeable{
     private static int _max_deepth = -1;
     protected static double _pos_x = 200;
     protected static double _pos_y = 200;
     protected static double _size_x = 100;
     protected static double _size_y = 100;
+    
 
     protected final String ID;
     private Point2D _pos;
     private Point2D _size;
+
+    private int _rotation;
+    private int _rounde;
+    private Color _color;
+
 
     private boolean _grouped;
     protected boolean _selected;
@@ -34,9 +49,28 @@ public abstract class Shape implements IShape{
         _selected = selected;
         _placed = true;
         _deepth = _max_deepth;
+        _rotation = 0;
+        _rounde = 0;
+        _color = Color.BLUE;
     }
 
-    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, String ID, boolean placed, int deepth, boolean grouped){
+    public Shape(Point2D pos, boolean selected, boolean grouped){
+        _grouped = grouped;
+        _max_deepth ++;
+        ID = UUID.randomUUID().toString();
+        _pos  = pos;
+        _size = new Point2D.Double(_size_x,_size_y);
+        _visible_pos  = pos;
+        _visible_size = _size;
+        _selected = selected;
+        _placed = true;
+        _deepth = _max_deepth;
+        _rotation = 0;
+        _rounde = 0;
+        _color = Color.BLUE;
+    }
+
+    public Shape(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, String ID, boolean placed, int deepth, boolean grouped, int rotation){
         _grouped = grouped;
         _pos  = pos;
         _size = size;
@@ -46,8 +80,18 @@ public abstract class Shape implements IShape{
         this.ID = ID;
         _placed = placed;
         _deepth = deepth;
+        _rotation = rotation;
+        _rounde = 0;
+        _color = Color.BLUE;
     }
 
+    @Override public void color(Color color){ _color = color; }
+    @Override public Color color(){ return _color; }
+    @Override public int rounded(){ return _rounde; }
+    @Override public void rounded(int rounde){ _rounde = rounde; }
+    @Override public Point2D centreRotation(){ return _pos; }
+    @Override public int rotation(){ return _rotation; }
+    @Override public void rotation(int rotation){ _rotation = rotation; }
     @Override public boolean grouped() { return _grouped; }
 	@Override public Point2D size() { return (Point2D) _size.clone(); }
     @Override public Shape size(Point2D vec) { _size = (Point2D) vec.clone(); return this; }
@@ -65,7 +109,6 @@ public abstract class Shape implements IShape{
     @Override public boolean isPlaced() { return _placed; }
     @Override public void setPlaced(boolean placed) { _placed = placed; }
     @Override public int deepth(){ return _deepth; }
-    @Override public void remove() { }
 
     @Override public String toString(){
         String str = "Rectangle :\n";

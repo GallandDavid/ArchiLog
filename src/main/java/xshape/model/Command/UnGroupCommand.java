@@ -3,8 +3,8 @@ package xshape.model.Command;
 import java.util.ArrayList;
 
 import xshape.controleur.XShape;
+import xshape.model.shape.Group;
 import xshape.model.shape.Shape;
-import xshape.model.shape.group.Group;
 
 public class UnGroupCommand extends Command{
 
@@ -22,6 +22,7 @@ public class UnGroupCommand extends Command{
 
     @Override
     public boolean execute() {
+        _app.printShapes();
         Group grp = (Group) _editor.get(0);
         _backup.add(grp);
         _app.removeShape(grp.getId());
@@ -31,6 +32,8 @@ public class UnGroupCommand extends Command{
             _editor.add(s);
             _app.addShape(s);
         }
+
+        _app.printShapes();
         return true;
     }
 

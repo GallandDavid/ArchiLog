@@ -1,11 +1,10 @@
 package xshape.model.Command;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import xshape.controleur.XShape;
+import xshape.model.shape.Group;
 import xshape.model.shape.Shape;
-import xshape.model.shape.group.Group;
 
 public class GroupCommand extends Command{
 
