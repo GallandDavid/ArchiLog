@@ -4,8 +4,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import xshape.controleur.XShape;
+import xshape.model.shape.Group;
 import xshape.model.shape.Shape;
-import xshape.model.shape.group.Group;
 
 public abstract class Command implements ICommand{
     public XShape _app;

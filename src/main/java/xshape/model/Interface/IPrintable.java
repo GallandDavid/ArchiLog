@@ -1,7 +1,6 @@
 package xshape.model.Interface;
 
-import xshape.model.shape.Rectangle;
-import xshape.model.shape.WhiteBoard;
+import xshape.model.shape.tools.WhiteBoard;
 
 public interface IPrintable {
     void whiteBoard(WhiteBoard rect);

@@ -8,14 +8,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import xshape.model.shape.Group;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
-import xshape.model.shape.WhiteBoard;
-import xshape.model.shape.group.Group;
 import xshape.model.shape.tools.Menu;
-import xshape.model.shape.tools.popup.PopUpMenu;
-import xshape.model.shape.tools.toolbar.shapestb.ShapeToolBar;
-import xshape.model.shape.tools.toolbar.systemtb.SystemToolBar;
+import xshape.model.shape.tools.PopUpMenu;
+import xshape.model.shape.tools.WhiteBoard;
+import xshape.model.shape.tools.toolbar.ShapeToolBar;
+import xshape.model.shape.tools.toolbar.SystemToolBar;
 
 public class DrawVisitorFx implements DrawVisitor{
     Canvas _cvs = null;
@@ -36,7 +36,7 @@ public class DrawVisitorFx implements DrawVisitor{
         Point2D p = rect.position();
 		Point2D	s = rect.size();
         GraphicsContext gc = _cvs.getGraphicsContext2D();
-        if(rect.selected()) gc.setFill(Color.color(100, 100, 255));
+        if(rect.selected()) gc.setFill(Color.color(0.40, 0.4, 1.0));
 		else gc.setFill(Color.BLUE);
         gc.fillRect(p.getX()- s.getX()/2,
                     p.getY()- s.getY()/2,

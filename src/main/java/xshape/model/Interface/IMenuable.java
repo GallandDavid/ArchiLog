@@ -1,8 +1,8 @@
 package xshape.model.Interface;
 
-import xshape.model.shape.tools.popup.PopUpMenu;
-import xshape.model.shape.tools.toolbar.shapestb.ShapeToolBar;
-import xshape.model.shape.tools.toolbar.systemtb.SystemToolBar;
+import xshape.model.shape.tools.PopUpMenu;
+import xshape.model.shape.tools.toolbar.ShapeToolBar;
+import xshape.model.shape.tools.toolbar.SystemToolBar;
 
 public interface IMenuable {
     void systemToolBar(SystemToolBar toolBar);

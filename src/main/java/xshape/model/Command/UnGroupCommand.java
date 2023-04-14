@@ -3,8 +3,8 @@ package xshape.model.Command;
 import java.util.ArrayList;
 
 import xshape.controleur.XShape;
+import xshape.model.shape.Group;
 import xshape.model.shape.Shape;
-import xshape.model.shape.group.Group;
 
 public class UnGroupCommand extends Command{
 

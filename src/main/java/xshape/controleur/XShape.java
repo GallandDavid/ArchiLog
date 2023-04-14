@@ -25,10 +25,10 @@ import xshape.model.controlInput.InputControl;
 import xshape.model.observer.IInputObserver;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
-import xshape.model.shape.WhiteBoard;
-import xshape.model.shape.tools.popup.PopUpMenu;
-import xshape.model.shape.tools.toolbar.shapestb.ShapeToolBar;
-import xshape.model.shape.tools.toolbar.systemtb.SystemToolBar;
+import xshape.model.shape.tools.PopUpMenu;
+import xshape.model.shape.tools.WhiteBoard;
+import xshape.model.shape.tools.toolbar.ShapeToolBar;
+import xshape.model.shape.tools.toolbar.SystemToolBar;
 import xshape.model.visitor.DrawVisitor;
 
 public abstract class XShape implements CommandHistory, IInputObserver, IMenuable, IShapeContenable, IPrintable, IRunnable, IClickable{

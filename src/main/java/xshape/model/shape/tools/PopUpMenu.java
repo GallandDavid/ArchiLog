@@ -1,10 +1,9 @@
-package xshape.model.shape.tools.popup;
+package xshape.model.shape.tools;
 
 import java.awt.geom.Point2D;
 
 import xshape.model.Interface.IShape;
 import xshape.model.shape.Rectangle;
-import xshape.model.shape.tools.Menu;
 import xshape.model.visitor.DrawVisitor;
 
 public class PopUpMenu implements IShape{

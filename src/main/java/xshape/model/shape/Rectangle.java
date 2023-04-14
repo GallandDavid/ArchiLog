@@ -9,6 +9,9 @@ public class Rectangle extends Shape {
     public Rectangle(Point2D pos, Point2D size, boolean selected){
         super(pos, size, selected, false);
     }
+    public Rectangle(Rectangle rect){
+        super(rect.position(), rect.size(), rect.visiblePosition(), rect.visibleSize(), rect.selected(), rect.getId(), rect.isPlaced(), rect.deepth(), rect.grouped());
+    }
     public Rectangle(Point2D pos, boolean selected){
         super(pos, selected, false);
     }

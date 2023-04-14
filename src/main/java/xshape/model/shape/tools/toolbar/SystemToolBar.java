@@ -1,9 +1,8 @@
-package xshape.model.shape.tools.toolbar.systemtb;
+package xshape.model.shape.tools.toolbar;
 
 import java.awt.geom.Point2D;
 
 import xshape.model.shape.tools.Menu;
-import xshape.model.shape.tools.toolbar.ToolBar;
 import xshape.model.visitor.DrawVisitor;
 
 public class SystemToolBar extends ToolBar {

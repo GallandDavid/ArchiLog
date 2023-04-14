@@ -1,11 +1,10 @@
-package xshape.model.shape.group;
+package xshape.model.shape;
 
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-import xshape.model.shape.Shape;
 import xshape.model.visitor.DrawVisitor;
 
 

@@ -1,11 +1,10 @@
-package xshape.model.shape.tools.toolbar.shapestb;
+package xshape.model.shape.tools.toolbar;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
-import xshape.model.shape.tools.toolbar.ToolBar;
 import xshape.model.visitor.DrawVisitor;
 
 public class ShapeToolBar extends ToolBar {
