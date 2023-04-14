@@ -9,14 +9,14 @@ import xshape.model.Interface.IShape;
 import xshape.model.shape.Rectangle;
 
 public class WhiteBoard implements IShape, IResizeable, IMovable{
-    Rectangle rect = null;
+    public Rectangle rect = null;
 
     public WhiteBoard(double posX, double posY, double height, double width, boolean selected) {
         rect = new Rectangle(new Point2D.Double(posX, posY),new Point2D.Double(width, height), selected);
     }
 
     @Override public boolean isInside(Point2D pos) { return rect.isInside(pos); }
-    @Override public void selected(boolean sel) { }
+    @Override public void selected(boolean sel) { rect.selected(sel); }
     @Override public boolean selected() { return rect.selected(); }
     @Override public Point2D size() { return rect.size(); }
     @Override public Point2D position() { return rect.position(); }

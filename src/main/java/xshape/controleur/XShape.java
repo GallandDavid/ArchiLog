@@ -190,6 +190,14 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         }
     }
 
+    private boolean shapeIsInsideRect(Rectangle rect, Shape shape){
+        if(rect.isInside(new Point2D.Double(shape.position().getX() - shape.size().getX() / 2, shape.position().getY() - shape.size().getY() / 2)) &&
+           rect.isInside(new Point2D.Double(shape.position().getX() + shape.size().getX() / 2, shape.position().getY() + shape.size().getY() / 2))){
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void update(InputControl inputControleur) {
         Command cmd = null;
@@ -264,6 +272,7 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         }
         //left mouse dragged
         if(inputControleur.mouseMoved() && inputControleur.leftPressed() && !inputControleur.rightPressed()){
+            System.out.println("mouse grag");
             if(placedShape() != null){
                 placedShape().visibleTranslate(mousVec(inputControleur.position()));
             }else if(whiteBoard().selected()){
@@ -320,11 +329,15 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         }
         //left dragg released (released)
         if(inputControleur.left().now() && inputControleur.leftReleased() && !inputControleur.rightPressed() && inputControleur.mouseMoved()){
-            if(placedShape() != null && whiteBoard().isInside(inputControleur.position())){ 
-                ArrayList<Object> shapes = new ArrayList<>();
-                shapes.add(placedShape());
-                cmd = new ShapePlaceCommand(this,shapes);
-                addShapeToPlaced(null);
+            if(placedShape() != null){ 
+                if(shapeIsInsideRect(whiteBoard().rect, placedShape())){ 
+                    ArrayList<Object> shapes = new ArrayList<>();
+                    shapes.add(placedShape());
+                    cmd = new ShapePlaceCommand(this,shapes);
+                    addShapeToPlaced(null);
+                }else{
+                    addShapeToPlaced(null);
+                }
             }else if(!whiteBoard().selected() && selection()){
                 if(whiteBoard().isInside(inputControleur.position())){
                     ArrayList<Object> shapes = new ArrayList<>();

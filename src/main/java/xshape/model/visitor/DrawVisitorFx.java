@@ -33,8 +33,8 @@ public class DrawVisitorFx implements DrawVisitor{
 
     @Override
     public void drawRectangle(Rectangle rect) {
-        Point2D p = rect.position();
-		Point2D	s = rect.size();
+        Point2D p = rect.visiblePosition();
+		Point2D	s = rect.visibleSize();
         GraphicsContext gc = _cvs.getGraphicsContext2D();
         if(rect.selected()) gc.setFill(Color.color(0.40, 0.4, 1.0));
 		else gc.setFill(Color.BLUE);

@@ -1,7 +1,5 @@
 package xshape.vue;
 
-import java.awt.geom.Point2D;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -26,7 +24,7 @@ public class FxApplication extends Application implements IInputObservable{
     public static Group _root = new Group();
     public double scene_width = 500;
     public double scene_height = 500;
-    Canvas _canvas;
+    Canvas _canvas = new Canvas(scene_width, scene_height);
     private FxApp _fxapp;
     private InputControl _inputControleur = new InputControl();
 
@@ -45,9 +43,7 @@ public class FxApplication extends Application implements IInputObservable{
     }
 
     public Canvas clearCanvas(){
-        _root.getChildren().remove(canvas());
-        _canvas = new Canvas(scene_width, scene_height);
-        _root.getChildren().add(canvas());
+        canvas().getGraphicsContext2D().clearRect(0, 0, canvas().getWidth(), canvas().getHeight());
         return canvas();
     }
 
@@ -58,7 +54,6 @@ public class FxApplication extends Application implements IInputObservable{
         Platform.runLater(() -> {
             primaryStage.setTitle("XShape JavaFx Rendering");
             Scene scene = new Scene(_root, scene_width, scene_height);
-            _canvas = new Canvas(scene_width, scene_height);
             _root.getChildren().add(_canvas);
             scene.setFill(Color.GRAY);
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
