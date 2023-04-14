@@ -1,6 +1,5 @@
 package xshape.model.Command;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import xshape.controleur.XShape;

@@ -111,12 +111,10 @@ public class DrawVisitorAwt implements DrawVisitor{
         (int)(size.getY()) - 1);
 
         g.setFont(new Font("Arial", Font.PLAIN, 13));
-		g.drawString(menu.title(), (int)((pos.getX()- size.getX()/2) + 5), (int)(size.getY() - 5));
+		g.drawString(menu.title(), (int)((pos.getX()- size.getX()/2) + 3), (int)(pos.getY() + 6));
     }
 
     public void drawPopUpMenu(PopUpMenu pum){
-        pum.edit().accept(this);
-        pum.ungroup().accept(this);
         Graphics2D g = (Graphics2D) AwtContext.instance().graphics();
 		Point2D pos = pum.position();
 		Point2D size = pum.size();
@@ -125,5 +123,8 @@ public class DrawVisitorAwt implements DrawVisitor{
         (int)(pos.getY() - size.getY()/2),        
         (int)(size.getX()),
         (int)(size.getY()));
+        pum.edit().accept(this);
+        if(pum.nbSelected() > 1) pum.group().accept(this);
+        if(pum.grouped()) pum.ungroup().accept(this);
     }
 }

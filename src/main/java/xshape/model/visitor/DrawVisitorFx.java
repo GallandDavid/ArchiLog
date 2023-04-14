@@ -101,7 +101,7 @@ public class DrawVisitorFx implements DrawVisitor{
         Point2D p = menu.position();
 		Point2D	s = menu.size();
         GraphicsContext gc = _cvs.getGraphicsContext2D();
-        gc.setFill(Color.LIGHTGRAY);
+        gc.setFill(Color.GRAY);
         gc.fillRect(p.getX()- s.getX()/2,
                     p.getY()- s.getY()/2,
                     s.getX(),
@@ -113,7 +113,7 @@ public class DrawVisitorFx implements DrawVisitor{
                     s.getY());
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Arial", FontWeight.EXTRA_LIGHT, FontPosture.REGULAR, 13));
-        gc.fillText(menu.title(), (p.getX()- s.getX()/2) + 5, p.getY() + 6);
+        gc.fillText(menu.title(), (p.getX()- s.getX()/2) + 3, p.getY() + 6);
     }
 
     @Override

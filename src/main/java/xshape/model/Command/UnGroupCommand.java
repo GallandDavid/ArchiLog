@@ -22,6 +22,7 @@ public class UnGroupCommand extends Command{
 
     @Override
     public boolean execute() {
+        _app.printShapes();
         Group grp = (Group) _editor.get(0);
         _backup.add(grp);
         _app.removeShape(grp.getId());
@@ -31,6 +32,8 @@ public class UnGroupCommand extends Command{
             _editor.add(s);
             _app.addShape(s);
         }
+
+        _app.printShapes();
         return true;
     }
 

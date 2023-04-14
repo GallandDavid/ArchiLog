@@ -46,8 +46,8 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
     LinkedList<ICommand> _redos = new LinkedList<>();
 
     private void createScene() {
-        Command command1 = new ShapePlaceCommand(this, 20,300, true);
-        Command command2 = new ShapePlaceCommand(this, 100, 200, true);
+        Command command1 = new ShapePlaceCommand(this, 200,300, true);
+        Command command2 = new ShapePlaceCommand(this, 150, 200, true);
         Command[] tmp = {command1,command2};
         for(Command cmd : tmp)
             cmd.execute();
@@ -190,12 +190,14 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         }
     }
 
-    private boolean shapeIsInsideRect(Rectangle rect, Shape shape){
-        if(rect.isInside(new Point2D.Double(shape.position().getX() - shape.size().getX() / 2, shape.position().getY() - shape.size().getY() / 2)) &&
-           rect.isInside(new Point2D.Double(shape.position().getX() + shape.size().getX() / 2, shape.position().getY() + shape.size().getY() / 2))){
-            return true;
+    private boolean shapeIsInsideRect(Rectangle rect, ArrayList<Shape> shapes){
+        for (Shape shape : shapes) {
+            if((!rect.isInside(new Point2D.Double(shape.visiblePosition().getX() - shape.size().getX() / 2, shape.visiblePosition().getY() - shape.size().getY() / 2))) ||
+                (!rect.isInside(new Point2D.Double(shape.visiblePosition().getX() + shape.size().getX() / 2, shape.visiblePosition().getY() + shape.size().getY() / 2)))){
+                return false;
+            }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -218,15 +220,18 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                 }
             }else if(isPopUping() && popUpMenu().isInside(inputControleur.position())){
                 if(popUpMenu().edit().isInside(inputControleur.position())){
+                    popUpMenu(null);
                 }
                 if(popUpMenu().nbSelected() > 1 && popUpMenu().group().isInside(inputControleur.position())){
                     ArrayList<Object> shapes = new ArrayList<>();
                     for (Shape shape : getSelected()) { shapes.add(shape); }
                     cmd = new GroupCommand(this, shapes);
+                    popUpMenu(null);
                 }else if(popUpMenu().grouped() && popUpMenu().ungroup().isInside(inputControleur.position())){
                     ArrayList<Object> shapes = new ArrayList<>();
                     shapes.add(getSelected().get(0));
                     cmd = new UnGroupCommand(this,shapes);
+                    popUpMenu(null);
                 }
                 //pop up press action
             }else if(isPopUping() && !popUpMenu().isInside(inputControleur.position())){
@@ -330,7 +335,9 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         //left dragg released (released)
         if(inputControleur.left().now() && inputControleur.leftReleased() && !inputControleur.rightPressed() && inputControleur.mouseMoved()){
             if(placedShape() != null){ 
-                if(shapeIsInsideRect(whiteBoard().rect, placedShape())){ 
+                ArrayList<Shape> tmp = new ArrayList<Shape>();
+                tmp.add(placedShape());
+                if(shapeIsInsideRect(whiteBoard().rect, tmp)){ 
                     ArrayList<Object> shapes = new ArrayList<>();
                     shapes.add(placedShape());
                     cmd = new ShapePlaceCommand(this,shapes);
@@ -338,15 +345,6 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                 }else{
                     addShapeToPlaced(null);
                 }
-            }else if(!whiteBoard().selected() && selection()){
-                if(whiteBoard().isInside(inputControleur.position())){
-                    ArrayList<Object> shapes = new ArrayList<>();
-                    shapes.addAll(getSelected());
-                    cmd = new ShapeTranslateCommand(this, shapes);
-                }else
-                    for (Shape shape : getSelected()) {
-                        shape.visiblePosition(shape.position());
-                    }   
             }else if(systemToolBar().isInside(inputControleur.position())){
                 if(systemToolBar().isInItem(inputControleur.position())){
                     if(systemToolBar().files().isInside(inputControleur.position())){
@@ -374,6 +372,15 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                         }
                     }
                 }
+            }else if(!whiteBoard().selected() && selection()){
+                if(shapeIsInsideRect(whiteBoard().rect, getSelected())){
+                    ArrayList<Object> shapes = new ArrayList<>();
+                    shapes.addAll(getSelected());
+                    cmd = new ShapeTranslateCommand(this, shapes);
+                }else
+                    for (Shape shape : getSelected()) {
+                        shape.visiblePosition(shape.position());
+                    }   
             }
             whiteBoard().selected(false);
             systemToolBar().unSelect();

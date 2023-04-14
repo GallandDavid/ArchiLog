@@ -10,14 +10,10 @@ public class Rectangle extends Shape {
         super(pos, size, selected, false);
     }
     public Rectangle(Rectangle rect){
-        super(rect.position(), rect.size(), rect.visiblePosition(), rect.visibleSize(), rect.selected(), rect.getId(), rect.isPlaced(), rect.deepth(), rect.grouped());
+        super(rect.position(), rect.size(), rect.visiblePosition(), rect.visibleSize(), rect.selected(), rect.getId(), rect.isPlaced(), rect.deepth(), rect.grouped(), rect.rotation());
     }
     public Rectangle(Point2D pos, boolean selected){
         super(pos, selected, false);
-    }
-
-    public Rectangle(Point2D pos, Point2D size, Point2D visible_pos, Point2D visible_size, boolean selected, String ID, boolean placed, int deepth){
-        super(pos, size, visible_pos, visible_size, selected, ID, placed, deepth, false);
     }
 
     @Override public boolean equals(Object obj){ return super.equals(obj); }

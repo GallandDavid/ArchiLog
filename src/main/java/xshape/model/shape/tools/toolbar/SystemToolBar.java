@@ -26,8 +26,8 @@ public class SystemToolBar extends ToolBar {
     _save = new Menu("Save", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY())), new Point2D.Double(_width, size.getY()), false);
     _load = new Menu("Load", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY() * 2)), new Point2D.Double(_width, size.getY()), false);
     _edit = new Menu("Edit", new Point2D.Double(_width + (_width / 2), size.getY() / 2), new Point2D.Double(_width, size.getY()), false);
-    _undo = new Menu("Undo", new Point2D.Double(_width / 2, (size.getY() / 2) + size.getY()), new Point2D.Double(_width, size.getY()), false);
-    _redo = new Menu("Redo", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY() * 2)), new Point2D.Double(_width, size.getY()), false);
+    _undo = new Menu("Undo", new Point2D.Double(_width + (_width / 2), (size.getY() / 2) + size.getY()), new Point2D.Double(_width, size.getY()), false);
+    _redo = new Menu("Redo", new Point2D.Double(_width + (_width / 2), (size.getY() / 2) + (size.getY() * 2)), new Point2D.Double(_width, size.getY()), false);
     _trashbin = new Menu("Bin", new Point2D.Double(2 * _width + (_width / 2), size.getY() / 2), new Point2D.Double(_width, size.getY()), false);
 
   }

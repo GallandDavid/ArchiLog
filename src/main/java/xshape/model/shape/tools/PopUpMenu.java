@@ -7,7 +7,7 @@ import xshape.model.shape.Rectangle;
 import xshape.model.visitor.DrawVisitor;
 
 public class PopUpMenu implements IShape{
-    public static Point2D _size = new Point2D.Double(70,120);
+    public static Point2D _size = new Point2D.Double(70,80);
     Rectangle _rect = null;
     private final Menu _edit;
     private final Menu _group;
@@ -16,10 +16,11 @@ public class PopUpMenu implements IShape{
     private int _selected;
 
     public PopUpMenu(Point2D pos, int selected, boolean grouped) {
+        pos = new Point2D.Double(pos.getX() + _size.getX() / 2, pos.getY() + _size.getY() / 2);
         _rect = new Rectangle(pos, _size, false);
-        _edit = new Menu("Edit", new Point2D.Double(pos.getX() + _size.getX() / 2, pos.getY() + _size.getY() / 2 - (_size.getY() / 3)), new Point2D.Double(_size.getX(), _size.getY() / 3), grouped);
-        _group = new Menu("Group", new Point2D.Double(pos.getX() + _size.getX() / 2, pos.getY() + _size.getY() / 2), new Point2D.Double(_size.getX(), _size.getY() / 3), grouped);
-        _ungroup = new Menu("Un-Group", new Point2D.Double(pos.getX() + _size.getX() / 2, pos.getY() + _size.getY() / 2 + (_size.getY() / 3)), new Point2D.Double(_size.getX(), _size.getY() / 3), grouped);
+        _edit = new Menu("Edit", new Point2D.Double(pos.getX(), pos.getY() - _size.getY() / 4), new Point2D.Double(_size.getX(), _size.getY() / 2), grouped);
+        _group = new Menu("Group", new Point2D.Double(pos.getX(), pos.getY() + _size.getY() / 4), new Point2D.Double(_size.getX(), _size.getY() / 2), grouped);
+        _ungroup = new Menu("Un-Group", new Point2D.Double(pos.getX(), pos.getY() + _size.getY() / 4), new Point2D.Double(_size.getX(), _size.getY() / 2), grouped);
         _selected = selected;
         _grouped = grouped;
     }
