@@ -4,5 +4,6 @@ import xshape.model.controlInput.InputControl;
 
 public interface IInputObserver {
     void update(InputControl mouse);
+    void update(double width, double height);
 
 }

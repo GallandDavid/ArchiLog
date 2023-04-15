@@ -56,6 +56,11 @@ public class FxApplication extends Application implements IInputObservable{
             Scene scene = new Scene(_root, scene_width, scene_height);
             _root.getChildren().add(_canvas);
             scene.setFill(Color.GRAY);
+            scene.heightProperty().addListener(e ->{
+                scene_height = scene.getHeight();
+                scene_width = scene.getWidth();
+                notifyObservers(scene_width, scene_height);
+            });
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
                 @Override
@@ -131,5 +136,8 @@ public class FxApplication extends Application implements IInputObservable{
             primaryStage.setScene(scene);
             primaryStage.show();
         });
+    }
+    @Override public void notifyObservers(double width, double height) {
+        _fxapp.update(width, height);
     }
 }

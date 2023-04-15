@@ -2,10 +2,11 @@ package xshape.model.shape.tools.toolbar;
 
 import java.awt.geom.Point2D;
 
+import xshape.model.Interface.IResizeable;
 import xshape.model.Interface.IShape;
 import xshape.model.shape.Rectangle;
 
-public abstract class ToolBar implements IShape{
+public abstract class ToolBar implements IShape, IResizeable{
     Rectangle _rect = null;
     public ToolBar(Point2D pos, Point2D size, boolean selected){
         _rect = new Rectangle(pos,size,selected);

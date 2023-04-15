@@ -3,6 +3,7 @@ package xshape.model.shape.tools.toolbar;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import xshape.model.Interface.IShape;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
 import xshape.model.visitor.DrawVisitor;
@@ -66,5 +67,9 @@ public class ShapeToolBar extends ToolBar {
     }
 
     @Override public void accept(DrawVisitor dv) { dv.drawShapeToolBar(this); }
+
+    @Override public IShape size(Point2D vec) {
+        
+    }
   
   }

@@ -200,6 +200,13 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         return true;
     }
 
+
+
+    @Override
+    public void update(double width, double height) {
+        _shapesToolBar.size(new Point2D.Double(width, height));
+    }
+
     @Override
     public void update(InputControl inputControleur) {
         Command cmd = null;
