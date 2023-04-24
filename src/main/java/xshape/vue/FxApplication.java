@@ -47,6 +47,11 @@ public class FxApplication extends Application implements IInputObservable{
         return canvas();
     }
 
+    public void resizeCanvas(double w, double h){
+        _canvas.setWidth(_canvas.getWidth() + w);
+        _canvas.setHeight(_canvas.getHeight() + h);
+    }
+
     
 
     @Override
@@ -56,10 +61,19 @@ public class FxApplication extends Application implements IInputObservable{
             Scene scene = new Scene(_root, scene_width, scene_height);
             _root.getChildren().add(_canvas);
             scene.setFill(Color.GRAY);
+            primaryStage.setMinHeight(500);
+            primaryStage.setMinWidth(500);
             scene.heightProperty().addListener(e ->{
+                double vect = scene.getHeight() - scene_height;
                 scene_height = scene.getHeight();
+                resizeCanvas(0, vect);
+                notifyObservers(0, vect);
+            });
+            scene.widthProperty().addListener(e ->{
+                double vect = scene.getWidth() - scene_width;
                 scene_width = scene.getWidth();
-                notifyObservers(scene_width, scene_height);
+                resizeCanvas(vect, 0);
+                notifyObservers(vect, 0);
             });
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
@@ -69,6 +83,11 @@ public class FxApplication extends Application implements IInputObservable{
                         _inputControleur.ctrl().now(true);
                         _inputControleur.ctrlPressed(true);
                         _inputControleur.ctrlReleased(false);
+                    }else if (Character.isDigit(e.getCharacter().charAt(0))) {
+                        _inputControleur.write(true);
+                        _inputControleur.writeChar(e.getCharacter().charAt(0));
+                        notifyObservers(_inputControleur);
+                        _inputControleur.write(false);
                     }
                 }
             });

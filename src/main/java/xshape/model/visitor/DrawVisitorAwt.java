@@ -7,13 +7,16 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 
 import xshape.model.shape.Group;
+import xshape.model.shape.Polygone;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
+import xshape.model.shape.tools.EditItem;
 import xshape.model.shape.tools.Menu;
 import xshape.model.shape.tools.PopUpMenu;
 import xshape.model.shape.tools.WhiteBoard;
 import xshape.model.shape.tools.toolbar.ShapeToolBar;
 import xshape.model.shape.tools.toolbar.SystemToolBar;
+import xshape.model.shape.tools.toolbar.editToolBar.EditToolBar;
 import xshape.vue.AwtContext;
 
 public class DrawVisitorAwt implements DrawVisitor{
@@ -126,5 +129,77 @@ public class DrawVisitorAwt implements DrawVisitor{
         pum.edit().accept(this);
         if(pum.nbSelected() > 1) pum.group().accept(this);
         if(pum.grouped()) pum.ungroup().accept(this);
+    }
+
+    @Override
+    public void drawEditItem(EditItem editItem) {
+        Point2D p = editItem.position();
+		Point2D	s = editItem.size();
+        Graphics2D gc = (Graphics2D) AwtContext.instance().graphics();
+        gc.setColor(Color.LIGHT_GRAY);
+        gc.fillRect((int)(p.getX()- s.getX()/2),
+                    (int)(p.getY()- s.getY()/2),
+                    (int)(s.getX()),
+                    (int)(s.getY()));
+        gc.setColor(Color.GRAY);
+        gc.drawRect((int)(p.getX()- s.getX()/2),
+                      (int)(p.getY()- s.getY()/2),
+                      (int)(s.getX()),
+                      (int)(s.getY()));
+        for (int i = 0; i < editItem.nbItems(); i ++) {
+            Rectangle items_area = editItem.itemsArea()[i];
+            Rectangle input_area = editItem.inputsArea()[i];
+
+            gc.setColor(Color.BLACK);
+            gc.setFont(new Font("Arial", Font.PLAIN, 13));
+            gc.drawString(editItem.titles()[i], (int)((items_area.position().getX()- items_area.size().getX()/2) + 3), (int)(items_area.position().getY() + 6));
+            gc.setColor(Color.WHITE);
+            gc.fillRect((int)(input_area.position().getX()- input_area.size().getX()/2),
+                        (int)(input_area.position().getY()- input_area.size().getY()/2),
+                        (int)(input_area.size().getX()),
+                        (int)(input_area.size().getY()));
+            gc.setColor(Color.GRAY);
+            gc.drawRect((int)(input_area.position().getX()- input_area.size().getX()/2),
+                        (int)(input_area.position().getY()- input_area.size().getY()/2),
+                        (int)(input_area.size().getX()),
+                        (int)(input_area.size().getY()));
+
+            gc.setColor(Color.BLACK);
+            gc.setFont(new Font("Arial", Font.PLAIN, 10));
+            gc.drawString(editItem.inputs()[i], (int)((input_area.position().getX()- input_area.size().getX()/2) + 3), (int)(input_area.position().getY() + 6));
+            
+        }
+        
+    
+    }
+
+    @Override
+    public void drawEditToolBar(EditToolBar editToolBar) {
+        Point2D p = editToolBar.position();
+		Point2D	s = editToolBar.size();
+        Graphics2D gc = (Graphics2D) AwtContext.instance().graphics();
+        gc.setColor(Color.GRAY);
+        gc.fillRect((int)(p.getX()- s.getX()/2),
+                    (int)(p.getY()- s.getY()/2),
+                    (int)(s.getX()),
+                    (int)(s.getY()));
+        gc.setColor(Color.BLACK);
+        gc.drawRect((int)(p.getX()- s.getX()/2),
+                    (int)(p.getY()- s.getY()/2),
+                    (int)(s.getX()),
+                    (int)(s.getY()));
+        
+        editToolBar.apply().accept(this);
+        editToolBar.ok().accept(this);   
+        editToolBar.cancel().accept(this);
+        for (EditItem ei : editToolBar.items()) {
+            ei.accept(this);
+        }
+    }
+
+    @Override
+    public void drawPolygone(Polygone polygone) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'drawPolygone'");
     }
 }

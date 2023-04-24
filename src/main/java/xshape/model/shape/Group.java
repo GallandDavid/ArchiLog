@@ -5,37 +5,47 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import xshape.model.Interface.IShape;
+import xshape.model.shape.tools.toolbar.editToolBar.EditToolBar;
+import xshape.model.visitor.CreateEditToolBarVisitor;
 import xshape.model.visitor.DrawVisitor;
 
 
 public class Group extends Shape{
+    Rectangle _rect;
 
     private ArrayList<Shape> _group = new ArrayList<>();
 
     public Group(){
-        super(null,null,false,true);
+        super(null,false,true);
     }
 
     public Group(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> group) {
-        super(pos, size, selected, true);
+        super(pos, selected, true);
+        _rect = new Rectangle(pos,size, selected);
         for (Shape shape : group)
             _group.add(shape);
         init();
     }
     public Group(ArrayList<Shape> group) {
-        super(null, null, false, true);
+        super(null, false, true);
         for (Shape shape : group)
             _group.add(shape);
         init();
     }
 
     public Group(Point2D pos, Point2D size, boolean selected, Shape shape) {
-        super(pos, size, selected, true);
+        super(pos, selected, true);
+        _rect = new Rectangle(pos, size, selected);
         _group.add(shape);
     }
 
     public Group(Group grp) {
-        super(grp.position(),grp.size(),grp.visiblePosition(),grp.visibleSize(),grp.selected(),grp.getId(),grp.isPlaced(),grp.deepth(),true, grp.rotation());
+        super(grp.position(),grp.visiblePosition(),grp.selected(),grp.getId(),grp.isPlaced(),grp.deepth(),true, grp.rotation(), grp.color());
+        _rect.position(grp.position());
+        _rect.visiblePosition(grp.position());
+        _rect.size(grp.size());
+        _rect.visibleSize(grp.visibleSize());
     }
 
     private void init() {
@@ -49,9 +59,9 @@ public class Group extends Shape{
             if(shape.position().getX() - shape.size().getX() / 2  < min_x) min_x = shape.position().getX() - shape.size().getX() / 2;
             if(shape.position().getY() - shape.size().getY() / 2 < min_y) min_y = shape.position().getY() - shape.size().getY() / 2;
         }
-        size(new Point2D.Double(max_x - min_x + 4, max_y - min_y + 4));
 
-        position(new Point2D.Double(min_x + size().getX()/2 - 2, min_y + size().getY()/2 - 2));
+        Point2D size = new Point2D.Double(max_x - min_x + 4, max_y - min_y + 4);
+        _rect = new Rectangle(new Point2D.Double(min_x + size.getX()/2 - 2, min_y + size.getY()/2 - 2), size, false);
         visiblePosition(position());
         visibleSize(size());
     }
@@ -61,7 +71,7 @@ public class Group extends Shape{
         for(Shape s : group()){
             s.selected(sel);
         }
-        _selected = true;
+        _rect.selected(true);
     }
 
     public void add(Shape shape){
@@ -104,20 +114,21 @@ public class Group extends Shape{
     }
     @Override public Shape translate(Point2D vec) { 
         for (Shape s : group()) s.translate(vec);
-        super.translate(vec);
+        _rect.translate(vec);
         return this;
     }
     @Override public Shape visibleTranslate(Point2D vec) { 
         for (Shape s : group()) s.visibleTranslate(vec);
-        super.visibleTranslate(vec);
+        _rect.visibleTranslate(vec);
         return this;
     }
 
-    @Override
-	public boolean isInside(Point2D pos){
-        return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() > position().getY() - size().getY() / 2 && pos.getY() < position().getY() + size().getY() / 2;
-    }
-    
+    @Override public boolean isInside(Point2D pos) { return _rect.isInside(pos); }
+    @Override public boolean selected() { return _rect.selected(); }
+    @Override public Point2D size() { return _rect.size(); }
+    @Override public IShape size(Point2D vec) { _rect.size(vec); return _rect;}
+    @Override public Point2D position() { return _rect.position(); }
+
     @Override
     public String toString(){
         String str = "Group : " + getId() + "\n";
@@ -127,6 +138,7 @@ public class Group extends Shape{
         return str;
     }
     
+    public EditToolBar accept(CreateEditToolBarVisitor cetbv, Point2D pos, Point2D size) { return cetbv.groupEditToolBar(null, pos, size, position().getX(), position().getY(), size().getX(), size().getY(), color().getRed(), color().getGreen(), color().getBlue(), rotation()); }
 
     /**
      * @return ArrayList<Shape> return the _group
@@ -142,6 +154,11 @@ public class Group extends Shape{
     public void accept(DrawVisitor dv) {
         dv.drawGroup(this);
     }
+
+    @Override public Point2D visibleSize() { return _rect.visibleSize(); }
+
+    @Override
+    Shape visibleSize(Point2D vec) { _rect.visibleSize(vec); return this;}
 
 }
 

@@ -9,6 +9,7 @@ import xshape.model.shape.Shape;
 import xshape.model.visitor.DrawVisitor;
 
 public class ShapeToolBar extends ToolBar {
+    private Rectangle _area;
     private Rectangle _rect;
     private ArrayList<Shape> _addons = new ArrayList<>();
     private static double _marge_in_vertical = 7.0;
@@ -18,6 +19,7 @@ public class ShapeToolBar extends ToolBar {
   
     public ShapeToolBar(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> addons){
       super(pos, size, selected);
+      _area = new Rectangle(pos, size, selected);
       _rect = new Rectangle(new Point2D.Double(pos.getX(), (pos.getY() - (size.getY()/2)) + _marge_in_vertical + (_height/2)), new Point2D.Double(size.getX() - _marge_in_horizontal * 2, _height), selected);
       if(addons != null)
         _addons.addAll(addons);
@@ -67,9 +69,18 @@ public class ShapeToolBar extends ToolBar {
     }
 
     @Override public void accept(DrawVisitor dv) { dv.drawShapeToolBar(this); }
+    @Override
+    public void resize(double w, double h) {
+        Point2D size = new Point2D.Double(size().getX(), size().getY() + h);
 
-    @Override public IShape size(Point2D vec) {
-        
+        position(new Point2D.Double(position().getX(),position().getY() + (h / 2)));
+        size(size);
     }
-  
-  }
+    @Override public boolean isInside(Point2D pos) { return _area.isInside(pos); }
+    @Override public void selected(boolean sel) { _area.selected(sel); }
+    @Override public boolean selected() { return _area.selected(); }
+    @Override public Point2D size() { return _area.size(); }
+    @Override public IShape size(Point2D size) { _area.size(size); return this;}
+    @Override public Point2D position() { return _area.position(); }
+    @Override public IShape position(Point2D position) { _area.position(position); return this; }
+}

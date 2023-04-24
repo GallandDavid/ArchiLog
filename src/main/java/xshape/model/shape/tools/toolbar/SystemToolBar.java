@@ -2,10 +2,13 @@ package xshape.model.shape.tools.toolbar;
 
 import java.awt.geom.Point2D;
 
+import xshape.model.Interface.IShape;
+import xshape.model.shape.Rectangle;
 import xshape.model.shape.tools.Menu;
 import xshape.model.visitor.DrawVisitor;
 
 public class SystemToolBar extends ToolBar {
+  private Rectangle _rect;
   private Menu _files;
   private Menu _save;
   private Menu _load;
@@ -22,6 +25,7 @@ public class SystemToolBar extends ToolBar {
 
   public SystemToolBar(Point2D pos, Point2D size, boolean selected){
     super(pos, size, selected);
+    _rect = new Rectangle(pos, size, selected);
     _files = new Menu("Files", new Point2D.Double(_width / 2, size.getY() / 2), new Point2D.Double(_width, size.getY()), false);
     _save = new Menu("Save", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY())), new Point2D.Double(_width, size.getY()), false);
     _load = new Menu("Load", new Point2D.Double(_width / 2, (size.getY() / 2) + (size.getY() * 2)), new Point2D.Double(_width, size.getY()), false);
@@ -104,4 +108,16 @@ public class SystemToolBar extends ToolBar {
   public boolean editSelected(){ return editSelected; }
 
   @Override public void accept(DrawVisitor dv) { dv.drawSystemToolBar(this); }
+  @Override
+  public void resize(double w, double h) {
+    Point2D size = new Point2D.Double(size().getX() + w, size().getY());
+    position(new Point2D.Double(size.getX()/2, position().getY()));
+    size(size);
+  }
+  @Override public void selected(boolean sel) { _rect.selected(sel); }
+  @Override public boolean selected() { return _rect.selected(); }
+  @Override public Point2D size() { return _rect.size(); }
+  @Override public IShape size(Point2D position) { _rect.size(position); return this; }
+  @Override public Point2D position() { return _rect.position(); }
+  @Override public IShape position(Point2D position) { _rect.position(position); return this; }
 }

@@ -9,6 +9,8 @@ public class InputControl {
     private boolean _moved = false;
     private double _x;
     private double _y;
+    private char _c;
+    private boolean _write = false;
 
     public InputControl(){}
 
@@ -27,6 +29,10 @@ public class InputControl {
      */
     public Button ctrl() { return _ctrl; }
 
+    public void writeChar(char c){ _c = c; }
+    public char writeChar(){ return _c; }
+    public void write(boolean write){ _write = write; }
+    public boolean write(){ return _write; }
     public boolean rightPressed() { return right().pressEvent(); }
     public void rightPressed(boolean b) { right().pressEvent(b); }
     public boolean rightReleased() { return right().releaseEvent(); }

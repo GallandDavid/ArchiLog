@@ -23,15 +23,20 @@ import xshape.model.Interface.IShapeContenable;
 import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.controlInput.InputControl;
 import xshape.model.observer.IInputObserver;
+import xshape.model.shape.Group;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
 import xshape.model.shape.tools.PopUpMenu;
 import xshape.model.shape.tools.WhiteBoard;
 import xshape.model.shape.tools.toolbar.ShapeToolBar;
 import xshape.model.shape.tools.toolbar.SystemToolBar;
+import xshape.model.shape.tools.toolbar.editToolBar.EditToolBar;
+import xshape.model.visitor.CreateEditToolBarVisitor;
 import xshape.model.visitor.DrawVisitor;
 
 public abstract class XShape implements CommandHistory, IInputObserver, IMenuable, IShapeContenable, IPrintable, IRunnable, IClickable{
+    private EditToolBar _EditToolBar = null;
+    private CreateEditToolBarVisitor _cetbv = new CreateEditToolBarVisitor();
     private WhiteBoard _whiteBoard = null;
     private SystemToolBar _systemToolBar = null;
     private ShapeToolBar _shapesToolBar = null;
@@ -116,6 +121,7 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         if(placedShape() != null)
             placedShape().accept(_drawer);
         _systemToolBar.accept(_drawer);
+        if(_EditToolBar != null)_EditToolBar.accept(_drawer);
         if(_popUpMenu != null) _popUpMenu.accept(_drawer);
         render();
     }
@@ -204,7 +210,11 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
 
     @Override
     public void update(double width, double height) {
-        _shapesToolBar.size(new Point2D.Double(width, height));
+        _shapesToolBar.resize( width,  height);
+        _systemToolBar.resize( width,  height);
+        if(_EditToolBar != null) _EditToolBar.resize( width,  height);
+        
+        draw();
     }
 
     @Override
@@ -225,24 +235,6 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                         shape.selected(false);
                     }
                 }
-            }else if(isPopUping() && popUpMenu().isInside(inputControleur.position())){
-                if(popUpMenu().edit().isInside(inputControleur.position())){
-                    popUpMenu(null);
-                }
-                if(popUpMenu().nbSelected() > 1 && popUpMenu().group().isInside(inputControleur.position())){
-                    ArrayList<Object> shapes = new ArrayList<>();
-                    for (Shape shape : getSelected()) { shapes.add(shape); }
-                    cmd = new GroupCommand(this, shapes);
-                    popUpMenu(null);
-                }else if(popUpMenu().grouped() && popUpMenu().ungroup().isInside(inputControleur.position())){
-                    ArrayList<Object> shapes = new ArrayList<>();
-                    shapes.add(getSelected().get(0));
-                    cmd = new UnGroupCommand(this,shapes);
-                    popUpMenu(null);
-                }
-                //pop up press action
-            }else if(isPopUping() && !popUpMenu().isInside(inputControleur.position())){
-                popUpMenu(null);
             }else{
                 Shape shape = topShape(inputControleur.position());
                 if(shape != null){
@@ -300,6 +292,32 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         if(inputControleur.left().now() && inputControleur.leftReleased() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && !inputControleur.ctrlPressed()){
             if(placedShape() != null){
                 addShapeToPlaced(null);
+            }else if(isPopUping() && popUpMenu().isInside(inputControleur.position())){
+                if(popUpMenu().edit().isInside(inputControleur.position())){
+                    if(getSelected().size() > 1){
+                        Group grp = new Group(getSelected());
+                        _EditToolBar = grp.accept(_cetbv, new Point2D.Double((_systemToolBar.position().getX() + _systemToolBar.size().getX()/2) - 70, _shapesToolBar.position().getY()), 
+                                                    new Point2D.Double(140, _shapesToolBar.size().getY()));
+                        }else if(getSelected().size() == 1){
+                        _EditToolBar = getSelected().get(0).accept(_cetbv, new Point2D.Double((_systemToolBar.position().getX() + _systemToolBar.size().getX()/2) - 70, _shapesToolBar.position().getY()), 
+                        new Point2D.Double(140, _shapesToolBar.size().getY()));
+                    }
+                    
+                    popUpMenu(null);
+                }else if(popUpMenu().nbSelected() > 1 && popUpMenu().group().isInside(inputControleur.position())){
+                    ArrayList<Object> shapes = new ArrayList<>();
+                    for (Shape shape : getSelected()) { shapes.add(shape); }
+                    cmd = new GroupCommand(this, shapes);
+                    popUpMenu(null);
+                }else if(popUpMenu().grouped() && popUpMenu().ungroup().isInside(inputControleur.position())){
+                    ArrayList<Object> shapes = new ArrayList<>();
+                    shapes.add(getSelected().get(0));
+                    cmd = new UnGroupCommand(this,shapes);
+                    popUpMenu(null);
+                }
+                //pop up press action
+            }else if(isPopUping() && !popUpMenu().isInside(inputControleur.position())){
+                popUpMenu(null);
             }else if(whiteBoard().selected()){
                 if(topShape(inputControleur.position()) == null)
                     for (Shape s : getSelected())

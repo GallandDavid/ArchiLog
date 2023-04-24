@@ -67,6 +67,12 @@ public class PopUpMenu implements IShape{
     }
 
     @Override
+    public IShape position(Point2D pos) {
+        _rect.position(pos);
+        return this;
+    }
+
+    @Override
     public boolean isInside(Point2D pos) {return _rect.isInside(pos); }
 
 }

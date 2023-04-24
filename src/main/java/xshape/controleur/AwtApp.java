@@ -123,9 +123,7 @@ public class AwtApp extends XShape{
 
         @Override
         public void keyPressed(KeyEvent e) {
-            System.out.print("ok1");
             if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-                System.out.print("ok2");
                 _inputControleur.ctrl().now(true);
                 _inputControleur.ctrlPressed(true);
                 _inputControleur.ctrlReleased(false);
@@ -135,18 +133,27 @@ public class AwtApp extends XShape{
 
         @Override
         public void keyReleased(KeyEvent e) {
-            System.out.print("ok1");
             if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-                System.out.print("ok2");
                 _inputControleur.ctrl().now(true);
                 _inputControleur.ctrlPressed(false);
                 _inputControleur.ctrlReleased(true);
-            } 
+            }else if (Character.isDigit(e.getKeyChar())) {
+                _inputControleur.write(true);
+                _inputControleur.writeChar(e.getKeyChar());
+                notifyObservers(_inputControleur);
+                _inputControleur.write(false);
+            }
         }
 
         @Override
         public void keyTyped(KeyEvent e) {
             
+        }
+
+        @Override
+        public void notifyObservers(double width, double height) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'notifyObservers'");
         }
     }
 

@@ -7,12 +7,12 @@ import xshape.model.shape.Rectangle;
 import xshape.model.visitor.DrawVisitor;
 
 public class Menu implements IShape{
-    Rectangle rect = null;
+    Rectangle _rect = null;
     private String _title;
 
 
     public Menu(String title, Point2D pos, Point2D size, boolean selected){
-        rect = new Rectangle(pos, size, selected);
+        _rect = new Rectangle(pos, size, selected);
         _title = title;
     }
     
@@ -28,11 +28,12 @@ public class Menu implements IShape{
     public void title(String title) { _title = title; }
 
 
-    @Override public boolean isInside(Point2D pos) { return rect.isInside(pos); }
-    @Override public void selected(boolean sel) { }
-    @Override public boolean selected() { return rect.selected(); }
-    @Override public Point2D size() { return rect.size(); }
-    @Override public Point2D position() { return rect.position(); }
+    @Override public boolean isInside(Point2D pos) { return _rect.isInside(pos); }
+    @Override public void selected(boolean sel) { _rect.selected(sel); }
+    @Override public boolean selected() { return _rect.selected(); }
+    @Override public Point2D size() { return _rect.size(); }
+    @Override public Point2D position() { return _rect.position(); }
     @Override public void accept(DrawVisitor dv) { dv.drawMenu(this); }
+    @Override public IShape position(Point2D position) { _rect.position(position); return this;}
 
 }
