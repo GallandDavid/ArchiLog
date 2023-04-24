@@ -160,5 +160,8 @@ public class Group extends Shape{
     @Override
     Shape visibleSize(Point2D vec) { _rect.visibleSize(vec); return this;}
 
+    @Override
+    public Point2D[] extremPoints() { return _rect.extremPoints(); }
+
 }
 

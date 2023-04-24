@@ -36,6 +36,7 @@ public class DrawVisitorFx implements DrawVisitor{
 
     @Override
     public void drawPolygone(Polygone polygone) {
+        System.out.println(polygone.toString());
         GraphicsContext gc = _cvs.getGraphicsContext2D();
         if(polygone.selected()) gc.setFill(Color.color(0.40, 0.4, 1.0));
 		else gc.setFill(Color.color(polygone.color().getRed()/255, polygone.color().getGreen()/255, polygone.color().getBlue()/255));
@@ -84,6 +85,7 @@ public class DrawVisitorFx implements DrawVisitor{
             stb.addons().get(i).accept(this);
         }
         stb.rect().accept(this);
+        stb.poly().accept(this);
     }
 
     @Override

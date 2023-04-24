@@ -68,6 +68,12 @@ public class Rectangle extends Shape implements IBoundsRoundable, IResizeable{
     @Override
     public EditToolBar accept(CreateEditToolBarVisitor cetbv, Point2D pos, Point2D size) { return cetbv.rectangleEditToolBar(null, pos, size, position().getX(), position().getY(), size().getX(), size().getY(), color().getRed(), color().getGreen(), color().getBlue(), rotation(), rounded()); }
 
+    @Override
+    public Point2D[] extremPoints() {
+        Point2D[] p = {new Point2D.Double(position().getX() - size().getX()/2, position().getY() - size().getY()/2),new Point2D.Double(position().getX() + size().getX()/2, position().getY() + size().getY()/2)};
+        return p;
+    }
+
 
     
 }

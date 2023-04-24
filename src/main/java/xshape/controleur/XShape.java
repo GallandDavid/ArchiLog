@@ -24,6 +24,7 @@ import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.controlInput.InputControl;
 import xshape.model.observer.IInputObserver;
 import xshape.model.shape.Group;
+import xshape.model.shape.Polygone;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
 import xshape.model.shape.tools.PopUpMenu;
@@ -198,9 +199,8 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
 
     private boolean shapeIsInsideRect(Rectangle rect, ArrayList<Shape> shapes){
         for (Shape shape : shapes) {
-            if((!rect.isInside(new Point2D.Double(shape.visiblePosition().getX() - shape.size().getX() / 2, shape.visiblePosition().getY() - shape.size().getY() / 2))) ||
-                (!rect.isInside(new Point2D.Double(shape.visiblePosition().getX() + shape.size().getX() / 2, shape.visiblePosition().getY() + shape.size().getY() / 2)))){
-                return false;
+            for(Point2D point : shape.extremPoints()){
+                if(!rect.isInside(point)) return false;
             }
         }
         return true;
@@ -230,6 +230,10 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                         Shape rect = shapesToolBar().rect();
                         mousePos(inputControleur.position());
                         addShapeToPlaced(factory().createRectangle(rect.position().getX() - mousVec(rect.position()).getX(), rect.position().getY() - mousVec(rect.position()).getY(), rect.size().getY(), rect.size().getX(),true));
+                    }else if(shapesToolBar().poly().isInside(inputControleur.position())){
+                        Polygone poly = shapesToolBar().poly();
+                        mousePos(inputControleur.position());
+                        addShapeToPlaced(new Polygone(new Point2D.Double(poly.position().getX() - mousVec(poly.position()).getX(), poly.position().getY() - mousVec(poly.position()).getY()), poly.side(), poly.length(),true));
                     }
                     for (Shape shape : getSelected()) {
                         shape.selected(false);

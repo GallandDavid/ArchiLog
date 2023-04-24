@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import xshape.model.Interface.IShape;
+import xshape.model.shape.Polygone;
 import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
 import xshape.model.visitor.DrawVisitor;
@@ -11,6 +12,7 @@ import xshape.model.visitor.DrawVisitor;
 public class ShapeToolBar extends ToolBar {
     private Rectangle _area;
     private Rectangle _rect;
+    private Polygone _poly;
     private ArrayList<Shape> _addons = new ArrayList<>();
     private static double _marge_in_vertical = 7.0;
     private static double _marge_in_horizontal = 7.0;
@@ -20,7 +22,8 @@ public class ShapeToolBar extends ToolBar {
     public ShapeToolBar(Point2D pos, Point2D size, boolean selected, ArrayList<Shape> addons){
       super(pos, size, selected);
       _area = new Rectangle(pos, size, selected);
-      _rect = new Rectangle(new Point2D.Double(pos.getX(), (pos.getY() - (size.getY()/2)) + _marge_in_vertical + (_height/2)), new Point2D.Double(size.getX() - _marge_in_horizontal * 2, _height), selected);
+      _rect = new Rectangle(new Point2D.Double(pos.getX(), (pos.getY() - (size.getY()/2)) + _marge_in_vertical + (_height/2)), new Point2D.Double(size.getX() - _marge_in_horizontal * 2, _height), false);
+      _poly = new Polygone(new Point2D.Double(pos.getX(), (pos.getY() - (size.getY()/2)) + _marge_in_vertical*3 + (_height*3/2)), 6, 2 * Math.sqrt((Math.pow(_height, 2) * Math.pow(Math.sin(Math.PI / 6), 2)) / (4 - 2 * Math.cos(Math.PI * 2 / 6))), false);
       if(addons != null)
         _addons.addAll(addons);
     }
@@ -28,6 +31,8 @@ public class ShapeToolBar extends ToolBar {
      * @return Rectangle return the _rect
      */
     public Rectangle rect() { return _rect; }
+
+    public Polygone poly(){ return _poly; }
 
     /**
      * @return Menu return the _files
@@ -62,6 +67,7 @@ public class ShapeToolBar extends ToolBar {
     @Override
     public boolean isInItem(Point2D pos) {
         if(rect().isInside(pos)) return true;
+        if(poly().isInside(pos)) return true;
         for(Shape s : addons())
             if(s.isInside(pos))
                 return true;
