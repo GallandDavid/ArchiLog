@@ -32,12 +32,14 @@ import xshape.model.shape.tools.WhiteBoard;
 import xshape.model.shape.tools.toolbar.ShapeToolBar;
 import xshape.model.shape.tools.toolbar.SystemToolBar;
 import xshape.model.shape.tools.toolbar.editToolBar.EditToolBar;
+import xshape.model.visitor.ApplyEditToolBarVisitor;
 import xshape.model.visitor.CreateEditToolBarVisitor;
 import xshape.model.visitor.DrawVisitor;
 
 public abstract class XShape implements CommandHistory, IInputObserver, IMenuable, IShapeContenable, IPrintable, IRunnable, IClickable{
     private EditToolBar _EditToolBar = null;
     private CreateEditToolBarVisitor _cetbv = new CreateEditToolBarVisitor();
+    private ApplyEditToolBarVisitor _aetbv = new ApplyEditToolBarVisitor();
     private WhiteBoard _whiteBoard = null;
     private SystemToolBar _systemToolBar = null;
     private ShapeToolBar _shapesToolBar = null;
@@ -221,6 +223,13 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
     public void update(InputControl inputControleur) {
         Command cmd = null;
         //left pressed alone
+        if(inputControleur.write()){
+            if(_EditToolBar != null){
+                if(_EditToolBar.selected()){
+                    _EditToolBar.write(inputControleur.writeChar());
+                }
+            }
+        }
         if(inputControleur.left().now() && inputControleur.leftPressed() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && !inputControleur.ctrlPressed()){
             mousePos(inputControleur.position());
             if(systemToolBar().isInside(inputControleur.position())){
@@ -280,7 +289,6 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         }
         //left mouse dragged
         if(inputControleur.mouseMoved() && inputControleur.leftPressed() && !inputControleur.rightPressed()){
-            System.out.println("mouse grag");
             if(placedShape() != null){
                 placedShape().visibleTranslate(mousVec(inputControleur.position()));
             }else if(whiteBoard().selected()){
@@ -296,6 +304,21 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
         if(inputControleur.left().now() && inputControleur.leftReleased() && !inputControleur.rightPressed() && !inputControleur.mouseMoved() && !inputControleur.ctrlPressed()){
             if(placedShape() != null){
                 addShapeToPlaced(null);
+            }else if(_EditToolBar != null){
+                if(_EditToolBar.cancel().isInside(inputControleur.position())){
+                    _EditToolBar = null;
+                }else if(_EditToolBar.apply().isInside(inputControleur.position())){
+                    _EditToolBar.unselect();
+                    _EditToolBar.shape().accept(_aetbv, _EditToolBar);
+                }else if(_EditToolBar.ok().isInside(inputControleur.position())){
+                    _EditToolBar.shape().accept(_aetbv, _EditToolBar);
+                    _EditToolBar = null;
+                }else if(_EditToolBar.isInside(inputControleur.position())){
+                    _EditToolBar.unselect();
+                    _EditToolBar.select(inputControleur.position(), true);
+                }else{
+                    _EditToolBar.unselect();
+                }
             }else if(isPopUping() && popUpMenu().isInside(inputControleur.position())){
                 if(popUpMenu().edit().isInside(inputControleur.position())){
                     if(getSelected().size() > 1){
@@ -336,7 +359,6 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                     }else if(systemToolBar().trashbin().isInside(inputControleur.position())){
                         ArrayList<Object> shapes = new ArrayList<>();
                         for (Shape s : getSelected()){
-                            System.out.println(s.toString());
                             s.visiblePosition(s.position());
                                 shapes.add(s);
                         }

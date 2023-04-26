@@ -43,9 +43,23 @@ public class EditItem implements IShape, IResizeable{
     public String[] titles(){ return _title; }
     public String[] inputs(){ return _input; }
 
-    public int insideIndex(Point2D pos){
+    public int inIndex(Point2D pos){
         for (int i = 0; i < _items_area.length; i++) if(_input_area[i].isInside(pos)) return i;
         return -1;
+    }
+
+    public void unselect(){
+        for (Rectangle rect : inputsArea()) {
+            rect.selected(false);
+        }
+    }
+
+    public void write(char c){
+        for(int i = 0; i < inputsArea().length; i ++){
+            if(inputsArea()[i].selected() && inputs()[i].length() < 5){
+               inputs()[i] = inputs()[i].concat(String.valueOf(c)); 
+            } 
+        }
     }
 
     public String title(int index){ return _title[index]; }
@@ -56,9 +70,17 @@ public class EditItem implements IShape, IResizeable{
     public IShape size(Point2D vec, int index) { _area.size(vec); return _area;}
     public Point2D position(int index) { return _area.position(); }
 
-    @Override public boolean isInside(Point2D pos) { return _area.isInside(pos); }
+    @Override public boolean isInside(Point2D pos) { 
+        for(Rectangle rect : inputsArea()){
+            if(rect.isInside(pos)) return true;
+        }
+        return false;
+    }
     @Override public void selected(boolean sel) { }
-    @Override public boolean selected() { return _area.selected(); }
+    @Override public boolean selected() { 
+        for(Rectangle rect : inputsArea()) if(rect.selected()) return true;
+        return false;
+    }
     @Override public Point2D size() { return _area.size(); }
     @Override public IShape size(Point2D vec) { _area.size(vec); return _area;}
     @Override public Point2D position() { return _area.position(); }

@@ -1,11 +1,13 @@
 package xshape.model.shape;
 
 import java.awt.Color;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
 import xshape.model.Interface.IShape;
 import xshape.model.Interface.ISideable;
 import xshape.model.shape.tools.toolbar.editToolBar.EditToolBar;
+import xshape.model.visitor.ApplyEditToolBarVisitor;
 import xshape.model.visitor.CreateEditToolBarVisitor;
 import xshape.model.visitor.DrawVisitor;
 
@@ -31,37 +33,25 @@ public class Polygone extends Shape implements ISideable{
     }
 
     @Override public boolean isInside(Point2D pos) {
-                int windingNumber = 0;
-                int n = side();
-                Point2D[] points = points();
-                for (int i = 0; i < n; i++) {
-                    Point2D p1 = points[i];
-                    Point2D p2 = points[(i + 1) % n];
-        
-                    if (p1.getY() <= pos.getY()) {
-                        if (p2.getY() > pos.getY() && isLeft(p1, p2, pos) > 0) {
-                            windingNumber++;
-                        }
-                    } else {
-                        if (p2.getY() <= pos.getY() && isLeft(p1, p2, pos) < 0) {
-                            windingNumber--;
-                        }
-                    }
-                }
-                System.out.println(windingNumber != 0);
-                return windingNumber != 0;
-            }
+        Point2D[] points = points();
+        Path2D.Double polygon = new Path2D.Double();
+        polygon.moveTo(points[0].getX(), points[0].getY());
+        for (int i = 1; i < side(); i++) {
+            polygon.lineTo(points[i].getX(), points[i].getY());
+        }
+        polygon.closePath();
 
-    private double isLeft(Point2D p1, Point2D p2, Point2D pos) {
-        return (p2.getX() - p1.getX()) * (pos.getY() - p1.getY()) - (pos.getX() - p1.getX()) * (p2.getY() - p1.getY());
+        return polygon.contains(pos);
     }
+
 
     public Point2D[] points(){
         Point2D[] points = new Point2D[side()];
+        double radius = length() / (2 * Math.sin(Math.PI / side()));
         for (int i = 0; i < side(); i++) {
-            double angle = 2 * Math.PI * i / side();
-            double x = (int) Math.round(visiblePosition().getX() + length() * Math.cos(angle));
-            double y = (int) Math.round(visiblePosition().getY() + length() * Math.sin(angle));
+            double angle = rotation() + i * 2 * Math.PI / side();
+            double x = visiblePosition().getX() + radius * Math.cos(angle);
+            double y = visiblePosition().getY() + radius * Math.sin(angle);
             points[i] = new Point2D.Double(x, y);
         }
         return points;
@@ -105,7 +95,7 @@ public class Polygone extends Shape implements ISideable{
     }
 
     @Override public void accept(DrawVisitor dv) { dv.drawPolygone(this); }
-    @Override public EditToolBar accept(CreateEditToolBarVisitor cetbv, Point2D pos, Point2D size) { return cetbv.polygoneEditToolBar(null, pos, size, position().getX(), position().getY(), side(), length(), color().getRed(), color().getGreen(), color().getBlue(), rotation()); }
+    @Override public EditToolBar accept(CreateEditToolBarVisitor cetbv, Point2D pos, Point2D size) { return cetbv.polygoneEditToolBar(this, pos, size, position().getX(), position().getY(), side(), length(), color().getRed(), color().getGreen(), color().getBlue(), rotation()); }
     @Override public void side(int side) { _side = side; }
     @Override public int side() { return _side; }
     @Override public void length(double lenght) { _length = lenght; }
@@ -145,6 +135,9 @@ public class Polygone extends Shape implements ISideable{
 
     @Override
     public Point2D[] extremPoints() { return points(); }
+
+    @Override
+    public void accept(ApplyEditToolBarVisitor aetbv, EditToolBar etb) { aetbv.applyPolygone(this, etb);}
 
     
 }

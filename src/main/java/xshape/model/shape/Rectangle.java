@@ -4,12 +4,12 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import xshape.model.Interface.IBoundsRoundable;
-import xshape.model.Interface.IResizeable;
 import xshape.model.shape.tools.toolbar.editToolBar.EditToolBar;
+import xshape.model.visitor.ApplyEditToolBarVisitor;
 import xshape.model.visitor.CreateEditToolBarVisitor;
 import xshape.model.visitor.DrawVisitor;
 
-public class Rectangle extends Shape implements IBoundsRoundable, IResizeable{
+public class Rectangle extends Shape implements IBoundsRoundable{
 
     protected static double _size_x = 100;
     protected static double _size_y = 100;
@@ -59,20 +59,56 @@ public class Rectangle extends Shape implements IBoundsRoundable, IResizeable{
 	@Override public Point2D visibleSize() { return (Point2D) _visible_size.clone(); }
 	@Override public Shape visibleSize(Point2D vec) { _visible_size = (Point2D) vec.clone(); return this; }
     @Override public boolean equals(Object obj){ return super.equals(obj); }
-    @Override public boolean isInside(Point2D pos){ return pos.getX() > position().getX() - size().getX() / 2 && pos.getX() < position().getX() + size().getX() / 2 && pos.getY() > position().getY() - size().getY() / 2 && pos.getY() < position().getY() + size().getY() / 2; }
+    @Override public boolean isInside(Point2D pos){
+        double angle = Math.toRadians(-rotation());
+        double cos = Math.cos(angle);
+        double sin = Math.sin(angle);
+        
+        double dx = pos.getX() - position().getX();
+        double dy = pos.getY() - position().getY();
+
+        double rotatedX = position().getX() + dx * cos - dy * sin;
+        double rotatedY = position().getY() + dx * sin + dy * cos;
+
+        return rotatedX >= position().getX() - size().getX() / 2 && rotatedX <= position().getX() + size().getX() / 2 &&
+               rotatedY >= position().getY() - size().getY() / 2 && rotatedY <= position().getY() + size().getY() / 2;
+    }
 
     @Override
     public void accept(DrawVisitor dv) {
         dv.drawRectangle(this);
     }
     @Override
-    public EditToolBar accept(CreateEditToolBarVisitor cetbv, Point2D pos, Point2D size) { return cetbv.rectangleEditToolBar(null, pos, size, position().getX(), position().getY(), size().getX(), size().getY(), color().getRed(), color().getGreen(), color().getBlue(), rotation(), rounded()); }
+    public EditToolBar accept(CreateEditToolBarVisitor cetbv, Point2D pos, Point2D size) { return cetbv.rectangleEditToolBar(this, pos, size, position().getX(), position().getY(), size().getX(), size().getY(), color().getRed(), color().getGreen(), color().getBlue(), rotation(), rounded()); }
 
     @Override
     public Point2D[] extremPoints() {
-        Point2D[] p = {new Point2D.Double(position().getX() - size().getX()/2, position().getY() - size().getY()/2),new Point2D.Double(position().getX() + size().getX()/2, position().getY() + size().getY()/2)};
-        return p;
+        double halfWidth = size().getX() / 2;
+        double halfHeight = size().getY() / 2;
+        Point2D.Double[] corners = {
+            new Point2D.Double(position().getX() - halfWidth, position().getY() - halfHeight),
+            new Point2D.Double(position().getX() + halfWidth, position().getY() - halfHeight),
+            new Point2D.Double(position().getX() + halfWidth, position().getY() + halfHeight),
+            new Point2D.Double(position().getX() - halfWidth, position().getY() + halfHeight)
+        };
+
+        // Convertissez les degrés de rotation en radians
+        double rotationRadians = Math.toRadians(rotation());
+
+        // Appliquez la rotation à chaque coin
+        for (int i = 0; i < corners.length; i++) {
+            double x = corners[i].x - position().getX();
+            double y = corners[i].y - position().getY();
+            double rotatedX = x * Math.cos(rotationRadians) - y * Math.sin(rotationRadians);
+            double rotatedY = x * Math.sin(rotationRadians) + y * Math.cos(rotationRadians);
+            corners[i] = new Point2D.Double(position().getX() + rotatedX, position().getY() + rotatedY);
+        }
+
+        return corners;
     }
+
+    @Override
+    public void accept(ApplyEditToolBarVisitor aetbv, EditToolBar etb) { aetbv.applyRectangle(this, etb);}
 
 
     

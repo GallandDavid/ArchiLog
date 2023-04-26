@@ -10,9 +10,10 @@ import xshape.model.Interface.IPlaceable;
 import xshape.model.Interface.IResizeable;
 import xshape.model.Interface.IRotatable;
 import xshape.model.Interface.IShape;
+import xshape.model.visitor.ApplyEditToolBarVisitable;
 import xshape.model.visitor.CreateEditToolBarVisitable;
 
-public abstract class Shape implements IShape, IColorable, IRotatable, IManipulable, IPlaceable, IMovable, CreateEditToolBarVisitable, IResizeable{
+public abstract class Shape implements IShape, IColorable, IRotatable, IManipulable, IPlaceable, IMovable, CreateEditToolBarVisitable, ApplyEditToolBarVisitable, IResizeable{
     private static int _max_deepth = -1;
     protected static double _pos_x = 200;
     protected static double _pos_y = 200;

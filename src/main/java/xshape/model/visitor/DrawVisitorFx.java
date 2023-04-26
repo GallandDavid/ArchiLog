@@ -20,6 +20,46 @@ import xshape.model.shape.tools.toolbar.ShapeToolBar;
 import xshape.model.shape.tools.toolbar.SystemToolBar;
 import xshape.model.shape.tools.toolbar.editToolBar.EditToolBar;
 
+class HSLColor {
+
+    private float hue;
+    private float saturation;
+    private float luminosity;
+
+    public HSLColor(java.awt.Color color) {
+        float[] hsl = java.awt.Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        this.hue = hsl[0];
+        this.saturation = hsl[1];
+        this.luminosity = hsl[2];
+    }
+
+    public HSLColor(float hue, float saturation, float luminosity) {
+        this.hue = hue;
+        this.saturation = saturation;
+        this.luminosity = luminosity;
+    }
+
+    public float getHue() {
+        return hue;
+    }
+
+    public float getSaturation() {
+        return saturation;
+    }
+
+    public float getLuminosity() {
+        return luminosity;
+    }
+
+    public HSLColor adjustLuminosity(float newLuminosity) {
+        return new HSLColor(hue, saturation, newLuminosity);
+    }
+
+    public java.awt.Color getRGB() {
+        return java.awt.Color.getHSBColor(hue, saturation, luminosity);
+    }
+}
+
 public class DrawVisitorFx implements DrawVisitor{
     Canvas _cvs = null;
 
@@ -30,19 +70,41 @@ public class DrawVisitorFx implements DrawVisitor{
     }
 
     public void drawGroup(Group grp){
-        for (Shape shape : grp.group())
-            shape.accept(this);
+        GraphicsContext gc = _cvs.getGraphicsContext2D();
+        gc.save();
+        gc.translate(grp.position().getX(), grp.position().getY());
+        gc.rotate(grp.rotation());
+
+        gc.translate(-grp.position().getX(), -grp.position().getY());
+        if(grp.selected()){
+            HSLColor hslColor = new HSLColor(grp.color());
+            float newLuminosity = Math.min(hslColor.getLuminosity() + 0.2f, 1.0f);
+            java.awt.Color lightColor = hslColor.adjustLuminosity(newLuminosity).getRGB();
+            gc.setFill(Color.color(lightColor.getRed()/255, lightColor.getGreen()/255, lightColor.getBlue()/255));
+            gc.fillRect(grp.position().getX() - grp.size().getX()/2,grp.position().getY() - grp.size().getY()/2,
+            grp.size().getX(), grp.size().getY());
+        }
+        for (Shape shape : grp.group()) shape.accept(this);
+        gc.restore();
     }
 
     @Override
     public void drawPolygone(Polygone polygone) {
-        System.out.println(polygone.toString());
         GraphicsContext gc = _cvs.getGraphicsContext2D();
-        if(polygone.selected()) gc.setFill(Color.color(0.40, 0.4, 1.0));
-		else gc.setFill(Color.color(polygone.color().getRed()/255, polygone.color().getGreen()/255, polygone.color().getBlue()/255));
+        gc.save();
+        gc.translate(polygone.position().getX(), polygone.position().getY());
+        gc.rotate(polygone.rotation());
+        gc.translate(-polygone.position().getX(), -polygone.position().getY());
+        if(polygone.selected()) {
+            HSLColor hslColor = new HSLColor(polygone.color());
+            float newLuminosity = Math.min(hslColor.getLuminosity() + 0.2f, 1.0f);
+            java.awt.Color lightColor = hslColor.adjustLuminosity(newLuminosity).getRGB();
+            gc.setFill(Color.color(lightColor.getRed()/255, lightColor.getGreen()/255, lightColor.getBlue()/255));
+        }else gc.setFill(Color.color(polygone.color().getRed()/255, polygone.color().getGreen()/255, polygone.color().getBlue()/255));
         gc.fillPolygon(polygone.pointsXDouble(),
                         polygone.pointsYDouble(),
                     polygone.side());
+        gc.restore();
     }
 
     @Override
@@ -50,12 +112,14 @@ public class DrawVisitorFx implements DrawVisitor{
         Point2D p = rect.visiblePosition();
 		Point2D	s = rect.visibleSize();
         GraphicsContext gc = _cvs.getGraphicsContext2D();
-        if(rect.selected()) gc.setFill(Color.color(0.40, 0.4, 1.0));
-		else gc.setFill(Color.color(rect.color().getRed()/255, rect.color().getGreen()/255, rect.color().getBlue()/255));
-        gc.fillRect(p.getX()- s.getX()/2,
-                    p.getY()- s.getY()/2,
-                    s.getX(),
-                    s.getY());
+
+        gc.save();
+        gc.translate(p.getX(), p.getY());
+        gc.rotate(rect.rotation());
+        gc.setFill(Color.color(rect.color().getRed()/255, rect.color().getGreen()/255, rect.color().getBlue()/255));
+        gc.fillRect(0- s.getX()/2, 0- s.getY()/2,
+                    s.getX(), s.getY());
+        gc.restore();
     }
 
     @Override

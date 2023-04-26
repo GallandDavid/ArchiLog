@@ -24,12 +24,12 @@ public class CreateEditToolBarVisitor {
         double[] input3 = {orientation};
         items[3] = new EditItem(new Point2D.Double(pos.getX(), pos.getY() - size.getY() / 2 + 225), new Point2D.Double(size.getX() - 2, 30), title3, input3);
 
-        return new EditToolBar(pos,size,false,items);
+        return new EditToolBar(grp, pos,size,false,items);
 
     }
 
     public EditToolBar rectangleEditToolBar(Rectangle grp, Point2D pos, Point2D size, double x, double y, double w, double h, double r, double g, double b, double orientation, double round){
-    
+        if(grp == null) System.out.println("null");
         EditItem[] items = new EditItem[5];
         String[] title0 = {"x :", "y :"};
         double[] input0 = {x,y};
@@ -47,7 +47,7 @@ public class CreateEditToolBarVisitor {
         double[] input4 = {orientation};
         items[4] = new EditItem(new Point2D.Double(pos.getX(), pos.getY() - size.getY() / 2 + 255), new Point2D.Double(size.getX() - 2, 30), title4, input4);
 
-        return new EditToolBar(pos,size,false,items);
+        return new EditToolBar(grp, pos,size,false,items);
     }
 
     public EditToolBar polygoneEditToolBar(Polygone grp, Point2D pos, Point2D size, double x, double y, double side, double lenght, double r, double g, double b, double orientation){
@@ -64,7 +64,6 @@ public class CreateEditToolBarVisitor {
         String[] title3 = {"orientation :"};
         double[] input3 = {orientation};
         items[3] = new EditItem(new Point2D.Double(pos.getX(), pos.getY() - size.getY() / 2 + 225), new Point2D.Double(size.getX() - 2, 30), title3, input3);
-
-        return new EditToolBar(pos,size,false,items);
+        return new EditToolBar(grp, pos,size,false,items);
     }
 }

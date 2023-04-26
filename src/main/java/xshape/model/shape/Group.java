@@ -1,5 +1,6 @@
 package xshape.model.shape;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 
 import xshape.model.Interface.IShape;
 import xshape.model.shape.tools.toolbar.editToolBar.EditToolBar;
+import xshape.model.visitor.ApplyEditToolBarVisitor;
 import xshape.model.visitor.CreateEditToolBarVisitor;
 import xshape.model.visitor.DrawVisitor;
 
@@ -54,10 +56,12 @@ public class Group extends Shape{
         double min_x = 100000;
         double min_y = 100000;
         for (Shape shape : _group) {
-            if(shape.position().getX() + shape.size().getX() / 2 > max_x) max_x = shape.position().getX() + shape.size().getX() / 2;
-            if(shape.position().getY() + shape.size().getY() / 2 > max_y) max_y = shape.position().getY() + shape.size().getY() / 2;
-            if(shape.position().getX() - shape.size().getX() / 2  < min_x) min_x = shape.position().getX() - shape.size().getX() / 2;
-            if(shape.position().getY() - shape.size().getY() / 2 < min_y) min_y = shape.position().getY() - shape.size().getY() / 2;
+            for (Point2D point : shape.extremPoints()) {
+                if(point.getX() > max_x) max_x = point.getX();
+                if(point.getY() > max_y) max_y = point.getY();
+                if(point.getX() < min_x) min_x = point.getX();
+                if(point.getY() < min_y) min_y = point.getY();
+            }
         }
 
         Point2D size = new Point2D.Double(max_x - min_x + 4, max_y - min_y + 4);
@@ -71,7 +75,7 @@ public class Group extends Shape{
         for(Shape s : group()){
             s.selected(sel);
         }
-        _rect.selected(true);
+        _rect.selected(sel);
     }
 
     public void add(Shape shape){
@@ -123,11 +127,19 @@ public class Group extends Shape{
         return this;
     }
 
+    @Override public int rotation(){ return _rect.rotation(); }
+    @Override public void rotation(int rotation){ for (Shape s : group()) s.rotation(rotation); }
+    @Override public void color(Color c){for (Shape s : group()) s.color(c); }
     @Override public boolean isInside(Point2D pos) { return _rect.isInside(pos); }
     @Override public boolean selected() { return _rect.selected(); }
     @Override public Point2D size() { return _rect.size(); }
     @Override public IShape size(Point2D vec) { _rect.size(vec); return _rect;}
     @Override public Point2D position() { return _rect.position(); }
+    @Override public Shape position(Point2D pos) { return _rect.position(pos);}
+    @Override public Point2D visiblePosition() { return _rect.visiblePosition(); }
+    @Override public Shape visiblePosition(Point2D pos) { return _rect.visiblePosition(pos);}
+
+
 
     @Override
     public String toString(){
@@ -138,7 +150,7 @@ public class Group extends Shape{
         return str;
     }
     
-    public EditToolBar accept(CreateEditToolBarVisitor cetbv, Point2D pos, Point2D size) { return cetbv.groupEditToolBar(null, pos, size, position().getX(), position().getY(), size().getX(), size().getY(), color().getRed(), color().getGreen(), color().getBlue(), rotation()); }
+    public EditToolBar accept(CreateEditToolBarVisitor cetbv, Point2D pos, Point2D size) { return cetbv.groupEditToolBar(this, pos, size, position().getX(), position().getY(), size().getX(), size().getY(), color().getRed(), color().getGreen(), color().getBlue(), rotation()); }
 
     /**
      * @return ArrayList<Shape> return the _group
@@ -158,10 +170,14 @@ public class Group extends Shape{
     @Override public Point2D visibleSize() { return _rect.visibleSize(); }
 
     @Override
+    public
     Shape visibleSize(Point2D vec) { _rect.visibleSize(vec); return this;}
 
     @Override
     public Point2D[] extremPoints() { return _rect.extremPoints(); }
+
+    @Override
+    public void accept(ApplyEditToolBarVisitor aetbv, EditToolBar etb) {aetbv.applyGroup(this, etb);}
 
 }
 

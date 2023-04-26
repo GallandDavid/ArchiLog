@@ -83,9 +83,11 @@ public class FxApplication extends Application implements IInputObservable{
                         _inputControleur.ctrl().now(true);
                         _inputControleur.ctrlPressed(true);
                         _inputControleur.ctrlReleased(false);
-                    }else if (Character.isDigit(e.getCharacter().charAt(0))) {
+                    }
+                    
+                    if (!e.getText().isEmpty() && Character.isDigit(e.getText().charAt(0))) {
                         _inputControleur.write(true);
-                        _inputControleur.writeChar(e.getCharacter().charAt(0));
+                        _inputControleur.writeChar(e.getText().charAt(0));
                         notifyObservers(_inputControleur);
                         _inputControleur.write(false);
                     }
