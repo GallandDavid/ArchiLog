@@ -17,10 +17,7 @@ public class ShapeTranslateCommand extends Command{
         for (Object shape : _editor) {
             Point2D tmp = (Point2D) ((Shape) shape).visiblePosition();
             ((Shape) shape).visiblePosition((Point2D) ((Shape) shape).position());
-            if(shape instanceof Group){
-                saveBackup(((Group) shape).group());
-            }
-            else saveBackup(null);
+            saveBackup(null);
             ((Shape) shape).position((Point2D)tmp.clone());
             ((Shape) shape).visiblePosition((Point2D)tmp.clone());
         }
