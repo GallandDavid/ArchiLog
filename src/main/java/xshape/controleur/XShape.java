@@ -36,16 +36,16 @@ import xshape.model.visitor.CreateEditToolBarVisitor;
 import xshape.model.visitor.DrawVisitor;
 
 public abstract class XShape implements CommandHistory, IInputObserver, IMenuable, IShapeContenable, IPrintable, IRunnable, IClickable{
-    private EditToolBar _EditToolBar = null;
+    protected DrawVisitor _drawer = null;
     private CreateEditToolBarVisitor _cetbv = new CreateEditToolBarVisitor();
     private ApplyEditToolBarVisitor _aetbv = new ApplyEditToolBarVisitor();
     private WhiteBoard _whiteBoard = null;
+    private EditToolBar _EditToolBar = null;
     private SystemToolBar _systemToolBar = null;
     private ShapeToolBar _shapesToolBar = null;
     private PopUpMenu _popUpMenu = null;
     private boolean _selection = false;
     private Shape _placed_shape = null;
-    protected DrawVisitor _drawer = null;
     private Point2D _mouse_pos = null;
     Shape[] _shapes = null;
     LinkedList<ICommand> _history = new LinkedList<>();

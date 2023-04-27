@@ -20,45 +20,7 @@ import xshape.model.shape.tools.toolbar.ShapeToolBar;
 import xshape.model.shape.tools.toolbar.SystemToolBar;
 import xshape.model.shape.tools.toolbar.editToolBar.EditToolBar;
 
-class HSLColor {
 
-    private float hue;
-    private float saturation;
-    private float luminosity;
-
-    public HSLColor(java.awt.Color color) {
-        float[] hsl = java.awt.Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
-        this.hue = hsl[0];
-        this.saturation = hsl[1];
-        this.luminosity = hsl[2];
-    }
-
-    public HSLColor(float hue, float saturation, float luminosity) {
-        this.hue = hue;
-        this.saturation = saturation;
-        this.luminosity = luminosity;
-    }
-
-    public float getHue() {
-        return hue;
-    }
-
-    public float getSaturation() {
-        return saturation;
-    }
-
-    public float getLuminosity() {
-        return luminosity;
-    }
-
-    public HSLColor adjustLuminosity(float newLuminosity) {
-        return new HSLColor(hue, saturation, newLuminosity);
-    }
-
-    public java.awt.Color getRGB() {
-        return java.awt.Color.getHSBColor(hue, saturation, luminosity);
-    }
-}
 
 public class DrawVisitorFx implements DrawVisitor{
     Canvas _cvs = null;
@@ -77,10 +39,8 @@ public class DrawVisitorFx implements DrawVisitor{
 
         gc.translate(-grp.position().getX(), -grp.position().getY());
         if(grp.selected()){
-            HSLColor hslColor = new HSLColor(grp.color());
-            float newLuminosity = Math.min(hslColor.getLuminosity() + 0.2f, 1.0f);
-            java.awt.Color lightColor = hslColor.adjustLuminosity(newLuminosity).getRGB();
-            gc.setFill(Color.color(lightColor.getRed()/255, lightColor.getGreen()/255, lightColor.getBlue()/255));
+            
+            gc.setFill(Color.color(0,0,1.0,0.7));
             gc.fillRect(grp.position().getX() - grp.size().getX()/2,grp.position().getY() - grp.size().getY()/2,
             grp.size().getX(), grp.size().getY());
         }
@@ -96,10 +56,7 @@ public class DrawVisitorFx implements DrawVisitor{
         gc.rotate(polygone.rotation());
         gc.translate(-polygone.position().getX(), -polygone.position().getY());
         if(polygone.selected()) {
-            HSLColor hslColor = new HSLColor(polygone.color());
-            float newLuminosity = Math.min(hslColor.getLuminosity() + 0.2f, 1.0f);
-            java.awt.Color lightColor = hslColor.adjustLuminosity(newLuminosity).getRGB();
-            gc.setFill(Color.color(lightColor.getRed()/255, lightColor.getGreen()/255, lightColor.getBlue()/255));
+            gc.setFill(Color.color(0,0,1.0,0.7));
         }else gc.setFill(Color.color(polygone.color().getRed()/255, polygone.color().getGreen()/255, polygone.color().getBlue()/255));
         gc.fillPolygon(polygone.pointsXDouble(),
                         polygone.pointsYDouble(),
@@ -116,7 +73,9 @@ public class DrawVisitorFx implements DrawVisitor{
         gc.save();
         gc.translate(p.getX(), p.getY());
         gc.rotate(rect.rotation());
-        gc.setFill(Color.color(rect.color().getRed()/255, rect.color().getGreen()/255, rect.color().getBlue()/255));
+        if(rect.selected()) {
+            gc.setFill(Color.color(0,0,1.0,0.7));
+        }else gc.setFill(Color.color(rect.color().getRed()/255, rect.color().getGreen()/255, rect.color().getBlue()/255));
         gc.fillRect(0- s.getX()/2, 0- s.getY()/2,
                     s.getX(), s.getY());
         gc.restore();
