@@ -27,7 +27,7 @@ public class GroupCommand extends Command{
             array_backup.add(shape);
             _app.removeShape(shape.getId());
         }
-        Group grp = _app.factory().createGroup(array_backup);
+        Group grp = new Group(array_backup);
         grp.selected(true);
         _backup.add((Object) grp);
         _app.addShape(grp);

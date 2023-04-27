@@ -20,7 +20,6 @@ import xshape.model.Interface.IMenuable;
 import xshape.model.Interface.IPrintable;
 import xshape.model.Interface.IRunnable;
 import xshape.model.Interface.IShapeContenable;
-import xshape.model.abstractFactory.ShapeFactory;
 import xshape.model.controlInput.InputControl;
 import xshape.model.observer.IInputObserver;
 import xshape.model.shape.Group;
@@ -46,7 +45,6 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
     private PopUpMenu _popUpMenu = null;
     private boolean _selection = false;
     private Shape _placed_shape = null;
-    protected ShapeFactory _factory = new ShapeFactory();
     protected DrawVisitor _drawer = null;
     private Point2D _mouse_pos = null;
     Shape[] _shapes = null;
@@ -80,7 +78,6 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
     @Override public ShapeToolBar shapesToolBar() { return _shapesToolBar; }
     @Override public void popUpMenu(PopUpMenu popUpMenu){ _popUpMenu = popUpMenu; }
     @Override public PopUpMenu popUpMenu(){ return _popUpMenu; }
-    @Override public ShapeFactory factory(){ return _factory; }
     @Override public void addShapeToPlaced(Shape shape){ _placed_shape = shape; }
     @Override public Shape placedShape(){ return _placed_shape;}
     @Override public Shape getShape(String ref){ for (Shape s : _shapes) if(s.getId().equals(ref)) return s; return null; }
@@ -238,7 +235,7 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
                     if(shapesToolBar().rect().isInside(inputControleur.position())){
                         Shape rect = shapesToolBar().rect();
                         mousePos(inputControleur.position());
-                        addShapeToPlaced(factory().createRectangle(rect.position().getX() - mousVec(rect.position()).getX(), rect.position().getY() - mousVec(rect.position()).getY(), rect.size().getY(), rect.size().getX(),true));
+                        addShapeToPlaced(new Rectangle(new Point2D.Double(rect.position().getX() - mousVec(rect.position()).getX(), rect.position().getY() - mousVec(rect.position()).getY()), new Point2D.Double(rect.size().getY(), rect.size().getX()),true));
                     }else if(shapesToolBar().poly().isInside(inputControleur.position())){
                         Polygone poly = shapesToolBar().poly();
                         mousePos(inputControleur.position());
@@ -441,9 +438,9 @@ public abstract class XShape implements CommandHistory, IInputObserver, IMenuabl
             if(whiteBoard().isInside(inputControleur.position())){
                 if(topShape(inputControleur.position()) != null){
                     if(getSelected().size() == 1 && getSelected().get(0).grouped()){
-                        popUpMenu(factory().createPopUpMenu(inputControleur.position(), nbSelected(), true));
+                        popUpMenu(new PopUpMenu(inputControleur.position(), nbSelected(), true));
                     }else{
-                        popUpMenu(factory().createPopUpMenu(inputControleur.position(), nbSelected(), false));
+                        popUpMenu(new PopUpMenu(inputControleur.position(), nbSelected(), false));
                     }
                 }else{
                     //popup whiteboard

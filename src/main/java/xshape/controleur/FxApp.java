@@ -1,5 +1,8 @@
 package xshape.controleur;
 
+import xshape.model.shape.tools.WhiteBoard;
+import xshape.model.shape.tools.toolbar.ShapeToolBar;
+import xshape.model.shape.tools.toolbar.SystemToolBar;
 import xshape.model.visitor.DrawVisitorFx;
 import xshape.vue.FxApplication;
 
@@ -27,9 +30,9 @@ public class FxApp extends XShape  {
     @Override public void render() { }
     @Override public void clear() { ((DrawVisitorFx)_drawer).canvas(_fx.clearCanvas());}
     @Override public void run() { 
-        systemToolBar(factory().createSystemToolBar(_syst_tool_pos, _syst_tool_size, false));
-        shapesToolBar(factory().createShapeToolBar(_shape_tool_pos, _shape_tool_size, false, null));
-        whiteBoard(factory().createWhiteBoard(_scene_size.getX()/2 + _shape_tool_size.getX()/2, _scene_size.getY()/2 + _syst_tool_size.getY()/2, _scene_size.getY() - _syst_tool_size.getY(), _scene_size.getX() - _shape_tool_size.getX(), false));
+        systemToolBar(new SystemToolBar(_syst_tool_pos, _syst_tool_size, false));
+        shapesToolBar(new ShapeToolBar(_shape_tool_pos, _shape_tool_size, false, null));
+        whiteBoard(new WhiteBoard(_scene_size.getX()/2 + _shape_tool_size.getX()/2, _scene_size.getY()/2 + _syst_tool_size.getY()/2, _scene_size.getY() - _syst_tool_size.getY(), _scene_size.getX() - _shape_tool_size.getX(), false));
         draw(); }
 
     @Override

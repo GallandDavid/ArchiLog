@@ -20,6 +20,9 @@ import javax.swing.JPanel;
 import xshape.model.controlInput.InputControl;
 import xshape.model.observer.IInputObservable;
 import xshape.model.observer.IInputObserver;
+import xshape.model.shape.tools.WhiteBoard;
+import xshape.model.shape.tools.toolbar.ShapeToolBar;
+import xshape.model.shape.tools.toolbar.SystemToolBar;
 import xshape.model.visitor.DrawVisitorAwt;
 import xshape.vue.AwtContext;
 import xshape.controleur.AwtApp.JCanvas;
@@ -60,9 +63,9 @@ public class AwtApp extends XShape{
             setFocusable(true);
             addKeyListener(this);
             registerOberver(xs);
-            _xshape.systemToolBar(_xshape.factory().createSystemToolBar(_syst_tool_pos, _syst_tool_size, false));
-            _xshape.shapesToolBar(_xshape.factory().createShapeToolBar(_shape_tool_pos, _shape_tool_size, false, null));
-            _xshape.whiteBoard(_xshape.factory().createWhiteBoard(_scene_size.getX()/2 + _shape_tool_size.getX()/2, _scene_size.getY()/2 + _syst_tool_size.getY()/2, _scene_size.getY() - _syst_tool_size.getY(), _scene_size.getX() - _shape_tool_size.getX(), false));
+            _xshape.systemToolBar(new SystemToolBar(_syst_tool_pos, _syst_tool_size, false));
+            _xshape.shapesToolBar(new ShapeToolBar(_shape_tool_pos, _shape_tool_size, false, null));
+            _xshape.whiteBoard(new WhiteBoard(_scene_size.getX()/2 + _shape_tool_size.getX()/2, _scene_size.getY()/2 + _syst_tool_size.getY()/2, _scene_size.getY() - _syst_tool_size.getY(), _scene_size.getX() - _shape_tool_size.getX(), false));
 
         }
 

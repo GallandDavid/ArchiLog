@@ -1,7 +1,9 @@
 package xshape.model.Command;
 import java.util.ArrayList;
 
+import java.awt.geom.Point2D;
 import xshape.controleur.XShape;
+import xshape.model.shape.Rectangle;
 import xshape.model.shape.Shape;
 
 public class ShapePlaceCommand extends Command{
@@ -30,7 +32,7 @@ public class ShapePlaceCommand extends Command{
     @Override
     public boolean execute() {
         if(_god_place){
-            Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y,false);
+            Shape shape = new Rectangle(new Point2D.Double(_mouse_x, _mouse_y), false);
             shape.selected(false);
             _app.addShape(shape);
             return false;
@@ -45,7 +47,7 @@ public class ShapePlaceCommand extends Command{
             return false;
         }
         if(_mouse_y > _app.systemToolBar().size().getY()){
-            Shape shape = _app.factory().createRectangle(_mouse_x, _mouse_y, false);
+            Shape shape = new Rectangle(new Point2D.Double(_mouse_x, _mouse_y), false);
             shape.selected(true);
             _editor.add(shape);
             saveBackup(null);
